@@ -1,0 +1,22 @@
+log <= §a§ §b§ §b§
+
+testList = §a§ §b§ §c§
+
+testList2 =
+	§a§
+	§b§
+	§c§
+
+testObj =
+	a = 1
+	b = §hallo§
+	nested =
+		a1 = 1
+		b1 = 2
+	someKey = 4
+
+addFn = par1 par1 =>
+	add(par1 par2)
+
+log(addFn(par2 = 4 par1 = 5))
+log <= addFn <= par2 = 4 par1 = 5

@@ -1,0 +1,35 @@
+(body stackPanel label textInput numberInput booleanInput htmlIf inputValue$) = import(§ui§)
+
+nameInput = textInput()
+ageInput = numberInput()
+visibleInput = booleanInput(default = true)
+data$ = combine$(
+	name = nameInput/value$
+	age = ageInput/value$
+	visible = visibleInput/value$
+)
+
+body.push(
+	stackPanel(
+		label(
+			§name§
+			nameInput
+		)
+		htmlIf(
+			visibleInput/value$
+			label(
+				§age§
+				ageInput
+			)
+		)
+		label(
+			§visible§
+			ageInput
+		)
+		button(
+			label = §submit§
+			onClick = () =>
+				log(data$/value)
+		)
+	)
+)

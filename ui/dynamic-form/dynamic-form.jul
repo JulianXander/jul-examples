@@ -1,0 +1,24 @@
+(body stackPanel label textInput numberInput booleanInput htmlIf inputValue$) = import(§ui§)
+
+body.push(
+	stackPanel(
+		label(
+			§textfield1§
+			textInput()
+		)
+		htmlIf(
+			inputValue$(§visible§)
+			label(
+				§numberfield1§
+				numberInput()
+			)
+		)
+		label(
+			§visible§
+			booleanInput(
+				id = §visible§
+				default = true
+			)
+		)
+	)
+)

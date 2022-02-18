@@ -1,0 +1,16 @@
+# npx ts-node src/cli.ts ../examples/counter/counter.jul
+# (t) = import(§somepath§)
+counter$ = timer$(1000)
+counter$.subscribe(
+	(x) =>
+		log(x)
+		runJs(§document.body.innerText = §(x)§)
+		x ?
+			10 => counter$.complete()
+			() => ()
+)
+
+# test = (x: String): true
+# test1 = ValueOf(test)
+# test2 = Stream(Float64)
+# test3 = (delayMs: Float64): Stream(Float64)

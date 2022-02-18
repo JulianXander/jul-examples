@@ -1,0 +1,29 @@
+log(§a§ §b§ §b§)
+
+testList = §a§ §b§ §c§
+
+testList2 =
+	§a§
+	§b§
+	§c§
+
+
+testObj =
+	a = 1
+	b = §hallo§
+	someKey = 4
+
+
+addFn = par1 par1 =>
+	add(par1 par2)
+
+log(addFn(par2 = 4 par1 = 5))
+
+# Destructuring
+a b = testObj
+
+newObj = 
+	a = 4
+	...testObj
+
+first ...rest = testList

@@ -1,0 +1,94 @@
+# Experimente mit FunktionsLiteral Syntax
+myFn = (a b c) => a
+
+myFn2 = a b c => a
+
+myFn2 = (
+	par1
+	par2
+	par3
+) =>
+	add(par1 par2)
+
+myFn3 = 
+	par1
+	par2
+	par3
+=>
+	add(par1 par2)
+
+myFn4 = (par1 par2 par3) =>
+	add(par1 par2)
+
+map(someList el ind => el)
+
+map(someList (el ind) => el)
+
+map(
+	someList
+	(el ind) =>
+		el
+)
+
+map(
+	someList
+	(
+		el
+		ind
+	) =>
+		el
+)
+
+# ObjektLiteral Syntax
+
+myObj = (1 2 3)
+
+myObj = 1 2 3
+
+myObj = (
+	1
+	2
+	3
+)
+
+myObj =
+	1
+	2
+	3
+
+myObj = (a=1 b=2 c=3)
+
+myObj = (a = 1 b = 2 c = 3)
+
+myObj =
+	a = 1
+	b = 2
+	c = 3
+
+myObj =
+	a=1
+	b=2
+	c=3
+
+myObj =
+	a= 1
+	b= 2
+	c= 3
+
+myObj = (
+	a = 1
+	b = (
+		b1 = 1
+		b2 = 112344
+		b3 = 1234
+	)
+	c = 3
+)
+
+myObj =
+	a = 1
+	b =
+		b1 = 1
+		b2 = 112344
+		b3 = 1234
+	c = 3

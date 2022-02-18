@@ -1,0 +1,18 @@
+source$ = timer$(2000)
+source$.subscribe(
+	(x) =>
+		console.log(§source$§ x)
+)
+
+mapped1$ = map$(source$ (count) => count.modulo(2))
+mapped1$.subscribe((x) => console.log(§mapped1$§ x))
+
+mapped2$ = map$(source$ (count) => count.modulo(5))
+mapped2$.subscribe((x) => console.log(§mapped2$§ x))
+
+combined$ = combine$(source$ mapped1$ mapped2$)
+combined$.subscribe((x) => console.log(§combined§ x))
+combined$.onCompleted(() => console.log(§combined complete§))
+
+source$.complete()
+mapped2$.complete()

@@ -1,0 +1,76 @@
+# ObjectLiteral
+inlineObj = (a = 1 b = 4)
+
+inlineList = (1 4)
+
+# DestructuringLiteral
+someVar = (1 2 ...inlineList 4 5)
+
+multiLineObj = (
+	key1 = 4
+	key2 = §Hallo§
+	key3 = (
+		sub1 = 3
+		sub2 = 1
+	)
+	key4 = (3 4 5)
+	...inlineObj
+	# bei List Destructuring in einem ObjectLiteral werden die Keys = ListIndex gesetzt? oder weggelassen?
+	...inlineList
+)
+
+multiLineList = (
+	1
+	2
+	5
+	# bei ObjectLiteral Destructuring in einem ListLiteral werden die Keys erhalten/weggelassen??
+	...inlineObj
+)
+
+# NameList (für DestructuringDefinition/FunctionLiteral)
+
+# inline
+(a b)
+
+# mit Typen
+(a:String b:Number)
+# Leerzeichen bei Typen hinter Doppelpunkt?
+(a: String b: Number)
+
+# alias c für Parameter b
+# alias nur für Destructuring oder auch für FunctionLiteral?
+# Leerzeichen bei alias?
+(a:String c=b:String)
+(a: String c = b: String)
+
+# optionaler Parameter b
+(a:String b?:Number)
+
+# Fallback 1 für b
+# Leerzeichen bei Fallback?
+(a: String b?:Number ?? 1)
+
+# rest arguments
+(a b ...rest)
+
+# Parameter nach rest erlauben?
+(a ...rest b)
+
+# multiLine
+(
+	a: String
+	d?: Number
+	c = b?: Number ?? 1
+	...rest: List(String)
+)
+
+# FunctionLiteral
+(a) => log(a)
+
+() =>
+	log(a)
+
+# Branching
+(a b) ?
+	(a: String) => 1
+	(b: String) => 2

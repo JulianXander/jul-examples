@@ -1,0 +1,17 @@
+
+body.push(
+	button(
+		label = §create dialog§
+		onClick = () =>
+			createDialog(
+				title = §SomeTitle§
+				content = stackPanel(
+					button(
+						label = §OK§
+						onClick = () =>
+							# TODO
+					)
+				)
+			)
+	)
+)

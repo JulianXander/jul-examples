@@ -1,0 +1,63 @@
+# Typen sind Funktionen: Any => Boolean
+# Typen beginnen mit Großbuchstaben.
+# TODO TypParameter auch?
+# mit : wird einer Variable ein Typ als Guard hinzugefügt
+myVar: String = §hallo§
+# Wenn ein ungültiger Wert zur Comilezeit zugewiesen wird, wird ein Compilerfehler geliefert
+# Wenn ein ungültiger Wert zur Laufzeit zugewiesen wird, wird stattdessen ein Error Object zugewiesen
+myVar: String = 4
+# zur Laufzeit äquivalent zu:
+myVar = (
+	type = TypeError
+	message = §4 can not be assigned to myVar because it is not of type String§
+)
+# prüfe ob eine Variable vom Typ ist
+myVarIsString = String(myVar) # => true
+
+# Objekt Type Literal:
+Article = (
+	name: String
+	price: Decimal
+	color: String
+)
+# Ist äquivalent zu:
+Article =
+# Union Type:
+Number = or(Int32 Int64 Integer Float Decimal Real0)
+
+# String und Number Literale können auch als Typ verwendet werden
+myVar: §5§ = §5§
+myVar: 4 = 3 # => Error
+
+# Generische Funktion:
+# TODO syntax überdenken
+addNums = (num1: T num2: T): T where T: Number =>
+	(num1 num2) ?
+		(num1: Int32 num2: Int32) => addInt32(num1 num2)
+		(num1: Int64 num2: Int64) => addInt64(num1 num2)
+		...
+# Generische Funktion als Funktion höherer Ordnung:
+addNums = (T: Number) =>
+	(num1: T num2: T): T =>
+		(num1 num2) ?
+			(num1: Int32 num2: Int32) => addInt32(num1 num2)
+			(num1: Int64 num2: Int64) => addInt64(num1 num2)
+			...
+
+# Generische Typen:
+ParserResult(T: String) = (
+	type: T
+	errors: List<String>
+)
+# Generischer Typ als Funktion höherer Ordnung:
+ParserResult = (TypeParam: String) => (
+	type: TypeParam
+	errors: List(String)
+)
+ParserResult = (TypeParam: String) =>
+	x =>
+		and(TypeParam(x.type) List(String)(x.errors))
+
+# Typ mit Funktion definiert:
+Even = num =>
+	equal(modulo(num 2) 0)

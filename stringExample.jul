@@ -1,0 +1,28 @@
+inline = §Hallo Welt§
+
+mitInterpolation = §Hier ist $(inline) ...§
+
+# Klammern bei Interpolation optional wenn Interpolationsausdruck eine Referenz ist?
+mitInterpolation2 = §Hier ist $inline ...§
+
+multiLine = §
+	Das ist
+	ein mehrzeiliger
+		§§String!§§
+
+	# Kommentare? Kommentare einrücken? ## als Escapesquenz? auch bei InlineString?
+	mit §(mitInterpolation)
+§
+
+multiLineHtml = §html
+	<div>
+		Hallo §(inline)
+	</div>
+§
+
+pageSize = 10
+table = §Customer§
+sql = §sql
+	select top §(pageSize) * from §(table)
+	where name like '%test%'
+§
