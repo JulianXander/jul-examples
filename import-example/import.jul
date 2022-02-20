@@ -1,6 +1,6 @@
 # npx ts-node src/cli.ts ../examples/import-example/import.jul
 valueImport = import(§./somefile§)
-log(valueImport.someKey)
+log(valueImport/someKey)
 
 # Destructuring import
 # (token1 alias=token2) = import(§./file2§)
