@@ -1,4 +1,4 @@
-# npx ts-node src/cli.ts ../examples/counter/counter.jul
+# npx ts-node src/cli.ts ../jul-examples/counter/counter.jul
 counter$ = timer$(1000)
 counter$.subscribe(
 	(x) =>
