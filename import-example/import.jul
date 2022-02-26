@@ -1,4 +1,4 @@
-# npx ts-node src/cli.ts ../examples/import-example/import.jul
+# npx ts-node src/cli.ts ../jul-examples/import-example/import.jul
 valueImport = import(§./somefile§)
 log(valueImport/someKey)
 
