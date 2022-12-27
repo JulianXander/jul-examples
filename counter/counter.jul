@@ -10,5 +10,5 @@ counter$.subscribe(
 )
 
 # test1 = ValueOf(test)
-# test2 = Stream(Float64)
-# test3 = (delayMs: Float64): Stream(Float64)
+# test2 = Stream(Float)
+# test3 = (delayMs: Float): Stream(Float)
