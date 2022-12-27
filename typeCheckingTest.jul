@@ -2,14 +2,14 @@ test: 4 = 4
 test1: true = 4
 test2: Boolean = true
 test3: Boolean = 6
-test5: Float64 = 6
-test5a: Float64 = true
+test5: Float = 6
+test5a: Float = true
 testString1: String = §§
 testString2: String = §hallo welt§
 testString3: String = 4
 test6: Or(4 5) = 4
 test7: Or(4 5) = 6
-test7a: Or(Float64 5) = 6
+test7a: Or(Float 5) = 6
 test8: And(4 4) = 4
 test9: And(4 5) = 5
 test10: And(4 5) = 6
@@ -30,10 +30,10 @@ testDictionary4: (a: (b: 4)) = (a = (b = 4))
 testDictionary5: (a: (b: 4)) = (a = (b = 5))
 # test18: (a: (b = 4)) = (a = (b = 4))
 # test19: (a = (b = 4)) = (a = (b = 5))
-test20: (a: Float64) = (a = (b = 4))
-test20a: (a: Float64) = (a = 4)
-# test21: (a = Float64) = (a = (b = 4))
-# test21a: (a = Float64) = (a = 4)
+test20: (a: Float) = (a = (b = 4))
+test20a: (a: Float) = (a = 4)
+# test21: (a = Float) = (a = (b = 4))
+# test21a: (a = Float) = (a = 4)
 testAnd1: And(
 	(a: 4)
 	(b: 5)
