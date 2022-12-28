@@ -1,4 +1,4 @@
-evenlyDivisibleBy = (divisor: NonZeroInteger) =>
+divisibleBy = (divisor: NonZeroInteger) =>
 	(dividend: Integer) => dividend.modulo(divisor).equal(0)
 
 fizzBuzz = (index: PositiveInteger) =>
@@ -6,9 +6,9 @@ fizzBuzz = (index: PositiveInteger) =>
 		1 => ()
 		Any => fizzBuzz(index.subtract(1))
 	message = index ?
-		evenlyDivisibleBy(15) => §FizzBuzz§
-		evenlyDivisibleBy(5) => §Buzz§
-		evenlyDivisibleBy(3) => §Fizz§
+		divisibleBy(15) => §FizzBuzz§
+		divisibleBy(5) => §Buzz§
+		divisibleBy(3) => §Fizz§
 		Any => index
 	log(message)
 

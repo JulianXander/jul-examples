@@ -1,13 +1,14 @@
-evenlyDivisibleBy = (divisor: NonZeroInteger) =>
-	(dividend: Integer) => dividend.modulo(divisor).equal(0)
+divisibleBy = (divisor: NonZeroInteger) =>
+	(dividend: Integer) =>
+		rest = dividend.modulo(divisor).equal(0)
 
 repeat(
 	100
 	index =>
 		message = index ?
-			evenlyDivisibleBy(15) => §FizzBuzz§
-			evenlyDivisibleBy(5) => §Buzz§
-			evenlyDivisibleBy(3) => §Fizz§
+			divisibleBy(15) => §FizzBuzz§
+			divisibleBy(5) => §Buzz§
+			divisibleBy(3) => §Fizz§
 			() => index
 		log(message)
 )
