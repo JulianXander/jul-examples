@@ -1,6 +1,6 @@
 divisibleBy = (divisor: NonZeroInteger) =>
 	(dividend: Integer) =>
-		rest = dividend.modulo(divisor).equal(0)
+		dividend.modulo(divisor).equal(0)
 
 repeat(
 	100
