@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.runJs = exports.log = exports.timer$ = exports.subscribe = exports.complete = exports.sum = exports.subtract = exports._type = exports._error = exports._string = exports._float64 = exports._boolean = exports._any = exports.TypeOfType = exports.UnionType = exports.TypeType = exports.ArgumentReference = exports.FunctionType = exports.StreamType = exports.TupleType = exports.DictionaryLiteralType = exports.Float64 = exports.StringType = exports.BooleanType = exports.Any = exports.BuiltInTypeBase = exports._checkDictionaryType = exports._createFunction = exports._checkType = exports._callFunction = exports._branch = void 0;
+exports.runJs = exports.log = exports.timer$ = exports.subscribe = exports.complete = exports.sum = exports.subtract = exports._type = exports._error = exports._string = exports._float = exports._arbitraryInteger = exports._boolean = exports._any = exports.TypeOfType = exports.UnionType = exports.IntersectionType = exports.TypeType = exports.ArgumentReference = exports.FunctionType = exports.StreamType = exports.TupleType = exports.DictionaryLiteralType = exports.StringType = exports.Float = exports.ArbitraryInteger = exports.BooleanType = exports.Any = exports.BuiltInTypeBase = exports.deepEquals = exports._checkDictionaryType = exports._createFunction = exports._checkType = exports._callFunction = exports._branch = void 0;
 let processId = 1;
 //#region internals
 function _branch(value, ...branches) {
@@ -42,6 +42,7 @@ exports._checkDictionaryType = _checkDictionaryType;
 //#endregion internals
 function isOfType(value, type) {
     switch (typeof type) {
+        case 'bigint':
         case 'boolean':
         case 'number':
         case 'string':
@@ -54,7 +55,9 @@ function isOfType(value, type) {
                         return true;
                     case 'boolean':
                         return typeof value === 'boolean';
-                    case 'float64':
+                    case 'arbitraryInteger':
+                        return typeof value === 'bigint';
+                    case 'float':
                         return typeof value === 'number';
                     case 'string':
                         return typeof value === 'string';
@@ -129,11 +132,13 @@ function isOfType(value, type) {
         }
         case 'function':
             return type(value);
-        default:
-            throw new Error(`Unexpected type ${typeof type}`);
+        default: {
+            const assertNever = type;
+            throw new Error(`Unexpected type ${typeof assertNever}`);
+        }
     }
 }
-// TOOD check empty prototype?
+// TODO check empty prototype?
 function isDictionary(value) {
     return typeof value === 'object'
         && !(value instanceof BuiltInTypeBase)
@@ -244,140 +249,145 @@ function deepEquals(value1, value2) {
         }
     }
 }
+exports.deepEquals = deepEquals;
 class BuiltInTypeBase {
 }
 exports.BuiltInTypeBase = BuiltInTypeBase;
 class Any extends BuiltInTypeBase {
-    constructor() {
-        super(...arguments);
-        this.type = 'any';
-    }
+    type = 'any';
 }
 exports.Any = Any;
 class BooleanType extends BuiltInTypeBase {
-    constructor() {
-        super(...arguments);
-        this.type = 'boolean';
-    }
+    type = 'boolean';
 }
 exports.BooleanType = BooleanType;
+class ArbitraryInteger extends BuiltInTypeBase {
+    type = 'arbitraryInteger';
+}
+exports.ArbitraryInteger = ArbitraryInteger;
+class Float extends BuiltInTypeBase {
+    type = 'float';
+}
+exports.Float = Float;
 class StringType extends BuiltInTypeBase {
-    constructor() {
-        super(...arguments);
-        this.type = 'string';
-    }
+    type = 'string';
 }
 exports.StringType = StringType;
-class Float64 extends BuiltInTypeBase {
-    constructor() {
-        super(...arguments);
-        this.type = 'float64';
-    }
-}
-exports.Float64 = Float64;
 class ErrorType extends BuiltInTypeBase {
-    constructor() {
-        super(...arguments);
-        this.type = 'error';
-    }
+    type = 'error';
 }
 class DictionaryType extends BuiltInTypeBase {
+    elementType;
     constructor(elementType) {
         super();
         this.elementType = elementType;
-        this.type = 'dictionary';
     }
+    type = 'dictionary';
 }
 class DictionaryLiteralType extends BuiltInTypeBase {
+    fields;
     constructor(fields) {
         super();
         this.fields = fields;
-        this.type = 'dictionaryLiteral';
     }
+    type = 'dictionaryLiteral';
 }
 exports.DictionaryLiteralType = DictionaryLiteralType;
 class ListType extends BuiltInTypeBase {
+    elementType;
     constructor(elementType) {
         super();
         this.elementType = elementType;
-        this.type = 'list';
     }
+    type = 'list';
 }
 class TupleType extends BuiltInTypeBase {
+    elementTypes;
     constructor(elementTypes) {
         super();
         this.elementTypes = elementTypes;
-        this.type = 'tuple';
     }
+    type = 'tuple';
 }
 exports.TupleType = TupleType;
 class StreamType extends BuiltInTypeBase {
+    valueType;
     constructor(valueType) {
         super();
         this.valueType = valueType;
-        this.type = 'stream';
     }
+    type = 'stream';
 }
 exports.StreamType = StreamType;
 class FunctionType extends BuiltInTypeBase {
+    paramsType;
+    returnType;
     constructor(paramsType, returnType) {
         super();
         this.paramsType = paramsType;
         this.returnType = returnType;
-        this.type = 'function';
         // TODO set functionRef bei params
         if (returnType instanceof ArgumentReference) {
             returnType.functionRef = this;
         }
     }
+    type = 'function';
 }
 exports.FunctionType = FunctionType;
 // TODO Parameter Type ???
 class ArgumentReference extends BuiltInTypeBase {
+    path;
     constructor(path) {
         super();
         this.path = path;
-        this.type = 'reference';
     }
+    type = 'reference';
+    /**
+     * Wird im constructor von FunctionType gesetzt und sollte immer vorhanden sein.
+     */
+    functionRef;
 }
 exports.ArgumentReference = ArgumentReference;
 class TypeType extends BuiltInTypeBase {
-    constructor() {
-        super(...arguments);
-        this.type = 'type';
-    }
+    type = 'type';
 }
 exports.TypeType = TypeType;
 class IntersectionType extends BuiltInTypeBase {
+    choiceTypes;
     constructor(choiceTypes) {
         super();
         this.choiceTypes = choiceTypes;
-        this.type = 'and';
     }
+    type = 'and';
 }
+exports.IntersectionType = IntersectionType;
 class UnionType extends BuiltInTypeBase {
+    choiceTypes;
     constructor(choiceTypes) {
         super();
         this.choiceTypes = choiceTypes;
-        this.type = 'or';
     }
+    type = 'or';
 }
 exports.UnionType = UnionType;
 class TypeOfType extends BuiltInTypeBase {
+    value;
     constructor(value) {
         super();
         this.value = value;
-        this.type = 'typeOf';
     }
+    type = 'typeOf';
 }
 exports.TypeOfType = TypeOfType;
 class Stream {
     constructor(getValue) {
-        this.completed = false;
-        this.listeners = [];
-        this.onCompletedListeners = [];
         this.getValue = getValue;
     }
+    lastValue;
+    lastProcessId;
+    completed = false;
+    listeners = [];
+    onCompletedListeners = [];
     push(value, processId) {
         if (processId === this.lastProcessId) {
             return;
@@ -392,6 +402,10 @@ class Stream {
         this.lastProcessId = processId;
         this.listeners.forEach(listener => listener(value));
     }
+    /**
+     * Aktualisiert diesen Stream und alle Dependencies und benachrichtigt Subscriber.
+     */
+    getValue;
     /**
      * Gibt einen unsubscribe callback zurück.
      * Wertet sofort den listener beim subscriben sofort aus, wenn evaluateOnSubscribe = true.
@@ -606,7 +620,7 @@ function flatSwitch$(source$$) {
     });
     flat$.onCompleted(() => {
         unsubscribeOuter();
-        unsubscribeInner === null || unsubscribeInner === void 0 ? void 0 : unsubscribeInner();
+        unsubscribeInner?.();
     });
     // flat ist complete, wenn outerSource und die aktuelle innerSource complete sind
     source$$.onCompleted(() => {
@@ -648,7 +662,8 @@ function retry$(method$, maxAttepmts, currentAttempt = 1) {
 //#region Types
 exports._any = new Any();
 exports._boolean = new BooleanType();
-exports._float64 = new Float64();
+exports._arbitraryInteger = new ArbitraryInteger();
+exports._float = new Float();
 exports._string = new StringType();
 exports._error = new ErrorType();
 exports._type = new TypeType();
@@ -656,22 +671,24 @@ exports._type = new TypeType();
 // TODO remove
 // TODO types, funktionen ergänzen
 //#region Number
+// TODO subtract, subtractFloat
 exports.subtract = _createFunction((minuend, subtrahend) => minuend - subtrahend, {
     singleNames: [
         {
             name: 'minuend',
             // TODO
-            // type: { type: 'reference', names: ['Float64'] }
+            // type: { type: 'reference', names: ['Float'] }
         },
         {
             name: 'subtrahend',
             // TODO
-            // type: { type: 'reference', names: ['Float64'] }
+            // type: { type: 'reference', names: ['Float'] }
         }
     ]
 });
+// TODO sum, sumFloat
 exports.sum = _createFunction((...args) => args.reduce((accumulator, current) => accumulator + current, 0), 
-// TODO params type ...Float64[]
+// TODO params type ...Float[]
 {
     rest: {
     // name: 'args'
@@ -731,7 +748,7 @@ exports.timer$ = _createFunction((delayMs) => {
     singleNames: [{
             name: 'delayMs',
             // TODO
-            // type: Float64
+            // type: Float
         }]
 });
 //#endregion create

@@ -1,11 +1,11 @@
 # npx ts-node src/cli.ts ../jul-examples/counter/counter.jul
-counter$ = timer$(1000)
+counter$ = timer$(1000f)
 counter$.subscribe(
 	(x) =>
 		log(x)
 		runJs(§document.body.innerText = §(x)§)
 		x ?
-			10 => counter$.complete()
+			10f => counter$.complete()
 			() => ()
 )
 
