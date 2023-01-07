@@ -7,7 +7,7 @@
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.runJs = exports.log = exports.timer$ = exports.subscribe = exports.complete = exports.sum = exports.subtract = exports._type = exports._error = exports._string = exports._float = exports._arbitraryInteger = exports._boolean = exports._any = exports.TypeOfType = exports.UnionType = exports.IntersectionType = exports.TypeType = exports.ArgumentReference = exports.FunctionType = exports.StreamType = exports.TupleType = exports.DictionaryLiteralType = exports.StringType = exports.Float = exports.ArbitraryInteger = exports.BooleanType = exports.Any = exports.BuiltInTypeBase = exports.deepEquals = exports._checkDictionaryType = exports._createFunction = exports._checkType = exports._callFunction = exports._branch = void 0;
+exports.runJs = exports.log = exports.timer$ = exports.subscribe = exports.complete = exports.sum = exports.subtract = exports._type = exports._error = exports._string = exports._float = exports._integer = exports._boolean = exports._any = exports.TypeOfType = exports.UnionType = exports.IntersectionType = exports.TypeType = exports.ArgumentReference = exports.FunctionType = exports.StreamType = exports.TupleType = exports.DictionaryLiteralType = exports.StringType = exports.Float = exports.Integer = exports.BooleanType = exports.Any = exports.BuiltInTypeBase = exports.deepEquals = exports._checkDictionaryType = exports._createFunction = exports._checkType = exports._callFunction = exports._branch = void 0;
 let processId = 1;
 //#region internals
 function _branch(value, ...branches) {
@@ -62,7 +62,7 @@ function isOfType(value, type) {
                         return true;
                     case 'boolean':
                         return typeof value === 'boolean';
-                    case 'arbitraryInteger':
+                    case 'integer':
                         return typeof value === 'bigint';
                     case 'float':
                         return typeof value === 'number';
@@ -268,10 +268,10 @@ class BooleanType extends BuiltInTypeBase {
     type = 'boolean';
 }
 exports.BooleanType = BooleanType;
-class ArbitraryInteger extends BuiltInTypeBase {
-    type = 'arbitraryInteger';
+class Integer extends BuiltInTypeBase {
+    type = 'integer';
 }
-exports.ArbitraryInteger = ArbitraryInteger;
+exports.Integer = Integer;
 class Float extends BuiltInTypeBase {
     type = 'float';
 }
@@ -669,7 +669,7 @@ function retry$(method$, maxAttepmts, currentAttempt = 1) {
 //#region Types
 exports._any = new Any();
 exports._boolean = new BooleanType();
-exports._arbitraryInteger = new ArbitraryInteger();
+exports._integer = new Integer();
 exports._float = new Float();
 exports._string = new StringType();
 exports._error = new ErrorType();
@@ -814,7 +814,7 @@ var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
 var exports = __webpack_exports__;
-const { _branch, _callFunction, _checkType, _createFunction, _checkDictionaryType, deepEquals, BuiltInTypeBase, Any, BooleanType, ArbitraryInteger, Float, StringType, DictionaryLiteralType, TupleType, StreamType, FunctionType, ArgumentReference, TypeType, IntersectionType, UnionType, TypeOfType, _any, _boolean, _arbitraryInteger, _float, _string, _error, _type, subtract, sum, complete, subscribe, timer$, log, runJs } = __webpack_require__(1);
+const { _branch, _callFunction, _checkType, _createFunction, _checkDictionaryType, deepEquals, BuiltInTypeBase, Any, BooleanType, Integer, Float, StringType, DictionaryLiteralType, TupleType, StreamType, FunctionType, ArgumentReference, TypeType, IntersectionType, UnionType, TypeOfType, _any, _boolean, _integer, _float, _string, _error, _type, subtract, sum, complete, subscribe, timer$, log, runJs } = __webpack_require__(1);
 const counter$ = _callFunction(timer$, [
 1000,
 ]);

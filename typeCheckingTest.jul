@@ -22,6 +22,7 @@ testString1: String = §§
 testString2: String = §hallo welt§
 # should error
 testString3: String = 4
+# should not error
 testOr1: Or(4 5) = 4
 # should error
 testOr2: Or(4 5) = 6
@@ -47,11 +48,11 @@ testNot1: Not(true) = true
 testNot2: Not(true) = false
 # should not error
 testEmpty1: () = ()
-# ?
+# should error?
 testEmpty2: () = 4
-# ?
+# should error?
 testEmpty3: () = (4)
-# ?
+# should error?
 testEmpty4: () = (a = 4)
 # should not error
 testDictionary1: (a: 4) = (a = 4)

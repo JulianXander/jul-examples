@@ -1,4 +1,4 @@
-const { _branch, _callFunction, _checkType, _createFunction, _checkDictionaryType, deepEquals, BuiltInTypeBase, Any, BooleanType, ArbitraryInteger, Float, StringType, DictionaryLiteralType, TupleType, StreamType, FunctionType, ArgumentReference, TypeType, IntersectionType, UnionType, TypeOfType, _any, _boolean, _arbitraryInteger, _float, _string, _error, _type, subtract, sum, complete, subscribe, timer$, log, runJs } = require("./runtime");
+const { _branch, _callFunction, _checkType, _createFunction, _checkDictionaryType, deepEquals, BuiltInTypeBase, Any, BooleanType, Integer, Float, StringType, DictionaryLiteralType, TupleType, StreamType, FunctionType, ArgumentReference, TypeType, IntersectionType, UnionType, TypeOfType, _any, _boolean, _integer, _float, _string, _error, _type, subtract, sum, complete, subscribe, timer$, log, runJs } = require("./runtime");
 const counter$ = _callFunction(timer$, [
 1000,
 ]);
