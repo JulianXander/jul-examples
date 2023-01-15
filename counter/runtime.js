@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.runJs = exports.log = exports.timer$ = exports.subscribe = exports.complete = exports.sum = exports.subtract = exports._type = exports._error = exports._string = exports._float = exports._integer = exports._boolean = exports._any = exports.TypeOfType = exports.UnionType = exports.IntersectionType = exports.TypeType = exports.ArgumentReference = exports.FunctionType = exports.StreamType = exports.TupleType = exports.DictionaryLiteralType = exports.StringType = exports.Float = exports.Integer = exports.BooleanType = exports.Any = exports.BuiltInTypeBase = exports.deepEquals = exports._checkDictionaryType = exports._createFunction = exports._checkType = exports._callFunction = exports._branch = void 0;
+exports.runJs = exports.repeat = exports.log = exports.timer$ = exports.subscribe = exports.complete = exports.sum = exports.subtract = exports._type = exports._error = exports._string = exports._float = exports._integer = exports._boolean = exports._any = exports.TypeOfType = exports.ComplementType = exports.UnionType = exports.IntersectionType = exports.TypeType = exports.ArgumentReference = exports.FunctionType = exports.StreamType = exports.TupleType = exports.DictionaryLiteralType = exports.StringType = exports.Float = exports.Integer = exports.BooleanType = exports.Any = exports.BuiltInTypeBase = exports.deepEquals = exports._checkDictionaryType = exports._createFunction = exports._checkType = exports._callFunction = exports._branch = void 0;
 let processId = 1;
 //#region internals
 function _branch(value, ...branches) {
@@ -119,6 +119,8 @@ function isOfType(value, type) {
                         return builtInType.choiceTypes.every(coiceType => isOfType(value, coiceType));
                     case 'or':
                         return builtInType.choiceTypes.some(coiceType => isOfType(value, coiceType));
+                    case 'not':
+                        return !isOfType(value, builtInType.sourceType);
                     case 'typeOf':
                         return deepEquals(value, builtInType.value);
                     default: {
@@ -370,6 +372,15 @@ class UnionType extends BuiltInTypeBase {
     type = 'or';
 }
 exports.UnionType = UnionType;
+class ComplementType extends BuiltInTypeBase {
+    sourceType;
+    constructor(sourceType) {
+        super();
+        this.sourceType = sourceType;
+    }
+    type = 'not';
+}
+exports.ComplementType = ComplementType;
 class TypeOfType extends BuiltInTypeBase {
     value;
     constructor(value) {
@@ -756,6 +767,24 @@ exports.timer$ = _createFunction((delayMs) => {
 //#region Utility
 exports.log = _createFunction(console.log, {
     rest: {}
+});
+exports.repeat = _createFunction((count, iteratee) => {
+    for (let index = 1n; index <= count; index++) {
+        iteratee(index);
+    }
+}, {
+    singleNames: [
+        {
+            name: 'count',
+            // TODO
+            // type: Integer
+        },
+        {
+            name: 'iteratee',
+            // TODO
+            // type: Function
+        },
+    ]
 });
 exports.runJs = _createFunction(eval, {
     singleNames: [{

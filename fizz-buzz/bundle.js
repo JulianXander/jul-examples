@@ -6,8 +6,10 @@
 
 "use strict";
 
+// Enthält Laufzeit helper sowie core-lib builtins
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.runJs = exports.repeat = exports.log = exports.timer$ = exports.subscribe = exports.complete = exports.sum = exports.subtract = exports._type = exports._error = exports._string = exports._float = exports._integer = exports._boolean = exports._any = exports.TypeOfType = exports.ComplementType = exports.UnionType = exports.IntersectionType = exports.TypeType = exports.ArgumentReference = exports.FunctionType = exports.StreamType = exports.TupleType = exports.DictionaryLiteralType = exports.StringType = exports.Float = exports.Integer = exports.BooleanType = exports.Any = exports.BuiltInTypeBase = exports.deepEquals = exports._checkDictionaryType = exports._createFunction = exports._checkType = exports._callFunction = exports._branch = void 0;
+exports.runJs = exports.repeat = exports.log = exports.timer$ = exports.subscribe = exports.complete = exports.sum = exports.subtract = exports.modulo = exports.equal = exports.Type = exports._Error = exports._String = exports.NonZeroInteger = exports.Integer = exports.Float = exports._Boolean = exports.Any = exports.TypeOfType = exports.ComplementType = exports.UnionType = exports.IntersectionType = exports.TypeType = exports.ArgumentReference = exports.FunctionType = exports.StreamType = exports.TupleType = exports.DictionaryLiteralType = exports.StringType = exports.FloatType = exports.IntegerType = exports.BooleanType = exports.AnyType = exports.BuiltInTypeBase = exports.deepEquals = exports._checkDictionaryType = exports._createFunction = exports._checkType = exports._callFunction = exports._branch = void 0;
+//#region helper
 let processId = 1;
 //#region internals
 function _branch(value, ...branches) {
@@ -262,22 +264,22 @@ exports.deepEquals = deepEquals;
 class BuiltInTypeBase {
 }
 exports.BuiltInTypeBase = BuiltInTypeBase;
-class Any extends BuiltInTypeBase {
+class AnyType extends BuiltInTypeBase {
     type = 'any';
 }
-exports.Any = Any;
+exports.AnyType = AnyType;
 class BooleanType extends BuiltInTypeBase {
     type = 'boolean';
 }
 exports.BooleanType = BooleanType;
-class Integer extends BuiltInTypeBase {
+class IntegerType extends BuiltInTypeBase {
     type = 'integer';
 }
-exports.Integer = Integer;
-class Float extends BuiltInTypeBase {
+exports.IntegerType = IntegerType;
+class FloatType extends BuiltInTypeBase {
     type = 'float';
 }
-exports.Float = Float;
+exports.FloatType = FloatType;
 class StringType extends BuiltInTypeBase {
     type = 'string';
 }
@@ -676,19 +678,51 @@ function retry$(method$, maxAttepmts, currentAttempt = 1) {
 ;
 //#endregion transform
 //#endregion Stream
+//#endregion helper
 //#region builtins
 //#region Types
-exports._any = new Any();
-exports._boolean = new BooleanType();
-exports._integer = new Integer();
-exports._float = new Float();
-exports._string = new StringType();
-exports._error = new ErrorType();
-exports._type = new TypeType();
+exports.Any = new AnyType();
+exports._Boolean = new BooleanType();
+exports.Float = new FloatType();
+exports.Integer = new IntegerType();
+exports.NonZeroInteger = new UnionType([exports.Integer, new ComplementType(0)]);
+exports._String = new StringType();
+exports._Error = new ErrorType();
+exports.Type = new TypeType();
 //#endregion Types
-// TODO remove
-// TODO types, funktionen ergänzen
+//#region Functions
+//#region Any
+exports.equal = _createFunction((first, second) => first === second, {
+    singleNames: [
+        {
+            name: 'first',
+            // TODO
+            // type: { type: 'reference', names: ['Any'] }
+        },
+        {
+            name: 'second',
+            // TODO
+            // type: { type: 'reference', names: ['Any'] }
+        }
+    ]
+});
+//#endregion Any
 //#region Number
+// TODO moduloFloat
+exports.modulo = _createFunction((dividend, divisor) => dividend % divisor, {
+    singleNames: [
+        {
+            name: 'dividend',
+            // TODO
+            // type: { type: 'reference', names: ['Integer'] }
+        },
+        {
+            name: 'divisor',
+            // TODO
+            // type: { type: 'reference', names: ['NonZeroInteger'] }
+        }
+    ]
+});
 // TODO subtract, subtractFloat
 exports.subtract = _createFunction((minuend, subtrahend) => minuend - subtrahend, {
     singleNames: [
@@ -800,7 +834,6 @@ exports.runJs = _createFunction(eval, {
             // type: String
         }]
 });
-//#endregion Utility
 // TODO dynamische imports erlauben??
 // export const _import = _createFunction(require, {
 // 	singleNames: [{
@@ -808,6 +841,8 @@ exports.runJs = _createFunction(eval, {
 // 		type: (x) => typeof x === 'string'
 // 	}]
 // });
+//#endregion Utility
+//#endregion Functions
 //#endregion builtins
 //# sourceMappingURL=runtime.js.map
 
@@ -843,30 +878,49 @@ var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
 var exports = __webpack_exports__;
-const { _branch, _callFunction, _checkType, _createFunction, _checkDictionaryType, deepEquals, BuiltInTypeBase, Any, BooleanType, Integer, Float, StringType, DictionaryLiteralType, TupleType, StreamType, FunctionType, ArgumentReference, TypeType, IntersectionType, UnionType, ComplementType, TypeOfType, _any, _boolean, _integer, _float, _string, _error, _type, subtract, sum, complete, subscribe, timer$, log, repeat, runJs } = __webpack_require__(1);
-const counter$ = _callFunction(timer$, [
-1000,
-]);
-exports.counter$ = counter$;
-_callFunction(subscribe, [
-counter$,
-_createFunction((x) => {_callFunction(log, [
-x,
-])
-_callFunction(runJs, [
-`document.body.innerText = ${x}`,
-])
-return _branch(
-x,
-_createFunction(() => {return _callFunction(complete, [
-counter$,
-])}, {type:10}),
-_createFunction(() => {return null}, {
-}),
-)}, {
+const { _branch, _callFunction, _checkType, _createFunction, _checkDictionaryType, deepEquals, BuiltInTypeBase, AnyType, BooleanType, IntegerType, FloatType, StringType, DictionaryLiteralType, TupleType, StreamType, FunctionType, ArgumentReference, TypeType, IntersectionType, UnionType, ComplementType, TypeOfType, Any, _Boolean, Float, Integer, NonZeroInteger, _String, _Error, Type, equal, modulo, subtract, sum, complete, subscribe, timer$, log, repeat, runJs } = __webpack_require__(1);
+const divisibleBy = _createFunction((divisor) => {return _createFunction((dividend) => {return _callFunction(equal, [
+_callFunction(modulo, [
+dividend,
+divisor,
+]),
+0n,
+])}, {
 singleNames: [
 {
-name: "x"}
+name: "dividend",
+type: Integer}
+],
+})}, {
+singleNames: [
+{
+name: "divisor",
+type: NonZeroInteger}
+],
+});
+exports.divisibleBy = divisibleBy;
+_callFunction(repeat, [
+100n,
+_createFunction((index) => {const message = _branch(
+index,
+_createFunction(() => {return `FizzBuzz`}, {type:_callFunction(divisibleBy, [
+15n,
+])}),
+_createFunction(() => {return `Buzz`}, {type:_callFunction(divisibleBy, [
+5n,
+])}),
+_createFunction(() => {return `Fizz`}, {type:_callFunction(divisibleBy, [
+3n,
+])}),
+_createFunction(() => {return index}, {
+}),
+);
+return _callFunction(log, [
+message,
+])}, {
+singleNames: [
+{
+name: "index"}
 ],
 }),
 ])

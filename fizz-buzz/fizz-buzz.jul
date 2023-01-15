@@ -1,10 +1,11 @@
+# npx ts-node src/cli.ts ../jul-examples/fizz-buzz/fizz-buzz.jul
 divisibleBy = (divisor: NonZeroInteger) =>
 	(dividend: Integer) =>
 		dividend.modulo(divisor).equal(0)
 
 repeat(
 	100
-	index =>
+	(index) =>
 		message = index ?
 			divisibleBy(15) => §FizzBuzz§
 			divisibleBy(5) => §Buzz§
