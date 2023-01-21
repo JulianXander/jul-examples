@@ -8,6 +8,9 @@ multiLine = §
 		String!
 
 	# Kommentare eingerückt
+	# Die erste Einrückung am Anfang jeder Zeile
+	# sowie der Zeilenumbruch am Anfang und am Ende
+	# sind nicht Teil des Strings.
 	mit §(mitInterpolation)
 	§§ Escape Sequenz für Paragraph
 	§# Escape Sequenz für Raute
