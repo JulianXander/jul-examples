@@ -46,6 +46,15 @@ testAnd4: And(
 testNot1: Not(true) = true
 # should not error
 testNot2: Not(true) = false
+t1 = Boolean.And(true)
+t2 = Boolean.And(Not(true))
+t3 = Boolean.Without(true)
+# should not error
+testWithout1: Boolean.Without(true) = false
+testWithout11: Boolean.And(Not(true)) = false
+# should error
+testWithout2: Boolean.Without(true) = true
+testWithout21: Boolean.And(Not(true)) = true
 # should not error
 testEmpty1: () = ()
 # should error?
