@@ -1,17 +1,16 @@
 inline = §Hallo Welt§
 
-mitInterpolation = §Hier ist $(inline) ...§
-
-# Klammern bei Interpolation optional wenn Interpolationsausdruck eine Referenz ist?
-mitInterpolation2 = §Hier ist $inline ...§
+mitInterpolation = §Hier ist §(inline) ...§
 
 multiLine = §
 	Das ist
 	ein mehrzeiliger
-		§§String!§§
+		String!
 
-	# Kommentare? Kommentare einrücken? ## als Escapesquenz? auch bei InlineString?
+	# Kommentare eingerückt
 	mit §(mitInterpolation)
+	§§ Escape Sequenz für Paragraph
+	§# Escape Sequenz für Raute
 §
 
 multiLineHtml = §html
