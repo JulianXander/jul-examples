@@ -1,0 +1,9 @@
+# Ziel:
+# Without: (A B) => TypeOf(And(A Not(B)))
+# t: TypeOf(And(Boolean Not(true)))
+# Ist:
+# Without: (A B) => TypeOf(And(Type TypeOf(Not(Type))))
+# t: TypeOf(And(Type TypeOf(Not(Type))))
+
+t = Boolean.Without(true)
+t2 = Stream
