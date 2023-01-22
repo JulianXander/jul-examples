@@ -1,2 +1,1 @@
-(var var2) = (4 5)
-log(var var2)
+t3 = Boolean.Without(true)
