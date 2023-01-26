@@ -1,7 +1,7 @@
 "use strict";
 // Enthält Laufzeit helper sowie core-lib builtins
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.runJs = exports.repeat = exports.log = exports.timer$ = exports.subscribe = exports.complete = exports.sum = exports.subtract = exports.modulo = exports.equal = exports.Type = exports._Error = exports._String = exports.NonZeroInteger = exports.Integer = exports.Float = exports._Boolean = exports.Any = exports.TypeOfType = exports.ComplementType = exports.UnionType = exports.IntersectionType = exports.TypeType = exports.ArgumentReference = exports.FunctionType = exports.StreamType = exports.TupleType = exports.DictionaryLiteralType = exports.StringType = exports.FloatType = exports.IntegerType = exports.BooleanType = exports.AnyType = exports.BuiltInTypeBase = exports.deepEquals = exports._checkDictionaryType = exports._createFunction = exports._checkType = exports._callFunction = exports._branch = void 0;
+exports.runJs = exports.repeat = exports.log = exports.timer$ = exports.subscribe = exports.complete = exports.sum = exports.subtract = exports.modulo = exports.equal = exports.Type = exports._Error = exports._String = exports.NonZeroInteger = exports.Integer = exports.Float = exports._Boolean = exports.Any = exports.TypeOfType = exports.ComplementType = exports.UnionType = exports.IntersectionType = exports.TypeType = exports.ParameterReference = exports.FunctionType = exports.StreamType = exports.TupleType = exports.DictionaryLiteralType = exports.StringType = exports.FloatType = exports.IntegerType = exports.BooleanType = exports.AnyType = exports.BuiltInTypeBase = exports.deepEquals = exports._checkDictionaryType = exports._createFunction = exports._checkType = exports._callFunction = exports._branch = void 0;
 //#region helper
 let processId = 1;
 //#region internals
@@ -331,7 +331,7 @@ class FunctionType extends BuiltInTypeBase {
         this.paramsType = paramsType;
         this.returnType = returnType;
         // TODO set functionRef bei params
-        if (returnType instanceof ArgumentReference) {
+        if (returnType instanceof ParameterReference) {
             returnType.functionRef = this;
         }
     }
@@ -339,7 +339,7 @@ class FunctionType extends BuiltInTypeBase {
 }
 exports.FunctionType = FunctionType;
 // TODO Parameter Type ???
-class ArgumentReference extends BuiltInTypeBase {
+class ParameterReference extends BuiltInTypeBase {
     path;
     constructor(path) {
         super();
@@ -351,7 +351,7 @@ class ArgumentReference extends BuiltInTypeBase {
      */
     functionRef;
 }
-exports.ArgumentReference = ArgumentReference;
+exports.ParameterReference = ParameterReference;
 class TypeType extends BuiltInTypeBase {
     type = 'type';
 }
@@ -732,13 +732,13 @@ exports.subtract = _createFunction((minuend, subtrahend) => minuend - subtrahend
     ]
 });
 // TODO sum, sumFloat
-exports.sum = _createFunction((...args) => args.reduce((accumulator, current) => accumulator + current, 0), 
-// TODO params type ...Float[]
-{
-    rest: {
-    // name: 'args'
-    }
-});
+exports.sum = _createFunction((...args) => args.reduce((accumulator, current) => accumulator + current, 0),
+    // TODO params type ...Float[]
+    {
+        rest: {
+            // name: 'args'
+        }
+    });
 //#endregion Number
 //#region Stream
 //#region core
@@ -791,10 +791,10 @@ exports.timer$ = _createFunction((delayMs) => {
     return stream$;
 }, {
     singleNames: [{
-            name: 'delayMs',
-            // TODO
-            // type: Float
-        }]
+        name: 'delayMs',
+        // TODO
+        // type: Float
+    }]
 });
 //#endregion create
 //#endregion Stream
@@ -822,10 +822,10 @@ exports.repeat = _createFunction((count, iteratee) => {
 });
 exports.runJs = _createFunction(eval, {
     singleNames: [{
-            name: 'js',
-            // TODO
-            // type: String
-        }]
+        name: 'js',
+        // TODO
+        // type: String
+    }]
 });
 // TODO dynamische imports erlauben??
 // export const _import = _createFunction(require, {
