@@ -1,16 +1,14 @@
 "use strict";
+// Enthält Laufzeit helper sowie core-lib builtins
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.runJs = exports.log = exports.timer$ = exports.subscribe = exports.complete = exports.sum = exports.subtract = exports._createFunction = exports._checkType = exports._callFunction = exports._branch = void 0;
+exports.runJs = exports.repeat = exports.log = exports.timer$ = exports.subscribe = exports.complete = exports.sumFloat = exports.sum = exports.subtractFloat = exports.subtract = exports.modulo = exports.equal = exports.Type = exports._Error = exports._String = exports.NonZeroInteger = exports.Integer = exports.Float = exports._Boolean = exports.Any = exports.TypeOfType = exports.ComplementType = exports.UnionType = exports.IntersectionType = exports.TypeType = exports.ParameterReference = exports.FunctionType = exports.StreamType = exports.TupleType = exports.DictionaryLiteralType = exports.StringType = exports.FloatType = exports.IntegerType = exports.BooleanType = exports.AnyType = exports.BuiltInTypeBase = exports.deepEquals = exports._checkDictionaryType = exports._createFunction = exports._checkType = exports._callFunction = exports._branch = void 0;
+//#region helper
 let processId = 1;
 //#region internals
 function _branch(value, ...branches) {
-    // primitive value in Array wrappen
-    const wrappedValue = typeof value === 'object'
-        ? value
-        : [value];
     // TODO collect inner Errors?
     for (const branch of branches) {
-        const assignedParams = tryAssignParams(wrappedValue, branch.params);
+        const assignedParams = tryAssignParams(branch.params, value);
         if (!(assignedParams instanceof Error)) {
             return branch(assignedParams);
         }
@@ -19,7 +17,7 @@ function _branch(value, ...branches) {
 }
 exports._branch = _branch;
 function _callFunction(fn, args) {
-    const assignedParams = tryAssignParams(args, fn.params);
+    const assignedParams = tryAssignParams(fn.params, args);
     if (assignedParams instanceof Error) {
         return assignedParams;
     }
@@ -27,7 +25,7 @@ function _callFunction(fn, args) {
 }
 exports._callFunction = _callFunction;
 function _checkType(type, value) {
-    return type(value)
+    return isOfType(value, type)
         ? value
         : new Error(`${value} is not of type ${type}`);
 }
@@ -38,24 +36,147 @@ function _createFunction(fn, params) {
     return julFn;
 }
 exports._createFunction = _createFunction;
+function _checkDictionaryType(dictionaryType, value) {
+    const assignedParams = tryAssignParams(dictionaryType, value);
+    return assignedParams instanceof Error;
+}
+exports._checkDictionaryType = _checkDictionaryType;
 //#endregion internals
-function tryAssignParams(values, params) {
+function isOfType(value, type) {
+    switch (typeof type) {
+        case 'bigint':
+        case 'boolean':
+        case 'number':
+        case 'string':
+            return value === type;
+        case 'object': {
+            if (type instanceof BuiltInTypeBase) {
+                const builtInType = type;
+                switch (builtInType.type) {
+                    case 'any':
+                        return true;
+                    case 'boolean':
+                        return typeof value === 'boolean';
+                    case 'integer':
+                        return typeof value === 'bigint';
+                    case 'float':
+                        return typeof value === 'number';
+                    case 'string':
+                        return typeof value === 'string';
+                    case 'error':
+                        return value instanceof Error;
+                    case 'dictionary': {
+                        if (!isDictionary(value)) {
+                            return false;
+                        }
+                        const elementType = builtInType.elementType;
+                        for (const key in value) {
+                            const elementValue = value[key];
+                            if (!isOfType(elementValue, elementType)) {
+                                return false;
+                            }
+                        }
+                        return true;
+                    }
+                    case 'dictionaryLiteral': {
+                        if (!isDictionary(value)) {
+                            return false;
+                        }
+                        const fieldTypes = builtInType.fields;
+                        for (const key in fieldTypes) {
+                            const elementValue = value[key];
+                            const elementType = fieldTypes[key];
+                            if (!isOfType(elementValue, elementType)) {
+                                return false;
+                            }
+                        }
+                        return true;
+                    }
+                    case 'list':
+                        return Array.isArray(value)
+                            && value.every(element => isOfType(element, builtInType.elementType));
+                    case 'tuple':
+                        return Array.isArray(value)
+                            && value.length <= builtInType.elementTypes.length
+                            && builtInType.elementTypes.every((elementType, index) => isOfType(value[index], elementType));
+                    case 'stream':
+                        // TODO check value type
+                        return value instanceof Stream;
+                    case 'function':
+                        // TODO check returntype/paramstype
+                        return typeof value === 'function';
+                    case 'reference':
+                        // TODO deref?
+                        return true;
+                    case 'type':
+                        // TODO check primitive value (null/boolean/number/string)/builtintype/function
+                        // return value === null
+                        // || typeof value === 'boolean'
+                        // || typeof value === 'number'
+                        // || typeof value === 'string'
+                        // || value instanceof BuiltInTypeBase
+                        // || typeof value === ;
+                        return true;
+                    case 'and':
+                        return builtInType.choiceTypes.every(coiceType => isOfType(value, coiceType));
+                    case 'or':
+                        return builtInType.choiceTypes.some(coiceType => isOfType(value, coiceType));
+                    case 'not':
+                        return !isOfType(value, builtInType.sourceType);
+                    case 'typeOf':
+                        return deepEquals(value, builtInType.value);
+                    default: {
+                        const assertNever = builtInType;
+                        throw new Error(`Unexpected BuiltInType ${assertNever.type}`);
+                    }
+                }
+            }
+            // null/Dictionary/Array
+            return deepEquals(value, type);
+        }
+        case 'function':
+            return type(value);
+        default: {
+            const assertNever = type;
+            throw new Error(`Unexpected type ${typeof assertNever}`);
+        }
+    }
+}
+// TODO check empty prototype?
+function isDictionary(value) {
+    return typeof value === 'object'
+        && !(value instanceof BuiltInTypeBase)
+        && !(value instanceof Error)
+        && !Array.isArray(value);
+}
+function tryAssignParams(params, values) {
     const assigneds = [];
-    const { singleNames, rest } = params;
-    const isArray = Array.isArray(values);
+    const { type: outerType, singleNames, rest } = params;
+    if (outerType !== undefined) {
+        const isValid = isOfType(values, outerType);
+        if (!isValid) {
+            return new Error(`Can not assign the value ${values} to params because it is not of type ${outerType}`);
+        }
+        return assigneds;
+    }
+    // primitive value in Array wrappen
+    const wrappedValue = typeof values === 'object'
+        ? values
+        : [values];
+    const isArray = Array.isArray(wrappedValue);
     let index = 0;
     if (singleNames) {
         for (; index < singleNames.length; index++) {
             const param = singleNames[index];
             const { name, type } = param;
             const value = isArray
-                ? values[index]
-                : values[name];
+                ? wrappedValue[index]
+                : wrappedValue[name];
             const isValid = type
-                ? type(value)
+                ? isOfType(value, type)
                 : true;
             if (!isValid) {
-                return new Error(`Can not assigne the value ${value} to param ${name} because it is not of type ${type}`);
+                return new Error(`Can not assign the value ${value} to param ${name} because it is not of type ${type}`);
             }
             assigneds.push(value);
         }
@@ -63,13 +184,13 @@ function tryAssignParams(values, params) {
     if (rest) {
         const restType = rest.type;
         if (isArray) {
-            for (; index < values.length; index++) {
-                const value = values[index];
+            for (; index < wrappedValue.length; index++) {
+                const value = wrappedValue[index];
                 const isValid = restType
-                    ? restType(value)
+                    ? isOfType(value, restType)
                     : true;
                 if (!isValid) {
-                    return new Error(`Can not assigne the value ${value} to rest param because it is not of type ${rest}`);
+                    return new Error(`Can not assign the value ${value} to rest param because it is not of type ${rest}`);
                 }
                 assigneds.push(value);
             }
@@ -132,13 +253,156 @@ function deepEquals(value1, value2) {
         }
     }
 }
+exports.deepEquals = deepEquals;
+class BuiltInTypeBase {
+}
+exports.BuiltInTypeBase = BuiltInTypeBase;
+class AnyType extends BuiltInTypeBase {
+    type = 'any';
+}
+exports.AnyType = AnyType;
+class BooleanType extends BuiltInTypeBase {
+    type = 'boolean';
+}
+exports.BooleanType = BooleanType;
+class IntegerType extends BuiltInTypeBase {
+    type = 'integer';
+}
+exports.IntegerType = IntegerType;
+class FloatType extends BuiltInTypeBase {
+    type = 'float';
+}
+exports.FloatType = FloatType;
+class StringType extends BuiltInTypeBase {
+    type = 'string';
+}
+exports.StringType = StringType;
+class ErrorType extends BuiltInTypeBase {
+    type = 'error';
+}
+class DictionaryType extends BuiltInTypeBase {
+    elementType;
+    constructor(elementType) {
+        super();
+        this.elementType = elementType;
+    }
+    type = 'dictionary';
+}
+class DictionaryLiteralType extends BuiltInTypeBase {
+    fields;
+    constructor(fields) {
+        super();
+        this.fields = fields;
+    }
+    type = 'dictionaryLiteral';
+}
+exports.DictionaryLiteralType = DictionaryLiteralType;
+class ListType extends BuiltInTypeBase {
+    elementType;
+    constructor(elementType) {
+        super();
+        this.elementType = elementType;
+    }
+    type = 'list';
+}
+class TupleType extends BuiltInTypeBase {
+    elementTypes;
+    constructor(elementTypes) {
+        super();
+        this.elementTypes = elementTypes;
+    }
+    type = 'tuple';
+}
+exports.TupleType = TupleType;
+class StreamType extends BuiltInTypeBase {
+    valueType;
+    constructor(valueType) {
+        super();
+        this.valueType = valueType;
+    }
+    type = 'stream';
+}
+exports.StreamType = StreamType;
+class FunctionType extends BuiltInTypeBase {
+    paramsType;
+    returnType;
+    constructor(paramsType, returnType) {
+        super();
+        this.paramsType = paramsType;
+        this.returnType = returnType;
+        // TODO set functionRef bei params
+        if (returnType instanceof ParameterReference) {
+            returnType.functionRef = this;
+        }
+    }
+    type = 'function';
+}
+exports.FunctionType = FunctionType;
+// TODO Parameter Type ???
+class ParameterReference extends BuiltInTypeBase {
+    path;
+    index;
+    constructor(path, index) {
+        super();
+        this.path = path;
+        this.index = index;
+    }
+    type = 'reference';
+    /**
+     * Wird im constructor von FunctionType gesetzt und sollte immer vorhanden sein.
+     */
+    functionRef;
+}
+exports.ParameterReference = ParameterReference;
+class TypeType extends BuiltInTypeBase {
+    type = 'type';
+}
+exports.TypeType = TypeType;
+class IntersectionType extends BuiltInTypeBase {
+    choiceTypes;
+    constructor(choiceTypes) {
+        super();
+        this.choiceTypes = choiceTypes;
+    }
+    type = 'and';
+}
+exports.IntersectionType = IntersectionType;
+class UnionType extends BuiltInTypeBase {
+    choiceTypes;
+    constructor(choiceTypes) {
+        super();
+        this.choiceTypes = choiceTypes;
+    }
+    type = 'or';
+}
+exports.UnionType = UnionType;
+class ComplementType extends BuiltInTypeBase {
+    sourceType;
+    constructor(sourceType) {
+        super();
+        this.sourceType = sourceType;
+    }
+    type = 'not';
+}
+exports.ComplementType = ComplementType;
+class TypeOfType extends BuiltInTypeBase {
+    value;
+    constructor(value) {
+        super();
+        this.value = value;
+    }
+    type = 'typeOf';
+}
+exports.TypeOfType = TypeOfType;
 class Stream {
     constructor(getValue) {
-        this.completed = false;
-        this.listeners = [];
-        this.onCompletedListeners = [];
         this.getValue = getValue;
     }
+    lastValue;
+    lastProcessId;
+    completed = false;
+    listeners = [];
+    onCompletedListeners = [];
     push(value, processId) {
         if (processId === this.lastProcessId) {
             return;
@@ -153,6 +417,10 @@ class Stream {
         this.lastProcessId = processId;
         this.listeners.forEach(listener => listener(value));
     }
+    /**
+     * Aktualisiert diesen Stream und alle Dependencies und benachrichtigt Subscriber.
+     */
+    getValue;
     /**
      * Gibt einen unsubscribe callback zurück.
      * Wertet sofort den listener beim subscriben sofort aus, wenn evaluateOnSubscribe = true.
@@ -367,7 +635,7 @@ function flatSwitch$(source$$) {
     });
     flat$.onCompleted(() => {
         unsubscribeOuter();
-        unsubscribeInner === null || unsubscribeInner === void 0 ? void 0 : unsubscribeInner();
+        unsubscribeInner?.();
     });
     // flat ist complete, wenn outerSource und die aktuelle innerSource complete sind
     source$$.onCompleted(() => {
@@ -405,25 +673,143 @@ function retry$(method$, maxAttepmts, currentAttempt = 1) {
 ;
 //#endregion transform
 //#endregion Stream
+//#endregion helper
 //#region builtins
-// TODO types, funktionen ergänzen
+//#region Types
+exports.Any = new AnyType();
+exports._Boolean = new BooleanType();
+exports.Float = new FloatType();
+exports.Integer = new IntegerType();
+exports.NonZeroInteger = new UnionType([exports.Integer, new ComplementType(0)]);
+exports._String = new StringType();
+exports._Error = new ErrorType();
+exports.Type = new TypeType();
+//#endregion Types
+//#region Functions
+//#region Any
+exports.equal = _createFunction((first, second) => first === second, {
+    singleNames: [
+        {
+            name: 'first',
+            // TODO
+            // type: { type: 'reference', names: ['Any'] }
+        },
+        {
+            name: 'second',
+            // TODO
+            // type: { type: 'reference', names: ['Any'] }
+        }
+    ]
+});
+//#endregion Any
 //#region Number
-exports.subtract = _createFunction((minuend, subtrahend) => minuend - subtrahend, {
+// TODO moduloFloat
+exports.modulo = _createFunction((dividend, divisor) => dividend % divisor, {
+    singleNames: [
+        {
+            name: 'dividend',
+            // TODO
+            // type: { type: 'reference', names: ['Integer'] }
+        },
+        {
+            name: 'divisor',
+            // TODO
+            // type: { type: 'reference', names: ['NonZeroInteger'] }
+        }
+    ]
+});
+exports.subtract = _createFunction((minuend, subtrahend) => {
+    if (typeof minuend === 'bigint') {
+        if (typeof subtrahend === 'bigint') {
+            return minuend - subtrahend;
+        }
+        else {
+            return {
+                numerator: minuend * subtrahend.denominator - subtrahend.numerator,
+                denominator: subtrahend.denominator,
+            };
+        }
+    }
+    else {
+        if (typeof subtrahend === 'bigint') {
+            return {
+                numerator: minuend.numerator - subtrahend * minuend.denominator,
+                denominator: minuend.denominator,
+            };
+        }
+        else {
+            // TODO kleinstes gemeinsames Vielfaches, kürzen
+            return {
+                numerator: minuend.numerator * subtrahend.denominator - subtrahend.numerator * minuend.denominator,
+                denominator: minuend.denominator * subtrahend.denominator,
+            };
+        }
+    }
+}, {
     singleNames: [
         {
             name: 'minuend',
             // TODO
-            // type: { type: 'reference', names: ['Float64'] }
+            // type: { type: 'reference', names: ['Rational'] }
         },
         {
             name: 'subtrahend',
             // TODO
-            // type: { type: 'reference', names: ['Float64'] }
+            // type: { type: 'reference', names: ['Rational'] }
         }
     ]
 });
-exports.sum = _createFunction((...args) => args.reduce((accumulator, current) => accumulator + current, 0), 
-// TODO params type ...Float64[]
+exports.subtractFloat = _createFunction((minuend, subtrahend) => minuend - subtrahend, {
+    singleNames: [
+        {
+            name: 'minuend',
+            // TODO
+            // type: { type: 'reference', names: ['Float'] }
+        },
+        {
+            name: 'subtrahend',
+            // TODO
+            // type: { type: 'reference', names: ['Float'] }
+        }
+    ]
+});
+// TODO sum, sumFloat
+exports.sum = _createFunction((...args) => args.reduce((accumulator, current) => {
+    if (typeof accumulator === 'bigint') {
+        if (typeof current === 'bigint') {
+            return accumulator + current;
+        }
+        else {
+            return {
+                numerator: accumulator * current.denominator + current.numerator,
+                denominator: current.denominator,
+            };
+        }
+    }
+    else {
+        if (typeof current === 'bigint') {
+            return {
+                numerator: accumulator.numerator + current * accumulator.denominator,
+                denominator: accumulator.denominator,
+            };
+        }
+        else {
+            // TODO kleinstes gemeinsames Vielfaches, kürzen
+            return {
+                numerator: accumulator.numerator * current.denominator + current.numerator * accumulator.denominator,
+                denominator: accumulator.denominator * current.denominator,
+            };
+        }
+    }
+}, 0n), 
+// TODO params type ...Rational[]
+{
+    rest: {
+    // name: 'args'
+    }
+});
+exports.sumFloat = _createFunction((...args) => args.reduce((accumulator, current) => accumulator + current, 0), 
+// TODO params type ...Float[]
 {
     rest: {
     // name: 'args'
@@ -483,7 +869,7 @@ exports.timer$ = _createFunction((delayMs) => {
     singleNames: [{
             name: 'delayMs',
             // TODO
-            // type: Float64
+            // type: Float
         }]
 });
 //#endregion create
@@ -492,16 +878,31 @@ exports.timer$ = _createFunction((delayMs) => {
 exports.log = _createFunction(console.log, {
     rest: {}
 });
-exports.runJs = _createFunction((js) => {
-    return eval(js);
+exports.repeat = _createFunction((count, iteratee) => {
+    for (let index = 1n; index <= count; index++) {
+        iteratee(index);
+    }
 }, {
+    singleNames: [
+        {
+            name: 'count',
+            // TODO
+            // type: Integer
+        },
+        {
+            name: 'iteratee',
+            // TODO
+            // type: Function
+        },
+    ]
+});
+exports.runJs = _createFunction(eval, {
     singleNames: [{
             name: 'js',
             // TODO
             // type: String
         }]
 });
-//#endregion Utility
 // TODO dynamische imports erlauben??
 // export const _import = _createFunction(require, {
 // 	singleNames: [{
@@ -509,5 +910,7 @@ exports.runJs = _createFunction((js) => {
 // 		type: (x) => typeof x === 'string'
 // 	}]
 // });
+//#endregion Utility
+//#endregion Functions
 //#endregion builtins
 //# sourceMappingURL=runtime.js.map

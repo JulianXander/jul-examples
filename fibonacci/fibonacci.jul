@@ -1,15 +1,20 @@
-# npx ts-node src/cli.ts ../examples/fibonacci/fibonacci.jul
+# npx ts-node src/cli.ts ../jul-examples/fibonacci/fibonacci.jul
+# node ../jul-examples/fibonacci/fibonacci.js
 
 # int fib(int term, int val = 1, int prev = 0)
 # {
 #  if(term == 0) return prev;
 #  return fib(term - 1, val+prev, val);
 # }
-fibonacciHelper = (countdown current previous) =>
+fibonacciHelper = (
+	countdown: Integer
+	current: Integer
+	previous: Integer
+) =>
 	countdown ?
 		0 => previous
 		() => fibonacciHelper(subtract(countdown 1) sum(current previous) current)
-fibonacci = (x) =>
+fibonacci = (x: Integer) =>
 	fibonacciHelper(x 1 0)
 
 # fibonacciHelper = (n fibMinus1) =>

@@ -1,17 +1,11 @@
-const { _branch, _callFunction, _checkType, _createFunction, subtract, sum, complete, subscribe, timer$, log, runJs } = require("./runtime");
+const { _branch, _callFunction, _checkType, _createFunction, _checkDictionaryType, deepEquals, BuiltInTypeBase, AnyType, BooleanType, IntegerType, FloatType, StringType, DictionaryLiteralType, TupleType, StreamType, FunctionType, ParameterReference, TypeType, IntersectionType, UnionType, ComplementType, TypeOfType, Any, _Boolean, Float, Integer, NonZeroInteger, _String, _Error, Type, equal, modulo, subtract, subtractFloat, sum, sumFloat, complete, subscribe, timer$, log, repeat, runJs } = require("./runtime");
 const fibonacciHelper = _createFunction((countdown, current, previous) => {return _branch(
 countdown,
-_createFunction((x) => {return previous}, {
-singleNames: [
-{
-name: "x",
-type: (_x) => _x === 0}
-],
-}),
+_createFunction(() => {return previous}, {type:0n}),
 _createFunction(() => {return _callFunction(fibonacciHelper, [
 _callFunction(subtract, [
 countdown,
-1,
+1n,
 ]),
 _callFunction(sum, [
 current,
@@ -23,27 +17,31 @@ current,
 )}, {
 singleNames: [
 {
-name: "countdown"},
+name: "countdown",
+type: Integer},
 {
-name: "current"},
+name: "current",
+type: Integer},
 {
-name: "previous"}
+name: "previous",
+type: Integer}
 ],
 });
 exports.fibonacciHelper = fibonacciHelper;
 const fibonacci = _createFunction((x) => {return _callFunction(fibonacciHelper, [
 x,
-1,
-0,
+1n,
+0n,
 ])}, {
 singleNames: [
 {
-name: "x"}
+name: "x",
+type: Integer}
 ],
 });
 exports.fibonacci = fibonacci;
 const test = _callFunction(fibonacci, [
-12,
+12n,
 ]);
 exports.test = test;
 _callFunction(log, [
