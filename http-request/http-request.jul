@@ -1,0 +1,4 @@
+# npx ts-node src/cli.ts ../jul-examples/http-request/http-request.jul
+# node ../jul-examples/http-request/http-request.js
+
+httpTextRequest$(§https://api.ipify.org/?format=json§ §get§).subscribe(log)
