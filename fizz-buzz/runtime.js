@@ -1,7 +1,7 @@
 "use strict";
 // Enthält Laufzeit helper sowie core-lib builtins
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.runJs = exports.repeat = exports.log = exports.timer$ = exports.subscribe = exports.complete = exports.sum = exports.subtract = exports.modulo = exports.equal = exports.Type = exports._Error = exports._String = exports.NonZeroInteger = exports.Integer = exports.Float = exports._Boolean = exports.Any = exports.TypeOfType = exports.ComplementType = exports.UnionType = exports.IntersectionType = exports.TypeType = exports.ParameterReference = exports.FunctionType = exports.StreamType = exports.TupleType = exports.DictionaryLiteralType = exports.StringType = exports.FloatType = exports.IntegerType = exports.BooleanType = exports.AnyType = exports.BuiltInTypeBase = exports.deepEquals = exports._checkDictionaryType = exports._createFunction = exports._checkType = exports._callFunction = exports._branch = void 0;
+exports.runJs = exports.repeat = exports.log = exports.timer$ = exports.httpTextRequest$ = exports.subscribe = exports.complete = exports.sumFloat = exports.sum = exports.subtractFloat = exports.subtract = exports.modulo = exports.equal = exports.Type = exports._Error = exports._String = exports.NonZeroInteger = exports.Integer = exports.Float = exports._Boolean = exports.Any = exports.TypeOfType = exports.ComplementType = exports.UnionType = exports.IntersectionType = exports.TypeType = exports.ParameterReference = exports.FunctionType = exports.StreamType = exports.TupleType = exports.DictionaryLiteralType = exports.StringType = exports.FloatType = exports.IntegerType = exports.BooleanType = exports.AnyType = exports.BuiltInTypeBase = exports.deepEquals = exports._checkDictionaryType = exports._createFunction = exports._checkType = exports._callFunction = exports._branch = void 0;
 //#region helper
 let processId = 1;
 //#region internals
@@ -17,11 +17,18 @@ function _branch(value, ...branches) {
 }
 exports._branch = _branch;
 function _callFunction(fn, args) {
-    const assignedParams = tryAssignParams(fn.params, args);
-    if (assignedParams instanceof Error) {
-        return assignedParams;
+    if ('params' in fn) {
+        // jul function
+        const assignedParams = tryAssignParams(fn.params, args);
+        if (assignedParams instanceof Error) {
+            return assignedParams;
+        }
+        return fn(...assignedParams);
     }
-    return fn(...assignedParams);
+    // js function
+    return Array.isArray(args)
+        ? fn(...args)
+        : fn(args);
 }
 exports._callFunction = _callFunction;
 function _checkType(type, value) {
@@ -152,7 +159,7 @@ function isDictionary(value) {
 function tryAssignParams(params, values) {
     const assigneds = [];
     const { type: outerType, singleNames, rest } = params;
-    if (outerType) {
+    if (outerType !== undefined) {
         const isValid = isOfType(values, outerType);
         if (!isValid) {
             return new Error(`Can not assign the value ${values} to params because it is not of type ${outerType}`);
@@ -341,9 +348,11 @@ exports.FunctionType = FunctionType;
 // TODO Parameter Type ???
 class ParameterReference extends BuiltInTypeBase {
     path;
-    constructor(path) {
+    index;
+    constructor(path, index) {
         super();
         this.path = path;
+        this.index = index;
     }
     type = 'reference';
     /**
@@ -471,27 +480,6 @@ function createSource$(initialValue) {
     const stream$ = new Stream(() => stream$.lastValue);
     stream$.push(initialValue, processId);
     return stream$;
-}
-function httpRequest$(url, method, body) {
-    const abortController = new AbortController();
-    const response$ = createSource$(null);
-    response$.onCompleted(() => {
-        abortController.abort();
-    });
-    fetch(url, {
-        method: method,
-        body: body,
-        signal: abortController.signal,
-    }).then(response => {
-        processId++;
-        response$.push(response, processId);
-    }).catch(error => {
-        processId++;
-        response$.push(error, processId);
-    }).finally(() => {
-        response$.complete();
-    });
-    return response$;
 }
 function of$(value) {
     const $ = createSource$(value);
@@ -716,8 +704,48 @@ exports.modulo = _createFunction((dividend, divisor) => dividend % divisor, {
         }
     ]
 });
-// TODO subtract, subtractFloat
-exports.subtract = _createFunction((minuend, subtrahend) => minuend - subtrahend, {
+exports.subtract = _createFunction((minuend, subtrahend) => {
+    if (typeof minuend === 'bigint') {
+        if (typeof subtrahend === 'bigint') {
+            return minuend - subtrahend;
+        }
+        else {
+            return {
+                numerator: minuend * subtrahend.denominator - subtrahend.numerator,
+                denominator: subtrahend.denominator,
+            };
+        }
+    }
+    else {
+        if (typeof subtrahend === 'bigint') {
+            return {
+                numerator: minuend.numerator - subtrahend * minuend.denominator,
+                denominator: minuend.denominator,
+            };
+        }
+        else {
+            // TODO kleinstes gemeinsames Vielfaches, kürzen
+            return {
+                numerator: minuend.numerator * subtrahend.denominator - subtrahend.numerator * minuend.denominator,
+                denominator: minuend.denominator * subtrahend.denominator,
+            };
+        }
+    }
+}, {
+    singleNames: [
+        {
+            name: 'minuend',
+            // TODO
+            // type: { type: 'reference', names: ['Rational'] }
+        },
+        {
+            name: 'subtrahend',
+            // TODO
+            // type: { type: 'reference', names: ['Rational'] }
+        }
+    ]
+});
+exports.subtractFloat = _createFunction((minuend, subtrahend) => minuend - subtrahend, {
     singleNames: [
         {
             name: 'minuend',
@@ -732,13 +760,47 @@ exports.subtract = _createFunction((minuend, subtrahend) => minuend - subtrahend
     ]
 });
 // TODO sum, sumFloat
-exports.sum = _createFunction((...args) => args.reduce((accumulator, current) => accumulator + current, 0),
-    // TODO params type ...Float[]
-    {
-        rest: {
-            // name: 'args'
+exports.sum = _createFunction((...args) => args.reduce((accumulator, current) => {
+    if (typeof accumulator === 'bigint') {
+        if (typeof current === 'bigint') {
+            return accumulator + current;
         }
-    });
+        else {
+            return {
+                numerator: accumulator * current.denominator + current.numerator,
+                denominator: current.denominator,
+            };
+        }
+    }
+    else {
+        if (typeof current === 'bigint') {
+            return {
+                numerator: accumulator.numerator + current * accumulator.denominator,
+                denominator: accumulator.denominator,
+            };
+        }
+        else {
+            // TODO kleinstes gemeinsames Vielfaches, kürzen
+            return {
+                numerator: accumulator.numerator * current.denominator + current.numerator * accumulator.denominator,
+                denominator: accumulator.denominator * current.denominator,
+            };
+        }
+    }
+}, 0n), 
+// TODO params type ...Rational[]
+{
+    rest: {
+    // name: 'args'
+    }
+});
+exports.sumFloat = _createFunction((...args) => args.reduce((accumulator, current) => accumulator + current, 0), 
+// TODO params type ...Float[]
+{
+    rest: {
+    // name: 'args'
+    }
+});
 //#endregion Number
 //#region Stream
 //#region core
@@ -775,6 +837,52 @@ exports.subscribe = _createFunction((stream$, listener) => {
 });
 //#endregion core
 //#region create
+exports.httpTextRequest$ = _createFunction((url, method, body) => {
+    const abortController = new AbortController();
+    const response$ = createSource$(null);
+    response$.onCompleted(() => {
+        abortController.abort();
+    });
+    fetch(url, {
+        method: method,
+        body: body,
+        signal: abortController.signal,
+    }).then(response => {
+        if (response.ok) {
+            return response.text();
+        }
+        else {
+            throw new Error(response.statusText);
+        }
+    }).then(responseText => {
+        processId++;
+        response$.push(responseText, processId);
+    }).catch(error => {
+        processId++;
+        response$.push(error, processId);
+    }).finally(() => {
+        response$.complete();
+    });
+    return response$;
+}, {
+    singleNames: [
+        {
+            name: 'url',
+            // TODO
+            // type: String
+        },
+        {
+            name: 'method',
+            // TODO
+            // type: String
+        },
+        {
+            name: 'body',
+            // TODO
+            // type: Any
+        },
+    ]
+});
 exports.timer$ = _createFunction((delayMs) => {
     const stream$ = createSource$(1);
     const cycle = () => {
@@ -791,10 +899,10 @@ exports.timer$ = _createFunction((delayMs) => {
     return stream$;
 }, {
     singleNames: [{
-        name: 'delayMs',
-        // TODO
-        // type: Float
-    }]
+            name: 'delayMs',
+            // TODO
+            // type: Float
+        }]
 });
 //#endregion create
 //#endregion Stream
@@ -822,10 +930,10 @@ exports.repeat = _createFunction((count, iteratee) => {
 });
 exports.runJs = _createFunction(eval, {
     singleNames: [{
-        name: 'js',
-        // TODO
-        // type: String
-    }]
+            name: 'js',
+            // TODO
+            // type: String
+        }]
 });
 // TODO dynamische imports erlauben??
 // export const _import = _createFunction(require, {

@@ -1,7 +1,7 @@
 "use strict";
 // Enthält Laufzeit helper sowie core-lib builtins
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.runJs = exports.repeat = exports.log = exports.timer$ = exports.subscribe = exports.complete = exports.sumFloat = exports.sum = exports.subtractFloat = exports.subtract = exports.modulo = exports.equal = exports.Type = exports._Error = exports._String = exports.NonZeroInteger = exports.Integer = exports.Float = exports._Boolean = exports.Any = exports.TypeOfType = exports.ComplementType = exports.UnionType = exports.IntersectionType = exports.TypeType = exports.ParameterReference = exports.FunctionType = exports.StreamType = exports.TupleType = exports.DictionaryLiteralType = exports.StringType = exports.FloatType = exports.IntegerType = exports.BooleanType = exports.AnyType = exports.BuiltInTypeBase = exports.deepEquals = exports._checkDictionaryType = exports._createFunction = exports._checkType = exports._callFunction = exports._branch = void 0;
+exports.runJs = exports.repeat = exports.log = exports.timer$ = exports.httpTextRequest$ = exports.subscribe = exports.complete = exports.sumFloat = exports.sum = exports.subtractFloat = exports.subtract = exports.modulo = exports.equal = exports.Type = exports._Error = exports._String = exports.NonZeroInteger = exports.Integer = exports.Float = exports._Boolean = exports.Any = exports.TypeOfType = exports.ComplementType = exports.UnionType = exports.IntersectionType = exports.TypeType = exports.ParameterReference = exports.FunctionType = exports.StreamType = exports.TupleType = exports.DictionaryLiteralType = exports.StringType = exports.FloatType = exports.IntegerType = exports.BooleanType = exports.AnyType = exports.BuiltInTypeBase = exports.deepEquals = exports._checkDictionaryType = exports._createFunction = exports._checkType = exports._callFunction = exports._branch = void 0;
 //#region helper
 let processId = 1;
 //#region internals
@@ -17,11 +17,18 @@ function _branch(value, ...branches) {
 }
 exports._branch = _branch;
 function _callFunction(fn, args) {
-    const assignedParams = tryAssignParams(fn.params, args);
-    if (assignedParams instanceof Error) {
-        return assignedParams;
+    if ('params' in fn) {
+        // jul function
+        const assignedParams = tryAssignParams(fn.params, args);
+        if (assignedParams instanceof Error) {
+            return assignedParams;
+        }
+        return fn(...assignedParams);
     }
-    return fn(...assignedParams);
+    // js function
+    return Array.isArray(args)
+        ? fn(...args)
+        : fn(args);
 }
 exports._callFunction = _callFunction;
 function _checkType(type, value) {
@@ -474,27 +481,6 @@ function createSource$(initialValue) {
     stream$.push(initialValue, processId);
     return stream$;
 }
-function httpRequest$(url, method, body) {
-    const abortController = new AbortController();
-    const response$ = createSource$(null);
-    response$.onCompleted(() => {
-        abortController.abort();
-    });
-    fetch(url, {
-        method: method,
-        body: body,
-        signal: abortController.signal,
-    }).then(response => {
-        processId++;
-        response$.push(response, processId);
-    }).catch(error => {
-        processId++;
-        response$.push(error, processId);
-    }).finally(() => {
-        response$.complete();
-    });
-    return response$;
-}
 function of$(value) {
     const $ = createSource$(value);
     $.complete();
@@ -851,6 +837,52 @@ exports.subscribe = _createFunction((stream$, listener) => {
 });
 //#endregion core
 //#region create
+exports.httpTextRequest$ = _createFunction((url, method, body) => {
+    const abortController = new AbortController();
+    const response$ = createSource$(null);
+    response$.onCompleted(() => {
+        abortController.abort();
+    });
+    fetch(url, {
+        method: method,
+        body: body,
+        signal: abortController.signal,
+    }).then(response => {
+        if (response.ok) {
+            return response.text();
+        }
+        else {
+            throw new Error(response.statusText);
+        }
+    }).then(responseText => {
+        processId++;
+        response$.push(responseText, processId);
+    }).catch(error => {
+        processId++;
+        response$.push(error, processId);
+    }).finally(() => {
+        response$.complete();
+    });
+    return response$;
+}, {
+    singleNames: [
+        {
+            name: 'url',
+            // TODO
+            // type: String
+        },
+        {
+            name: 'method',
+            // TODO
+            // type: String
+        },
+        {
+            name: 'body',
+            // TODO
+            // type: Any
+        },
+    ]
+});
 exports.timer$ = _createFunction((delayMs) => {
     const stream$ = createSource$(1);
     const cycle = () => {
