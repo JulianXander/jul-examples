@@ -1004,20 +1004,20 @@ exports.sum = _createFunction((...args) => args.reduce((accumulator, current) =>
             };
         }
     }
-}, 0n), 
-// TODO params type ...Rational[]
-{
-    rest: {
-    // name: 'args'
-    }
-});
-exports.sumFloat = _createFunction((...args) => args.reduce((accumulator, current) => accumulator + current, 0), 
-// TODO params type ...Float[]
-{
-    rest: {
-    // name: 'args'
-    }
-});
+}, 0n),
+    // TODO params type ...Rational[]
+    {
+        rest: {
+            // name: 'args'
+        }
+    });
+exports.sumFloat = _createFunction((...args) => args.reduce((accumulator, current) => accumulator + current, 0),
+    // TODO params type ...Float[]
+    {
+        rest: {
+            // name: 'args'
+        }
+    });
 //#endregion Number
 //#region String
 exports.parseJson = _createFunction((json) => {
@@ -1157,10 +1157,10 @@ exports.timer$ = _createFunction((delayMs) => {
     return stream$;
 }, {
     singleNames: [{
-            name: 'delayMs',
-            // TODO
-            // type: Float
-        }]
+        name: 'delayMs',
+        // TODO
+        // type: Float
+    }]
 });
 //#endregion create
 //#endregion Stream
@@ -1188,10 +1188,10 @@ exports.repeat = _createFunction((count, iteratee) => {
 });
 exports.runJs = _createFunction(eval, {
     singleNames: [{
-            name: 'js',
-            // TODO
-            // type: String
-        }]
+        name: 'js',
+        // TODO
+        // type: String
+    }]
 });
 // TODO dynamische imports erlauben??
 // export const _import = _createFunction(require, {
