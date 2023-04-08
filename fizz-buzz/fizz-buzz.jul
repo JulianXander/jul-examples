@@ -1,5 +1,5 @@
-# npx ts-node src/cli.ts ../jul-examples/fizz-buzz/fizz-buzz.jul
-# node ../jul-examples/fizz-buzz/fizz-buzz.js
+# jul fizz-buzz.jul
+# node fizz-buzz.js
 divisibleBy = (divisor: NonZeroInteger) =>
 	(dividend: Integer) =>
 		dividend.modulo(divisor).equal(0)

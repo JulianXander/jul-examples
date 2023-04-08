@@ -1,5 +1,5 @@
-# npx ts-node src/cli.ts ../jul-examples/fibonacci/fibonacci.jul
-# node ../jul-examples/fibonacci/fibonacci.js
+# jul fibonacci.jul
+# node fibonacci.js
 
 # int fib(int term, int val = 1, int prev = 0)
 # {
