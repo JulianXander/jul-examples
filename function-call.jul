@@ -1,0 +1,114 @@
+myFunction = (a b) => log(a b)
+
+# 1. Argumente direkt übergeben
+myFunction(1 2)
+
+# 2. Argumente mit Parameternamen übergeben
+myFunction(
+	a = 1
+	b = 2
+)
+
+# 2.1 Die Reihenfolge der Argumente ist egal (anders als bei 1.)
+myFunction(
+	b = 2
+	a = 1
+)
+
+# 3. Argumente in einer List mit spread-Operator
+myList = (1 2)
+myFunction(...myList)
+
+# 4. Argumente in einem Dictionary mit spread-Operator
+myDictionary = (
+	a = 1
+	b = 2
+)
+myFunction(...myDictionary)
+
+# 4.1 Die Reihenfolge der Argumente ist egal (anders als bei 3.)
+myDictionary1 = (
+	b = 2
+	a = 1
+)
+myFunction(...myDictionary1)
+
+# Bei 1. und 2. ist die Übergabe von nicht definierten Parametern nicht erlaubt.
+# Bei 3. und 4. ist die Übergabe von nicht definierten Parametern erlaubt.
+
+# Type Paramtered Function
+MyType = (
+	a: 1
+	b: 2
+)
+myFunction1 = (a: MyType) => log(§hi§)
+myFunction1((1 2))
+# äquivalent
+typeFunction = MyType => log(§hi§)
+typeFunction((1 2))
+
+# TODO mit Parameternamen nicht erlaubt?
+typeFunction(a = (1 2))
+
+# Rest Parameter
+restFunction = (...restParameter) => log(restParameter)
+
+restFunction(1 2)
+# äquivalent
+restFunction(...(1 2))
+# nicht äquivalent
+restFunction((1 2))
+
+# TODO mit Parameternamen nicht erlaubt?
+restFunction(
+	a = 1
+	b = 2
+)
+
+# Rest Parameter getypt
+# TODO rest type nur List oder auch Dictionary? bei rest Dictionary Parameternamen spreaden?
+# bei rest type Tuple/DictionaryLiteral: feste Anzahl Argumente erzwingen?
+restFunction2 = (...restParameter: MyType) => log(§hi§)
+# äquivalent?
+myFunction4 = (a: 1 b: 2) => log(§hi§)
+
+# Branching
+# 1.
+myFunction2 = (a) => log(a)
+myFunction2(1)
+# äquivalent
+1 ?
+	myFunction2
+
+# 2.
+1 ?
+	1 => log(1)
+	(a: 1) => log(§a: 1§)
+
+# TODO nicht äquivalent?
+(1) ?
+	1 => log(1)
+	(a: 1) => log(§a: 1§)
+
+# 3.
+myFunction3 = (args: List(Any)) => log(...args)
+myFunction3((1 2))
+# äquivalent
+(1 2) ?
+	myFunction3
+
+# 4.
+(1 2) ?
+	MyType => log(§MyType§)
+	(
+		a: (
+			a: 1
+			b: 2
+		)
+	) => myFunction(...a)
+
+# TODO branching spreads? wrap in List only for primitive value?
+(1 2) ?
+	(a: 1 b: 2) => log(a b)
+	(...rest: MyType) => log(...rest)
+	myFunction
