@@ -1,1 +1,10 @@
-t = Boolean.Without(true)
+# t = Boolean.Without(true)
+# List(String)
+log(1)
+myFn = (a: String) => log(a)
+# myFunction78 = (...args: List(String)) => log(a b)
+(...a) = (1)
+(b) = a
+(c d e) = (a = 1 b = 2 c = 3)
+(f g h) = (1 2 3)
+DictType = (a: String b c ...Dict1)

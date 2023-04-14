@@ -36,19 +36,19 @@ myFunction(...myDictionary1)
 # Bei 1. und 2. ist die Übergabe von nicht definierten Parametern nicht erlaubt.
 # Bei 3. und 4. ist die Übergabe von nicht definierten Parametern erlaubt.
 
-# Type Paramtered Function
+# Type Parametered Function
 MyType = (
 	a: 1
 	b: 2
 )
 myFunction1 = (a: MyType) => log(§hi§)
-myFunction1((1 2))
+myFunction1((a = 1 b = 2))
 # äquivalent
 typeFunction = MyType => log(§hi§)
-typeFunction((1 2))
+typeFunction((a = 1 b = 2))
 
 # TODO mit Parameternamen nicht erlaubt?
-typeFunction(a = (1 2))
+typeFunction(a = (a = 1 b = 2))
 
 # Rest Parameter
 restFunction = (...restParameter) => log(restParameter)
