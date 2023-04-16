@@ -11,6 +11,6 @@ repeat(
 			divisibleBy(15) => §FizzBuzz§
 			divisibleBy(5) => §Buzz§
 			divisibleBy(3) => §Fizz§
-			() => index
+			Any => index
 		log(message)
 )
