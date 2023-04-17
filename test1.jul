@@ -4,6 +4,10 @@
 # 	§method§
 # ).subscribe((value: String) => log(1))
 
-myFn = (cb: (a: Any): Any) => ()
-testFn = (a: String) => ()
+# myFn = (cb: (a: Any): Any) => ()
+# testFn = (a: String) => ()
+# myFn(testFn)
+
+myFn = (cb: (...a: List(Integer)): Any) => ()
+testFn = (a: Or(() String)) => ()
 myFn(testFn)
