@@ -1,10 +1,13 @@
 # t = Boolean.Without(true)
-# List(String)
-log(1)
-myFn = (a: String) => log(a)
-# myFunction78 = (...args: List(String)) => log(a b)
-(...a) = (1)
-(b) = a
-(c d e) = (a = 1 b = 2 c = 3)
-(f g h) = (1 2 3)
-DictType = (a: String b c ...Dict1)
+# httpTextRequest$(
+# 	§url§
+# 	§method§
+# ).subscribe((value: String) => log(1))
+
+# myFn = (cb: (a: Any): Any) => ()
+# testFn = (a: String) => ()
+# myFn(testFn)
+
+myFn = (cb: (...a: List(Integer)): Any) => ()
+testFn = (a: Or(() String)) => ()
+myFn(testFn)
