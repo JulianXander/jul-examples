@@ -1,4 +1,4 @@
-const { _branch, _callFunction, _checkType, _createFunction, _checkDictionaryType, deepEquals, BuiltInTypeBase, AnyType, BooleanType, IntegerType, FloatType, StringType, DictionaryLiteralType, TupleType, StreamType, FunctionType, ParameterReference, TypeType, IntersectionType, UnionType, ComplementType, TypeOfType, Any, _Boolean, Float, Integer, NonZeroInteger, _String, _Error, Type, equal, modulo, subtract, subtractFloat, sum, sumFloat, complete, subscribe, httpTextRequest$, timer$, log, repeat, runJs } = require("./runtime");
+const { _branch, _callFunction, _checkType, _createFunction, _checkDictionaryType, deepEquals, BuiltInTypeBase, AnyType, BooleanType, IntegerType, FloatType, StringType, ListType, TupleType, DictionaryType, DictionaryLiteralType, StreamType, FunctionType, ParameterReference, ParametersType, TypeType, IntersectionType, UnionType, ComplementType, TypeOfType, Any, Type, _Boolean, Float, Integer, NonZeroInteger, Fraction, Rational, _String, _Error, List, Or, equal, modulo, subtract, subtractFloat, sum, sumFloat, parseJson, regex, filterMap, forEach, complete, subscribe, httpTextRequest$, timer$, log, repeat, runJs } = require("./runtime");
 const divisibleBy = _createFunction((divisor) => {return _createFunction((dividend) => {return _callFunction(equal, [
 _callFunction(modulo, [
 dividend,
@@ -32,8 +32,7 @@ _createFunction(() => {return `Buzz`}, {type:_callFunction(divisibleBy, [
 _createFunction(() => {return `Fizz`}, {type:_callFunction(divisibleBy, [
 3n,
 ])}),
-_createFunction(() => {return index}, {
-}),
+_createFunction(() => {return index}, {type:Any}),
 );
 return _callFunction(log, [
 message,

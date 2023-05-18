@@ -1,7 +1,8 @@
 "use strict";
 // Enthält Laufzeit helper sowie core-lib builtins
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.runJs = exports.repeat = exports.log = exports.timer$ = exports.httpTextRequest$ = exports.subscribe = exports.complete = exports.sumFloat = exports.sum = exports.subtractFloat = exports.subtract = exports.modulo = exports.equal = exports.Type = exports._Error = exports._String = exports.NonZeroInteger = exports.Integer = exports.Float = exports._Boolean = exports.Any = exports.TypeOfType = exports.ComplementType = exports.UnionType = exports.IntersectionType = exports.TypeType = exports.ParameterReference = exports.FunctionType = exports.StreamType = exports.TupleType = exports.DictionaryLiteralType = exports.StringType = exports.FloatType = exports.IntegerType = exports.BooleanType = exports.AnyType = exports.BuiltInTypeBase = exports.deepEquals = exports._checkDictionaryType = exports._createFunction = exports._checkType = exports._callFunction = exports._branch = void 0;
+exports.httpTextRequest$ = exports.subscribe = exports.complete = exports.forEach = exports.filterMap = exports.regex = exports.parseJson = exports.sumFloat = exports.sum = exports.subtractFloat = exports.subtract = exports.modulo = exports.equal = exports.Or = exports.List = exports._Error = exports._String = exports.Rational = exports.Fraction = exports.NonZeroInteger = exports.Integer = exports.Float = exports._Boolean = exports.Type = exports.Any = exports.TypeOfType = exports.ComplementType = exports.UnionType = exports.IntersectionType = exports.TypeType = exports.ParametersType = exports.ParameterReference = exports.FunctionType = exports.StreamType = exports.DictionaryLiteralType = exports.DictionaryType = exports.TupleType = exports.ListType = exports.StringType = exports.FloatType = exports.IntegerType = exports.BooleanType = exports.AnyType = exports.BuiltInTypeBase = exports.deepEquals = exports._checkDictionaryType = exports._createFunction = exports._checkType = exports._callFunction = exports._branch = void 0;
+exports.runJs = exports.repeat = exports.log = exports.timer$ = void 0;
 //#region helper
 let processId = 1;
 //#region internals
@@ -10,7 +11,7 @@ function _branch(value, ...branches) {
     for (const branch of branches) {
         const assignedParams = tryAssignParams(branch.params, value);
         if (!(assignedParams instanceof Error)) {
-            return branch(assignedParams);
+            return branch(...assignedParams);
         }
     }
     return new Error(`${value} did not match any branch`);
@@ -49,6 +50,7 @@ function _checkDictionaryType(dictionaryType, value) {
 }
 exports._checkDictionaryType = _checkDictionaryType;
 //#endregion internals
+// TODO value: RuntimeValue, RuntimeValue = RuntimeType | Stream ...
 function isOfType(value, type) {
     switch (typeof type) {
         case 'bigint':
@@ -78,7 +80,7 @@ function isOfType(value, type) {
                         }
                         const elementType = builtInType.elementType;
                         for (const key in value) {
-                            const elementValue = value[key];
+                            const elementValue = value[key] ?? null;
                             if (!isOfType(elementValue, elementType)) {
                                 return false;
                             }
@@ -91,7 +93,7 @@ function isOfType(value, type) {
                         }
                         const fieldTypes = builtInType.fields;
                         for (const key in fieldTypes) {
-                            const elementValue = value[key];
+                            const elementValue = value[key] ?? null;
                             const elementType = fieldTypes[key];
                             if (!isOfType(elementValue, elementType)) {
                                 return false;
@@ -105,7 +107,7 @@ function isOfType(value, type) {
                     case 'tuple':
                         return Array.isArray(value)
                             && value.length <= builtInType.elementTypes.length
-                            && builtInType.elementTypes.every((elementType, index) => isOfType(value[index], elementType));
+                            && builtInType.elementTypes.every((elementType, index) => isOfType(value[index] ?? null, elementType));
                     case 'stream':
                         // TODO check value type
                         return value instanceof Stream;
@@ -114,6 +116,9 @@ function isOfType(value, type) {
                         return typeof value === 'function';
                     case 'reference':
                         // TODO deref?
+                        return true;
+                    case 'parameters':
+                        // TODO
                         return true;
                     case 'type':
                         // TODO check primitive value (null/boolean/number/string)/builtintype/function
@@ -149,25 +154,29 @@ function isOfType(value, type) {
         }
     }
 }
+function isRealObject(value) {
+    return typeof value === 'object'
+        && value !== null;
+}
 // TODO check empty prototype?
 function isDictionary(value) {
-    return typeof value === 'object'
+    return isRealObject(value)
         && !(value instanceof BuiltInTypeBase)
         && !(value instanceof Error)
         && !Array.isArray(value);
 }
 function tryAssignParams(params, values) {
-    const assigneds = [];
+    const assignedValues = [];
     const { type: outerType, singleNames, rest } = params;
     if (outerType !== undefined) {
         const isValid = isOfType(values, outerType);
         if (!isValid) {
             return new Error(`Can not assign the value ${values} to params because it is not of type ${outerType}`);
         }
-        return assigneds;
+        return assignedValues;
     }
     // primitive value in Array wrappen
-    const wrappedValue = typeof values === 'object'
+    const wrappedValue = isRealObject(values)
         ? values
         : [values];
     const isArray = Array.isArray(wrappedValue);
@@ -176,38 +185,36 @@ function tryAssignParams(params, values) {
         for (; index < singleNames.length; index++) {
             const param = singleNames[index];
             const { name, type } = param;
-            const value = isArray
+            const value = (isArray
                 ? wrappedValue[index]
-                : wrappedValue[name];
+                : wrappedValue[name]) ?? null;
             const isValid = type
                 ? isOfType(value, type)
                 : true;
             if (!isValid) {
                 return new Error(`Can not assign the value ${value} to param ${name} because it is not of type ${type}`);
             }
-            assigneds.push(value);
+            assignedValues.push(value);
         }
     }
     if (rest) {
         const restType = rest.type;
         if (isArray) {
-            for (; index < wrappedValue.length; index++) {
-                const value = wrappedValue[index];
-                const isValid = restType
-                    ? isOfType(value, restType)
-                    : true;
-                if (!isValid) {
-                    return new Error(`Can not assign the value ${value} to rest param because it is not of type ${rest}`);
-                }
-                assigneds.push(value);
+            const remainingArgs = wrappedValue.slice(index);
+            const isValid = restType
+                ? isOfType(remainingArgs, restType)
+                : true;
+            if (!isValid) {
+                return new Error(`Can not assign the value ${remainingArgs} to rest param because it is not of type ${rest}`);
             }
+            assignedValues.push(...remainingArgs);
         }
         else {
             // TODO rest dictionary??
             throw new Error('tryAssignParams not implemented yet for rest dictionary');
         }
     }
-    return assigneds;
+    return assignedValues;
 }
 // TODO toString
 function deepEquals(value1, value2) {
@@ -287,23 +294,6 @@ exports.StringType = StringType;
 class ErrorType extends BuiltInTypeBase {
     type = 'error';
 }
-class DictionaryType extends BuiltInTypeBase {
-    elementType;
-    constructor(elementType) {
-        super();
-        this.elementType = elementType;
-    }
-    type = 'dictionary';
-}
-class DictionaryLiteralType extends BuiltInTypeBase {
-    fields;
-    constructor(fields) {
-        super();
-        this.fields = fields;
-    }
-    type = 'dictionaryLiteral';
-}
-exports.DictionaryLiteralType = DictionaryLiteralType;
 class ListType extends BuiltInTypeBase {
     elementType;
     constructor(elementType) {
@@ -312,6 +302,7 @@ class ListType extends BuiltInTypeBase {
     }
     type = 'list';
 }
+exports.ListType = ListType;
 class TupleType extends BuiltInTypeBase {
     elementTypes;
     constructor(elementTypes) {
@@ -321,6 +312,25 @@ class TupleType extends BuiltInTypeBase {
     type = 'tuple';
 }
 exports.TupleType = TupleType;
+class DictionaryType extends BuiltInTypeBase {
+    elementType;
+    constructor(elementType) {
+        super();
+        this.elementType = elementType;
+    }
+    type = 'dictionary';
+}
+exports.DictionaryType = DictionaryType;
+// TODO rename to _DictionaryLiteralType or split builtin exports to other file or importLine contain only builtins?
+class DictionaryLiteralType extends BuiltInTypeBase {
+    fields;
+    constructor(fields) {
+        super();
+        this.fields = fields;
+    }
+    type = 'dictionaryLiteral';
+}
+exports.DictionaryLiteralType = DictionaryLiteralType;
 class StreamType extends BuiltInTypeBase {
     valueType;
     constructor(valueType) {
@@ -345,7 +355,6 @@ class FunctionType extends BuiltInTypeBase {
     type = 'function';
 }
 exports.FunctionType = FunctionType;
-// TODO Parameter Type ???
 class ParameterReference extends BuiltInTypeBase {
     path;
     index;
@@ -361,6 +370,17 @@ class ParameterReference extends BuiltInTypeBase {
     functionRef;
 }
 exports.ParameterReference = ParameterReference;
+class ParametersType extends BuiltInTypeBase {
+    singleNames;
+    rest;
+    constructor(singleNames, rest) {
+        super();
+        this.singleNames = singleNames;
+        this.rest = rest;
+    }
+    type = 'parameters';
+}
+exports.ParametersType = ParametersType;
 class TypeType extends BuiltInTypeBase {
     type = 'type';
 }
@@ -657,19 +677,256 @@ function retry$(method$, maxAttepmts, currentAttempt = 1) {
     return flatSwitch$(withRetry$$);
 }
 ;
-//#endregion transform
-//#endregion Stream
+function parseJsonValue(json, startIndex) {
+    let index = parseJsonWhiteSpace(json, startIndex);
+    const character = json[index];
+    switch (character) {
+        case 'n':
+            return parseJsonToken(json, index, 'null', null);
+        case 't':
+            return parseJsonToken(json, index, 'true', true);
+        case 'f':
+            return parseJsonToken(json, index, 'false', false);
+        case '-':
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9': {
+            const isNegative = character === '-';
+            const numberRegex = /(?<integer>0|[1-9][0-9]*)(\.(?<fraction>[0-9]+))?([eE](?<exponent>[-+]?[0-9]+))?/y;
+            numberRegex.lastIndex = isNegative
+                ? index + 1
+                : index;
+            const match = numberRegex.exec(json);
+            if (!match) {
+                return new Error(`Invalid JSON. Failed to parse number at position ${index}`);
+            }
+            const integerString = (isNegative ? '-' : '') + match.groups.integer;
+            const fractionString = match.groups.fraction;
+            const numerator = BigInt(integerString + (fractionString ?? ''));
+            const exponentString = match.groups.exponent;
+            const fractionExponent = fractionString
+                ? BigInt('-' + fractionString.length)
+                : 0n;
+            const exponent = exponentString
+                ? BigInt(exponentString)
+                : 0n;
+            const combinedExponent = fractionExponent + exponent;
+            const numberValue = combinedExponent < 0
+                // TODO kürzen?
+                ? {
+                    numerator: numerator,
+                    denominator: 10n ** (-1n * combinedExponent),
+                }
+                : numerator * 10n ** combinedExponent;
+            return {
+                parsed: numberValue,
+                endIndex: numberRegex.lastIndex,
+            };
+        }
+        case '"':
+            return parseJsonString(json, index + 1);
+        case '[': {
+            index++;
+            const array = [];
+            index = parseJsonWhiteSpace(json, index);
+            if (json[index] === ']') {
+                return {
+                    parsed: array,
+                    endIndex: index + 1,
+                };
+            }
+            let isSeparator = false;
+            while (index < json.length) {
+                if (isSeparator) {
+                    index = parseJsonWhiteSpace(json, index);
+                    const arrayCharacter = json[index];
+                    switch (arrayCharacter) {
+                        case ',':
+                            isSeparator = false;
+                            index++;
+                            break;
+                        case ']':
+                            return {
+                                parsed: array,
+                                endIndex: index + 1,
+                            };
+                        default:
+                            return new Error(`Invalid JSON. Unexpected character ${arrayCharacter} at position ${index} while parsing array.`);
+                    }
+                }
+                else {
+                    const elementResult = parseJsonValue(json, index);
+                    if (elementResult instanceof Error) {
+                        return elementResult;
+                    }
+                    array.push(elementResult.parsed);
+                    isSeparator = true;
+                    index = elementResult.endIndex;
+                }
+            }
+        }
+        case '{': {
+            index++;
+            const object = {};
+            index = parseJsonWhiteSpace(json, index);
+            if (json[index] === '}') {
+                return {
+                    parsed: object,
+                    endIndex: index + 1,
+                };
+            }
+            let isSeparator = false;
+            while (index < json.length) {
+                index = parseJsonWhiteSpace(json, index);
+                const objectCharacter = json[index];
+                if (isSeparator) {
+                    switch (objectCharacter) {
+                        case ',':
+                            isSeparator = false;
+                            index++;
+                            break;
+                        case '}':
+                            return {
+                                parsed: object,
+                                endIndex: index + 1,
+                            };
+                        default:
+                            return new Error(`Invalid JSON. Unexpected character ${objectCharacter} at position ${index} while parsing object.`);
+                    }
+                }
+                else {
+                    if (objectCharacter !== '"') {
+                        return new Error(`Invalid JSON. Unexpected character ${objectCharacter} at position ${index} while parsing object key.`);
+                    }
+                    const keyResult = parseJsonString(json, index);
+                    if (keyResult instanceof Error) {
+                        return keyResult;
+                    }
+                    const colonIndex = parseJsonWhiteSpace(json, keyResult.endIndex);
+                    const colonCharacter = json[colonIndex];
+                    if (colonCharacter !== ':') {
+                        return new Error(`Invalid JSON. Unexpected character ${objectCharacter} at position ${index} while parsing colon.`);
+                    }
+                    const valueResult = parseJsonValue(json, colonIndex + 1);
+                    if (valueResult instanceof Error) {
+                        return valueResult;
+                    }
+                    object[keyResult.parsed] = valueResult.parsed;
+                    isSeparator = true;
+                    index = valueResult.endIndex;
+                }
+            }
+        }
+        default:
+            return new Error(`Invalid JSON. Unexpected character ${character} at position ${index}`);
+    }
+}
+function parseJsonWhiteSpace(json, startIndex) {
+    const whiteSpaceRegex = /[ \n\r\t]*/y;
+    whiteSpaceRegex.lastIndex = startIndex;
+    whiteSpaceRegex.exec(json);
+    return whiteSpaceRegex.lastIndex;
+}
+function parseJsonToken(json, startIndex, token, value) {
+    const endIndex = startIndex + token.length;
+    if (json.substring(startIndex, endIndex) !== token) {
+        return new Error(`Inavlid JSON. Failed to parse value ${token} at position ${startIndex}`);
+    }
+    return {
+        parsed: value,
+        endIndex: endIndex,
+    };
+}
+function parseJsonString(json, startIndex) {
+    let stringValue = '';
+    for (let index = startIndex; index < json.length; index++) {
+        const stringCharacter = json[index];
+        switch (stringCharacter) {
+            case '"':
+                return {
+                    parsed: stringValue,
+                    endIndex: index + 1,
+                };
+            case '\\':
+                index++;
+                if (index === json.length) {
+                    return new Error('Invalid JSON. String not terminated.');
+                }
+                const escapedCharacter = json[index];
+                switch (escapedCharacter) {
+                    case '"':
+                    case '\\':
+                    case '/':
+                    case 'b':
+                    case 'f':
+                    case 'n':
+                    case 'r':
+                    case 't':
+                        stringValue += escapedCharacter;
+                        break;
+                    case 'u':
+                        index++;
+                        const hexEndIndex = index + 4;
+                        if (hexEndIndex >= json.length) {
+                            return new Error('Invalid JSON. String not terminated.');
+                        }
+                        const hexCharacters = json.substring(index, hexEndIndex);
+                        if (!/[0-9a-fA-F]{4}/.test(hexCharacters)) {
+                            return new Error(`Invalid JSON. Invalid hex code at position ${index}.`);
+                        }
+                        stringValue += String.fromCharCode(parseInt(hexCharacters, 16));
+                        index = hexEndIndex - 1;
+                        break;
+                    default:
+                        return new Error();
+                }
+                break;
+            default:
+                stringValue += stringCharacter;
+                break;
+        }
+    }
+    return new Error('Invalid JSON. String not terminated.');
+}
+//#endregion JSON
 //#endregion helper
 //#region builtins
 //#region Types
 exports.Any = new AnyType();
+exports.Type = new TypeType();
 exports._Boolean = new BooleanType();
+//#region Number
 exports.Float = new FloatType();
 exports.Integer = new IntegerType();
 exports.NonZeroInteger = new UnionType([exports.Integer, new ComplementType(0)]);
+exports.Fraction = new DictionaryLiteralType({
+    numerator: exports.Integer,
+    denominator: exports.Integer
+});
+exports.Rational = new UnionType([exports.Integer, exports.Fraction]);
+//#endregion Number
 exports._String = new StringType();
 exports._Error = new ErrorType();
-exports.Type = new TypeType();
+exports.List = _createFunction((ElementType) => new ListType(ElementType), {
+    singleNames: [
+        {
+            name: 'ElementType',
+            type: exports.Type,
+        },
+    ]
+});
+exports.Or = _createFunction((...args) => new UnionType(args), {
+    rest: {
+        type: new ListType(exports.Type)
+    }
+});
 //#endregion Types
 //#region Functions
 //#region Any
@@ -677,13 +934,9 @@ exports.equal = _createFunction((first, second) => first === second, {
     singleNames: [
         {
             name: 'first',
-            // TODO
-            // type: { type: 'reference', names: ['Any'] }
         },
         {
             name: 'second',
-            // TODO
-            // type: { type: 'reference', names: ['Any'] }
         }
     ]
 });
@@ -694,13 +947,11 @@ exports.modulo = _createFunction((dividend, divisor) => dividend % divisor, {
     singleNames: [
         {
             name: 'dividend',
-            // TODO
-            // type: { type: 'reference', names: ['Integer'] }
+            type: exports.Integer,
         },
         {
             name: 'divisor',
-            // TODO
-            // type: { type: 'reference', names: ['NonZeroInteger'] }
+            type: exports.NonZeroInteger,
         }
     ]
 });
@@ -735,13 +986,11 @@ exports.subtract = _createFunction((minuend, subtrahend) => {
     singleNames: [
         {
             name: 'minuend',
-            // TODO
-            // type: { type: 'reference', names: ['Rational'] }
+            type: exports.Rational,
         },
         {
             name: 'subtrahend',
-            // TODO
-            // type: { type: 'reference', names: ['Rational'] }
+            type: exports.Rational,
         }
     ]
 });
@@ -749,17 +998,14 @@ exports.subtractFloat = _createFunction((minuend, subtrahend) => minuend - subtr
     singleNames: [
         {
             name: 'minuend',
-            // TODO
-            // type: { type: 'reference', names: ['Float'] }
+            type: exports.Float,
         },
         {
             name: 'subtrahend',
-            // TODO
-            // type: { type: 'reference', names: ['Float'] }
+            type: exports.Float,
         }
     ]
 });
-// TODO sum, sumFloat
 exports.sum = _createFunction((...args) => args.reduce((accumulator, current) => {
     if (typeof accumulator === 'bigint') {
         if (typeof current === 'bigint') {
@@ -787,21 +1033,92 @@ exports.sum = _createFunction((...args) => args.reduce((accumulator, current) =>
             };
         }
     }
-}, 0n), 
-// TODO params type ...Rational[]
-{
+}, 0n), {
     rest: {
-    // name: 'args'
+        type: new ListType(exports.Rational)
     }
 });
-exports.sumFloat = _createFunction((...args) => args.reduce((accumulator, current) => accumulator + current, 0), 
-// TODO params type ...Float[]
-{
+exports.sumFloat = _createFunction((...args) => args.reduce((accumulator, current) => accumulator + current, 0), {
     rest: {
-    // name: 'args'
+        type: new ListType(exports.Float)
     }
 });
 //#endregion Number
+//#region String
+exports.parseJson = _createFunction((json) => {
+    const result = parseJsonValue(json, 0);
+    if (result instanceof Error) {
+        return result;
+    }
+    const endIndex = parseJsonWhiteSpace(json, result.endIndex);
+    if (endIndex < json.length) {
+        return new Error(`Invalid JSON. Unexpected extra charcter ${json[endIndex]} after parsed value at position ${endIndex}`);
+    }
+    return result.parsed;
+}, {
+    singleNames: [
+        {
+            name: 'json',
+            type: exports._String,
+        },
+    ]
+});
+exports.regex = _createFunction((text, regex1) => {
+    const match = text.match(regex1);
+    return match?.groups ?? null;
+}, {
+    singleNames: [
+        {
+            name: 'text',
+            type: exports._String,
+        },
+        {
+            name: 'regex',
+            type: exports._String,
+        },
+    ]
+});
+//#endregion String
+//#region List
+exports.filterMap = _createFunction((values, callback) => {
+    const mappedValues = [];
+    values.forEach(value => {
+        const mapped = callback(value);
+        if (mapped !== null) {
+            mappedValues.push(mapped);
+        }
+    });
+    return mappedValues;
+}, {
+    singleNames: [
+        {
+            name: 'values',
+            type: new ListType(exports.Any)
+        },
+        {
+            name: 'callback',
+            // TODO
+            // typeGuard: { type: 'reference', names: ['Function'] }
+        },
+    ]
+});
+exports.forEach = _createFunction((values, callback) => {
+    values.forEach(callback);
+    return null;
+}, {
+    singleNames: [
+        {
+            name: 'values',
+            type: new ListType(exports.Any)
+        },
+        {
+            name: 'callback',
+            // TODO
+            // typeGuard: { type: 'reference', names: ['Function'] }
+        },
+    ]
+});
+//#endregion List
 //#region Stream
 //#region core
 exports.complete = _createFunction((stream$) => {
@@ -811,8 +1128,7 @@ exports.complete = _createFunction((stream$) => {
     singleNames: [
         {
             name: 'stream$',
-            // TODO
-            // typeGuard: { type: 'reference', names: ['Stream'] }
+            type: new StreamType(exports.Any)
         },
     ]
 });
@@ -825,8 +1141,7 @@ exports.subscribe = _createFunction((stream$, listener) => {
     singleNames: [
         {
             name: 'stream$',
-            // TODO
-            // typeGuard: { type: 'reference', names: ['Stream'] }
+            type: new StreamType(exports.Any)
         },
         {
             name: 'listener',
@@ -837,7 +1152,7 @@ exports.subscribe = _createFunction((stream$, listener) => {
 });
 //#endregion core
 //#region create
-exports.httpTextRequest$ = _createFunction((url, method, body) => {
+exports.httpTextRequest$ = _createFunction((url, method, headers, body) => {
     const abortController = new AbortController();
     const response$ = createSource$(null);
     response$.onCompleted(() => {
@@ -845,6 +1160,7 @@ exports.httpTextRequest$ = _createFunction((url, method, body) => {
     });
     fetch(url, {
         method: method,
+        headers: headers ?? undefined,
         body: body,
         signal: abortController.signal,
     }).then(response => {
@@ -868,18 +1184,14 @@ exports.httpTextRequest$ = _createFunction((url, method, body) => {
     singleNames: [
         {
             name: 'url',
-            // TODO
-            // type: String
+            type: exports._String
         },
         {
             name: 'method',
-            // TODO
-            // type: String
+            type: exports._String
         },
         {
             name: 'body',
-            // TODO
-            // type: Any
         },
     ]
 });
@@ -900,8 +1212,7 @@ exports.timer$ = _createFunction((delayMs) => {
 }, {
     singleNames: [{
             name: 'delayMs',
-            // TODO
-            // type: Float
+            type: exports.Float
         }]
 });
 //#endregion create
@@ -918,8 +1229,7 @@ exports.repeat = _createFunction((count, iteratee) => {
     singleNames: [
         {
             name: 'count',
-            // TODO
-            // type: Integer
+            type: exports.Integer
         },
         {
             name: 'iteratee',
@@ -931,8 +1241,7 @@ exports.repeat = _createFunction((count, iteratee) => {
 exports.runJs = _createFunction(eval, {
     singleNames: [{
             name: 'js',
-            // TODO
-            // type: String
+            type: exports._String
         }]
 });
 // TODO dynamische imports erlauben??
