@@ -1,5 +1,5 @@
 # jul
-# node fizz-buzz.js
+# node out/bundle.js
 divisibleBy = (divisor: NonZeroInteger) =>
 	(dividend: Integer) =>
 		dividend.modulo(divisor).equal(0)

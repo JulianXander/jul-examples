@@ -1,5 +1,5 @@
-# jul fibonacci.jul
-# node fibonacci.js
+# jul
+# node out/bundle.js
 
 # int fib(int term, int val = 1, int prev = 0)
 # {
