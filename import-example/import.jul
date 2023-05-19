@@ -1,4 +1,4 @@
-# jul import.jul
+# jul
 valueImport = import(§./somefile§)
 log(valueImport/someKey)
 
