@@ -1,4 +1,4 @@
-# jul fizz-buzz.jul
+# jul
 # node fizz-buzz.js
 divisibleBy = (divisor: NonZeroInteger) =>
 	(dividend: Integer) =>
