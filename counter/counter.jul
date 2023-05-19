@@ -1,10 +1,10 @@
-# jul counter.jul
+# jul
 counter$ = timer$(1000f)
 counter$.subscribe(
-	(x) =>
+	(value) =>
 		log(x)
-		runJs(§document.body.innerText = §(x)§)
-		x ?
+		runJs(§document.body.innerText = §(value)§)
+		value ?
 			10f => counter$.complete()
 			() => ()
 )

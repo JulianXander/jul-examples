@@ -1,5 +1,5 @@
 # jul
-# node out/bundle.js
+# node out/bundle
 divisibleBy = (divisor: NonZeroInteger) =>
 	(dividend: Integer) =>
 		dividend.modulo(divisor).equal(0)

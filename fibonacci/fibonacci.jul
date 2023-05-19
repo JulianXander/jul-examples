@@ -1,5 +1,5 @@
 # jul
-# node out/bundle.js
+# node out/bundle
 
 # int fib(int term, int val = 1, int prev = 0)
 # {
