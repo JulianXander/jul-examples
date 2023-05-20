@@ -71,11 +71,3 @@ restFunction(
 restFunction2 = (...restParameter: MyType) => log(§hi§)
 # äquivalent?
 myFunction4 = (a: 1 b: 2) => log(§hi§)
-
-# TODO fix spread expression in List
-testFn = (...args) => ()
-testFn(
-	1
-	2
-	...myList
-)

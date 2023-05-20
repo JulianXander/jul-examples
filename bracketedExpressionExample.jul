@@ -15,7 +15,7 @@ multiLineObj = (
 	)
 	key4 = (3 4 5)
 	...inlineObj
-	# bei List Destructuring in einem ObjectLiteral werden die Keys = ListIndex gesetzt? oder weggelassen?
+	# Fehler bei List Destructuring in einem DictionaryLiteral
 	...inlineList
 )
 
@@ -23,7 +23,7 @@ multiLineList = (
 	1
 	2
 	5
-	# bei ObjectLiteral Destructuring in einem ListLiteral werden die Keys erhalten/weggelassen??
+	# Fehler bei DictionaryLiteral Destructuring in einem ListLiteral
 	...inlineObj
 )
 
