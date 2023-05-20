@@ -1,0 +1,40 @@
+# Branching
+# 1.
+myFunction2 = (a) => log(a)
+myFunction2(1)
+# äquivalent
+1 ?
+	myFunction2
+
+# 2.
+1 ?
+	1 => log(1)
+	(a: 1) => log(§a: 1§)
+
+# TODO nicht äquivalent?
+(1) ?
+	1 => log(1)
+	(a: 1) => log(§a: 1§)
+
+# 3.
+myFunction3 = (args: List(Any)) => log(...args)
+myFunction3((1 2))
+# äquivalent
+(1 2) ?
+	myFunction3
+
+# 4.
+(1 2) ?
+	MyType => log(§MyType§)
+	(
+		a: (
+			a: 1
+			b: 2
+		)
+	) => myFunction(...a)
+
+# TODO branching spreads? wrap in List only for primitive value?
+(1 2) ?
+	(a: 1 b: 2) => log(a b)
+	(...rest: MyType) => log(...rest)
+	myFunction

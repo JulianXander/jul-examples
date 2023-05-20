@@ -1,81 +1,32 @@
-# Experimente mit FunktionsLiteral Syntax
-myFn = (a b c) => a
-
-myFn2 = a b c => a
-
-myFn2 = (
-	par1
-	par2
-	par3
-) =>
-	add(par1 par2)
-
-myFn3 = 
-	par1
-	par2
-	par3
-=>
-	add(par1 par2)
-
-myFn4 = (par1 par2 par3) =>
-	add(par1 par2)
-
-map(someList el ind => el)
-
-map(someList (el ind) => el)
-
-map(
-	someList
-	(el ind) =>
-		el
-)
-
-map(
-	someList
-	(
-		el
-		ind
-	) =>
-		el
-)
-
 # ObjektLiteral Syntax
 
-myObj = (1 2 3)
+#region List
+myList = (1 2 3)
 
-myObj = 1 2 3
-
-myObj = (
+myList2 = (
 	1
 	2
 	3
 )
 
-myObj =
+# spread
+
+# Äquivalent zu: (10 20 1 2 3 30)
+myList3 = (10 20 ...myList 30)
+
+myList4 = (
 	1
 	2
-	3
+	...myList
+	4
+)
 
-myObj = (a=1 b=2 c=3)
+#endregion List
 
-myObj = (a = 1 b = 2 c = 3)
+#region Dictionary
+myDictionary = (a = 1 b = 2 c = 3)
 
-myObj =
-	a = 1
-	b = 2
-	c = 3
-
-myObj =
-	a=1
-	b=2
-	c=3
-
-myObj =
-	a= 1
-	b= 2
-	c= 3
-
-myObj = (
+myDictionary2 = (
 	a = 1
 	b = (
 		b1 = 1
@@ -85,10 +36,20 @@ myObj = (
 	c = 3
 )
 
-myObj =
+# spread
+
+# äquivalent zu: (a = 1 b = 2 c = 30)
+myDictionary3 = (a = 10 b = 20 ...myDictionary c = 30)
+
+myDictionary4 = (
 	a = 1
-	b =
+	b = (
 		b1 = 1
 		b2 = 112344
+		...myDictionary
 		b3 = 1234
+	)
 	c = 3
+)
+
+#endregion Dictionary
