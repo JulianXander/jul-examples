@@ -3,7 +3,7 @@ inlineObj = (a = 1 b = 4)
 
 inlineList = (1 4)
 
-# DestructuringLiteral
+# spread ListLiteral
 someVar = (1 2 ...inlineList 4 5)
 
 multiLineObj = (
@@ -15,7 +15,7 @@ multiLineObj = (
 	)
 	key4 = (3 4 5)
 	...inlineObj
-	# Fehler bei List Destructuring in einem DictionaryLiteral
+	# Fehler bei List spread in einem DictionaryLiteral
 	...inlineList
 )
 
@@ -23,7 +23,7 @@ multiLineList = (
 	1
 	2
 	5
-	# Fehler bei DictionaryLiteral Destructuring in einem ListLiteral
+	# Fehler bei DictionaryLiteral spread in einem ListLiteral
 	...inlineObj
 )
 
@@ -37,7 +37,7 @@ multiLineList = (
 
 # alias c für Parameter b
 # alias nur für Destructuring oder auch für FunctionLiteral?
-(a: String c = b: String)
+(a: String c: String = b)
 
 # optionaler Parameter b
 (a: String b: Or(() Integer))
@@ -55,7 +55,7 @@ multiLineList = (
 (
 	a: String
 	d: Number
-	c = b: Number ?? 1
+	c: Number = b ?? 1
 	...rest: List(String)
 )
 
