@@ -1,0 +1,2 @@
+token1 = §test token 1§
+token2 = (value: String) => log(value)

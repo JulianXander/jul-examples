@@ -3,5 +3,8 @@ valueImport = import(§./somefile§)
 log(valueImport/someKey)
 
 # Destructuring import
-# (token1 alias=token2) = import(§./file2§)
-# alias(§hallo§)
+(
+	token1
+	alias = token2
+) = import(§./file2§)
+alias(§hallo§)
