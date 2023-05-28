@@ -73,6 +73,10 @@ restFunction2 = (...restParameter: MyType) => log(§hi§)
 myFunction4 = (a: 1 b: 2) => log(§hi§)
 
 # alias
-aliasFn = (b = a) => log(b)
-higherOrderFn = (fn: (a): ()) => ()
+aliasFn = (a1: Boolean = a b1 = b) => log(b1)
+higherOrderFn = (fn: (a: Boolean b: String): ()) => ()
 higherOrderFn(aliasFn)
+
+# nicht äquivalent
+fn1 = (a: Boolean b: String) => ()
+fn2 = (b: String a: Boolean) => ()

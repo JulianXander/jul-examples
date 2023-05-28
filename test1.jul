@@ -1,13 +1,7 @@
-# t = Boolean.Without(true)
-# httpTextRequest$(
-# 	§url§
-# 	§method§
-# ).subscribe((value: String) => log(1))
+aliasFn = (b1 = b a1: Boolean = a) => ()
+argValue = (a = true b = §test§)
+# aliasFn(...argValue)
+# aliasFn(a = true b = §test§)
 
-# myFn = (cb: (a: Any): Any) => ()
-# testFn = (a: String) => ()
-# myFn(testFn)
-
-myFn = (cb: (...a: List(Integer)): Any) => ()
-testFn = (a: Or(() String)) => ()
-myFn(testFn)
+higherOrderFn = (fn: (a: Boolean b: String): ()) => ()
+higherOrderFn(aliasFn)
