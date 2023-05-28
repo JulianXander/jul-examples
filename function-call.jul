@@ -71,3 +71,8 @@ restFunction(
 restFunction2 = (...restParameter: MyType) => log(§hi§)
 # äquivalent?
 myFunction4 = (a: 1 b: 2) => log(§hi§)
+
+# alias
+aliasFn = (b = a) => log(b)
+higherOrderFn = (fn: (a): ()) => ()
+higherOrderFn(aliasFn)
