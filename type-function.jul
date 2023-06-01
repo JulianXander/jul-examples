@@ -1,0 +1,37 @@
+BlubType = (
+	a: List(String)
+	b: Or(() String)
+)
+
+typeFnShort = BlubType => ()
+typeFnLong = (_: BlubType) => ()
+
+parameterFn2 = (x: (
+	blobNames: List(String)
+	nextMarker: Or(() String)
+)) => ()
+
+paramterFn = (
+	blobNames: List(String)
+	nextMarker: Or(() String)
+) => ()
+
+(myA1 = a/a1 b) = (a = (a1 = 1 b1 = 3) b = 2)
+log(myA1)
+log(b)
+
+# TODO fn parameters mit alias
+higherOrderFn = (lowerFn: (arg1: String arg2: Boolean) => ()) => ()
+
+arg1 = true
+higherOrderFn((blub = arg2 foobar = arg1) => ())
+
+# branching
+(a = 1 b = 2) ?
+	BlubType => ()
+	(a = x/a) => log(a)
+	(c d) => ()
+
+...(a = 1 b = 2) ?
+	(a b) => log(a)
+	(c d) => ()
