@@ -4,7 +4,15 @@ log(valueImport/someKey)
 
 # Destructuring import
 (
-	token1
-	alias = token2
+	someString
+	alias = logString
 ) = import(§./file2§)
 alias(§hallo§)
+
+# yaml
+yamlImport = import(§./example.yaml§)
+log(yamlImport)
+
+# json
+jsonImport = import(§./example.json§)
+log(jsonImport)
