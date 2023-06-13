@@ -1,13 +1,19 @@
-# jul
-valueImport = import(§./somefile§)
-log(valueImport/someKey)
+#region jul
+# value import
+valueImport = import(§./file1§)
+log(valueImport)
+
+# definitions import
+file2 = import(§./file2§)
+log(file2/someString)
 
 # Destructuring import
 (
 	someString
 	alias = logString
 ) = import(§./file2§)
-alias(§hallo§)
+alias(someString)
+#endregion jul
 
 # yaml
 yamlImport = import(§./example.yaml§)
