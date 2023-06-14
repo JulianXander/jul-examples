@@ -1,9 +1,11 @@
 #region jul
 # value import
+# the last expression is imported
 valueImport = import(§./file1§)
 log(valueImport)
 
 # definitions import
+# a dictionary containing all definition is imported
 file2 = import(§./file2§)
 log(file2/someString)
 
