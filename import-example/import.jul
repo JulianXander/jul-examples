@@ -24,3 +24,11 @@ log(yamlImport)
 # json
 jsonImport = import(§./example.json§)
 log(jsonImport)
+
+# typescript
+typescriptImport = import(§./ts-file.ts§)
+log(typescriptImport)
+
+# javascript
+javascriptImport = import(§./js-file.js§)
+log(javascriptImport)
