@@ -1,7 +1,10 @@
-aliasFn = (b1 = b a1: Boolean = a) => ()
+aliasFn = (a1: Boolean = a b1 = b) => ()
+aliasFn2 = (b1 = b a1: Boolean = a) => ()
 argValue = (a = true b = §test§)
 # aliasFn(...argValue)
 # aliasFn(a = true b = §test§)
 
+
 higherOrderFn = (fn: (a: Boolean b: String): ()) => ()
 higherOrderFn(aliasFn)
+higherOrderFn(aliasFn2)
