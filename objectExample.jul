@@ -21,6 +21,9 @@ myList4 = (
 	4
 )
 
+# Dereferenzierung
+myValue = myList/1
+
 #endregion List
 
 #region Dictionary
