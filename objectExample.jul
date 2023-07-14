@@ -5,9 +5,16 @@ myList = (1 2 3)
 
 myList2 = (
 	1
-	2
+	(
+		21
+		22
+		23
+	)
 	3
 )
+
+# Dereferenzierung
+myValue = myList/1
 
 # spread
 
@@ -20,9 +27,6 @@ myList4 = (
 	...myList
 	4
 )
-
-# Dereferenzierung
-myValue = myList/1
 
 #endregion List
 
@@ -38,6 +42,9 @@ myDictionary2 = (
 	)
 	c = 3
 )
+
+# Dereferenzierung
+myValue2 = myDictionary/c
 
 # spread
 
