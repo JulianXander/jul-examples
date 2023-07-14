@@ -14,7 +14,8 @@ myList2 = (
 )
 
 # Dereferenzierung
-myValue = myList/1
+myListValue = myList/1
+myListValue2 = myList2/2/1
 
 # spread
 
@@ -44,7 +45,8 @@ myDictionary2 = (
 )
 
 # Dereferenzierung
-myValue2 = myDictionary/c
+myDictValue1 = myDictionary/a
+myDictValue2 = myDictionary2/b/b3
 
 # spread
 
