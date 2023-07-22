@@ -5,7 +5,7 @@ valueImport = import(§./file1§)
 log(valueImport)
 
 # definitions import
-# a dictionary containing all definition is imported
+# a dictionary containing all definitions is imported
 file2 = import(§./file2§)
 log(file2/someString)
 
