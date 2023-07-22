@@ -18,11 +18,11 @@ alias(someString)
 #endregion jul
 
 # yaml
-yamlImport = import(§./example.yaml§)
+yamlImport = import(§./yaml-file.yaml§)
 log(yamlImport)
 
 # json
-jsonImport = import(§./example.json§)
+jsonImport = import(§./json-file.json§)
 log(jsonImport)
 
 # typescript
