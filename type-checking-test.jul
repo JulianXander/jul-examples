@@ -83,3 +83,11 @@ testDictionary5: (a: (b: 4)) = (a = (b = 5))
 testDictionary6: (a: Float) = (a = (b = 4f))
 # should not error
 testDictionary7: (a: Float) = (a = 4f)
+# should not error
+testList1: List(String) = (§aa§)
+# should error
+testList2: List(String) = (§aa§ 4)
+# should not error
+6.subtract(5)
+# should error
+().subtract(5)
