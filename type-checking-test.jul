@@ -13,6 +13,12 @@ testInteger1: Integer = 4
 # should error
 testInteger2: Integer = 4f
 # should not error
+testNonZeroInteger1: NonZeroInteger = -2
+# should error
+testNonZeroInteger2: NonZeroInteger = 0
+# should error
+testNonZeroInteger2: NonZeroInteger = 3.5
+# should not error
 testFloat1: Float = 6f
 # should error
 testFloat2: Float = 6
