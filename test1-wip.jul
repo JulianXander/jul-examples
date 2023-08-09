@@ -1,3 +1,0 @@
-FalseType = Boolean.Without(true)
-t: FalseType = false
-t2: FalseType = 4
