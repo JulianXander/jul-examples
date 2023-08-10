@@ -63,11 +63,11 @@ testWithout2: Boolean.Without(true) = true
 testWithout21: Boolean.And(Not(true)) = true
 # should not error
 testEmpty1: () = ()
-# should error?
+# should error
 testEmpty2: () = 4
-# should error?
+# should error
 testEmpty3: () = (4)
-# should error?
+# should error
 testEmpty4: () = (a = 4)
 # should not error
 testDictionary1: (a: 4) = (a = 4)
