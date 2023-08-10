@@ -93,6 +93,8 @@ testDictionary7: (a: Float) = (a = 4f)
 testList1: List(String) = (§aa§)
 # should error
 testList2: List(String) = (§aa§ 4)
+# should error
+testList3: List(String) = ()
 # should not error
 6.subtract(5)
 # should error
