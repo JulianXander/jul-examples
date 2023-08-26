@@ -105,6 +105,10 @@ testDictionary6: (a: Float) = (a = (b = 4f))
 # should not error
 testDictionary7: (a: Float) = (a = 4f)
 # should not error
+testTuple1: (Float Integer) = (4f 1)
+# should error
+testTuple2: (Float 2) = (4f 1)
+# should not error
 testList1: List(String) = (§aa§)
 # should error
 testList2: List(String) = (§aa§ 4)

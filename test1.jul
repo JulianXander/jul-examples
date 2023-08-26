@@ -1,2 +1,2 @@
-# should not error
-t1: (a = 5) = (a = 5)
+# should error
+testTuple2: (Float 2) = (4f 1)
