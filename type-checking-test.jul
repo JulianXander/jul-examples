@@ -45,8 +45,16 @@ testAnd4: And(
 	(a: 4)
 	(b: 5)
 ) = (
-	a: 4
-	b: 5
+	a = 4
+	b = 5
+)
+# should error
+testAnd5: And(
+	(a: 4)
+	(b: 5)
+) = (
+	a = 4
+	b = 6
 )
 # should error
 testNot1: Not(true) = true
@@ -77,6 +85,13 @@ testDictionary2: (a: 4) = (a = 6)
 testDictionary3: (
 	a: 4
 	b: 6
+) = (
+	a = 4
+	b = 6
+)
+# should not error
+testDictionary3a: (
+	a: 4
 ) = (
 	a = 4
 	b = 6

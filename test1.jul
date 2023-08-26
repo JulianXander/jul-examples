@@ -1,3 +1,2 @@
-te = 1
-te.
-import(§../jul-compiler/§)
+# should not error
+t1: (a = 5) = (a = 5)
