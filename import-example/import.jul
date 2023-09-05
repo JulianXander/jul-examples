@@ -1,19 +1,19 @@
 #region jul
 # value import
 # the last expression is imported
-valueImport = import(§./file1§)
+valueImport = import(§./file1.jul§)
 log(valueImport)
 
 # definitions import
 # a dictionary containing all definitions is imported
-file2 = import(§./file2§)
+file2 = import(§./file2.jul§)
 log(file2/someString)
 
 # Destructuring import
 (
 	someString
 	alias = logString
-) = import(§./file2§)
+) = import(§./file2.jul§)
 alias(someString)
 #endregion jul
 
