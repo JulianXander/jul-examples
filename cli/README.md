@@ -1,5 +1,6 @@
-Erforderlich:
-package.json:
-bin
-jul-config.yaml:
-cli: true
+# Erforderlich
+## package.json
+- name
+- bin
+## jul-config.yaml
+- cli: true

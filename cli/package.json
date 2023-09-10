@@ -1,8 +1,9 @@
 {
-  "bin": {
-    "example-cli": "out/bundle.js"
-  },
+  "name": "example-cli",
+  "bin": "out/bundle.js",
   "scripts": {
-    "install-cli": "npm i -g"
+    "build": "jul",
+    "install-cli": "npm i -g",
+    "start": "example-cli someArg1 someArg2"
   }
 }
