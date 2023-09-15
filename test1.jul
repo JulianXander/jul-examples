@@ -1,15 +1,5 @@
-# 5 ?
-# 	Any =>
-# 		log(
-# 			customerDto
-# 			dbBackupFolderPath
-# 			sqlDataFolderPath
-# 			sqlServer)
-
 # should error? (schließende klammer in neuer Zeile)
-5 ?
-	log(
-		customerDto
-		dbBackupFolderPath
-		sqlDataFolderPath
-		sqlServer)
+4 ?
+	4 =>
+		log(
+			4)
