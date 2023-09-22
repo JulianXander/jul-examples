@@ -74,9 +74,9 @@ myFunction4 = (a: 1 b: 2) => log(§hi§)
 
 # alias
 aliasFn = (a1: Boolean = a b1 = b) => log(b1)
-higherOrderFn = (fn: (a: Boolean b: String): ()) => ()
+higherOrderFn = (fn: (a: Boolean b: Text): ()) => ()
 higherOrderFn(aliasFn)
 
 # nicht äquivalent
-fn1 = (a: Boolean b: String) => ()
-fn2 = (b: String a: Boolean) => ()
+fn1 = (a: Boolean b: Text) => ()
+fn2 = (b: Text a: Boolean) => ()

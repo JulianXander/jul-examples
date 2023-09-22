@@ -5,6 +5,6 @@ someVar ?
 	2 => §sdf§
 	Number => add(someVar 2)
 	(first second) => add(first second)
-	(a:String) =>
+	(a: Text) =>
 		log(a)
 		a

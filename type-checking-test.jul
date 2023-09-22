@@ -23,11 +23,11 @@ testFloat1: Float = 6f
 # should error
 testFloat2: Float = 6
 # should not error
-testString1: String = §§
+testText1: Text = §§
 # should not  error
-testString2: String = §hallo welt§
+testText2: Text = §hallo welt§
 # should error
-testString3: String = 4
+testText3: Text = 4
 # should not error
 testOr1: Or(4 5) = 4
 # should error
@@ -109,11 +109,11 @@ testTuple1: (Float Integer) = (4f 1)
 # should error
 testTuple2: (Float 2) = (4f 1)
 # should not error
-testList1: List(String) = (§aa§)
+testList1: List(Text) = (§aa§)
 # should error
-testList2: List(String) = (§aa§ 4)
+testList2: List(Text) = (§aa§ 4)
 # should error
-testList3: List(String) = ()
+testList3: List(Text) = ()
 # should not error
 6.subtract(5)
 # should error

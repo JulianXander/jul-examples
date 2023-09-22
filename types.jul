@@ -2,30 +2,30 @@
 # Typen beginnen mit Großbuchstaben.
 # TODO TypParameter auch?
 # mit : wird einer Variable ein Typ als Guard hinzugefügt
-myVar: String = §hallo§
+myVar: Text = §hallo§
 # Wenn ein ungültiger Wert zur Comilezeit zugewiesen wird, wird ein Compilerfehler geliefert
 # Wenn ein ungültiger Wert zur Laufzeit zugewiesen wird, wird stattdessen ein Error Object zugewiesen
-myVar: String = 4
+myVar: Text = 4
 # zur Laufzeit äquivalent zu:
 myVar = (
 	type = TypeError
-	message = §4 can not be assigned to myVar because it is not of type String§
+	message = §4 can not be assigned to myVar because it is not of type Text§
 )
 # prüfe ob eine Variable vom Typ ist
-myVarIsString = String(myVar) # => true
+myVarIsText = Text(myVar) # => true
 
 # Objekt Type Literal:
 Article = (
-	name: String
+	name: Text
 	price: Decimal
-	color: String
+	color: Text
 )
 # Ist äquivalent zu:
 Article =
 # Union Type:
 Number = or(Int32 Int64 Integer Float Decimal Real0)
 
-# String und Number Literale können auch als Typ verwendet werden
+# Text und Number Literale können auch als Typ verwendet werden
 myVar: §5§ = §5§
 myVar: 4 = 3 # => Error
 
@@ -45,18 +45,18 @@ addNums = (T: Number) =>
 			...
 
 # Generische Typen:
-ParserResult(T: String) = (
+ParserResult(T: Text) = (
 	type: T
-	errors: List<String>
+	errors: List<Text>
 )
 # Generischer Typ als Funktion höherer Ordnung:
-ParserResult = (TypeParam: String) => (
+ParserResult = (TypeParam: Text) => (
 	type: TypeParam
-	errors: List(String)
+	errors: List(Text)
 )
-ParserResult = (TypeParam: String) =>
+ParserResult = (TypeParam: Text) =>
 	x =>
-		and(TypeParam(x.type) List(String)(x.errors))
+		and(TypeParam(x.type) List(Text)(x.errors))
 
 # Typ mit Funktion definiert:
 Even = num =>

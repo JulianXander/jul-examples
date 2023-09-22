@@ -1,2 +1,2 @@
-someString = §test token 1§
-logString = (value: String) => log(value)
+someText = §test token 1§
+logText = (value: Text) => log(value)

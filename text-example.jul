@@ -5,12 +5,12 @@ mitInterpolation = §Hier ist §(inline) ...§
 multiLine = §
 	Das ist
 	ein mehrzeiliger
-		String!
+		Text!
 
 	# Kommentare eingerückt
 	# Die erste Einrückung am Anfang jeder Zeile
 	# sowie der Zeilenumbruch am Anfang
-	# sind nicht Teil des Strings.
+	# sind nicht Teil des Textes.
 	mit §(mitInterpolation)
 	§§ Escape Sequenz für Paragraph
 	§# Escape Sequenz für Raute

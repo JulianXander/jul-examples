@@ -1,19 +1,19 @@
 BlubType = (
-	a: List(String)
-	b: Or(() String)
+	a: List(Text)
+	b: Or(() Text)
 )
 
 typeFnShort = BlubType => ()
 typeFnLong = (_: BlubType) => ()
 
 parameterFn2 = (x: (
-	blobNames: List(String)
-	nextMarker: Or(() String)
+	blobNames: List(Text)
+	nextMarker: Or(() Text)
 )) => ()
 
 paramterFn = (
-	blobNames: List(String)
-	nextMarker: Or(() String)
+	blobNames: List(Text)
+	nextMarker: Or(() Text)
 ) => ()
 
 (myA1 = a/a1 b) = (a = (a1 = 1 b1 = 3) b = 2)
@@ -21,7 +21,7 @@ log(myA1)
 log(b)
 
 # TODO fn parameters mit alias
-higherOrderFn = (lowerFn: (arg1: String arg2: Boolean) => ()) => ()
+higherOrderFn = (lowerFn: (arg1: Text arg2: Boolean) => ()) => ()
 
 arg1 = true
 higherOrderFn((blub = arg2 foobar = arg1) => ())

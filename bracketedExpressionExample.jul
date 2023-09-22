@@ -33,17 +33,17 @@ multiLineList = (
 (a b)
 
 # mit Typen
-(a: String b: Integer)
+(a: Text b: Integer)
 
 # alias c für Parameter b
 # alias nur für Destructuring oder auch für FunctionLiteral?
-(a: String c: String = b)
+(a: Text c: Text = b)
 
 # optionaler Parameter b
-(a: String b: Or(() Integer))
+(a: Text b: Or(() Integer))
 
 # Fallback 1 für b
-(a: String b: Integer ?? 1)
+(a: Text b: Integer ?? 1)
 
 # rest arguments
 (a b ...rest)
@@ -53,10 +53,10 @@ multiLineList = (
 
 # multiLine
 (
-	a: String
+	a: Text
 	d: Number
 	c: Number = b ?? 1
-	...rest: List(String)
+	...rest: List(Text)
 )
 
 # FunctionLiteral
@@ -67,5 +67,5 @@ multiLineList = (
 
 # Branching
 (a b) ?
-	(a: String) => 1
-	(b: String) => 2
+	(a: Text) => 1
+	(b: Text) => 2
