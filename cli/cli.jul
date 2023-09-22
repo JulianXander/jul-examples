@@ -1,1 +1,2 @@
+cliArguments = runJs(§process.argv§)
 log(cliArguments)
