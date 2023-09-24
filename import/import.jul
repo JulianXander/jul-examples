@@ -7,14 +7,14 @@ log(valueImport)
 # definitions import
 # a dictionary containing all definitions is imported
 file2 = import(§./file2.jul§)
-log(file2/someString)
+log(file2/someText)
 
 # Destructuring import
 (
-	someString
-	alias = logString
+	someText
+	alias = logText
 ) = import(§./file2.jul§)
-alias(someString)
+alias(someText)
 #endregion jul
 
 # yaml
