@@ -1,3 +1,4 @@
-log(someVar)
-# should error
-§§(someVar)§
+t: Or(() List(Text)) = ()
+t2: (
+	a: Or(() List(Text))
+) = (a = 1)
