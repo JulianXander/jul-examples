@@ -7,11 +7,16 @@ progress$.subscribe(
 			true =>
 				timer1$.complete()
 			false =>
+				moveJs = value.greater(2) ?
+					true => §process.stdout.moveCursor(0, -2);§
+					false => ()
 				runJs(
 					§
-						process.stdout.clearLine();
-						process.stdout.cursorTo(0);
-						process.stdout.write('§(value)%');
+						§(moveJs)
+						# vorherigen Text löschen, falls weniger neu geschrieben wird
+						# process.stdout.clearScreenDown();
+						process.stdout.write('§(value.multiplyFloat(2f))%\n');
+						process.stdout.write('§(value)%\n');
 					§
 				)
 )
