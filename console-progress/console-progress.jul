@@ -1,0 +1,17 @@
+timer1$ = timer$(500f)
+progress$ = timer1$.map$((value) => value.multiplyFloat(2f))
+progress$.subscribe(
+	(value) =>
+		endReached = value.greater(100)
+		endReached ?
+			true =>
+				timer1$.complete()
+			false =>
+				runJs(
+					§
+						process.stdout.clearLine();
+						process.stdout.cursorTo(0);
+						process.stdout.write('§(value)%');
+					§
+				)
+)
