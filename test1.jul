@@ -1,2 +1,8 @@
-# should error
-add = 45
+a = 45
+# should error: a is already defined in upper scope
+t = (a) =>
+	()
+
+t2 = (b) =>
+	# should error
+	b = 3
