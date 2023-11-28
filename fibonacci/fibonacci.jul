@@ -13,7 +13,7 @@ fibonacciHelper = (
 ) =>
 	countdown ?
 		0 => previous
-		() => fibonacciHelper(subtract(countdown 1) sum(current previous) current)
+		() => fibonacciHelper(subtract(countdown 1) add(current previous) current)
 fibonacci = (x: Integer) =>
 	fibonacciHelper(x 1 0)
 
@@ -22,7 +22,7 @@ fibonacci = (x: Integer) =>
 # 		(x: 1) => (1 0)
 # 		() => 
 # 			(prev fibMinus2) = fibonacciHelper(subtract(n 1) )
-# 			(prev sum(fibMinus1 fibMinus2))
+# 			(prev add(fibMinus1 fibMinus2))
 
 test = fibonacci(12)
 log(test)
