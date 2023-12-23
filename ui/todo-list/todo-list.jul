@@ -1,0 +1,21 @@
+(
+	addHtml
+	removeElement
+	subscribeEvent
+) = import(§./dom.ts§)
+
+todoItemHtml = §
+	<div>
+		<input type="checkbox">
+		<input>
+		<button onclick="emit(this, 'delete')">x</button>
+	</div>
+§
+
+subscribeEvent(
+	(sender event) =>
+		event ?
+			§delete§ => removeElement(sender/parentElement)
+			§add§ => addHtml(todoItemHtml)
+			() => ()
+)
