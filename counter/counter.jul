@@ -3,7 +3,10 @@ counter$ = timer$(1000f)
 counter$.subscribe(
 	(value) =>
 		log(value)
-		runJs(§document.body.innerText = §(value)§)
+		runJs(§js
+			document.body.innerText = §(value)
+		§)
+		# runJs(§document.body.innerText = §(value)§)
 		value ?
 			10f => counter$.complete()
 			() => ()

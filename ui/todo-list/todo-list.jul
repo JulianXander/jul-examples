@@ -4,7 +4,7 @@
 	subscribeEvent
 ) = import(§./dom.ts§)
 
-todoItemHtml = §
+todoItemHtml = §html
 	<div>
 		<input type="checkbox">
 		<input>
