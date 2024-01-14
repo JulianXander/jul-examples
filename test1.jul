@@ -1,8 +1,13 @@
-a = 45
-# should error: a is already defined in upper scope
-t = (a) =>
-	()
+MyType = (
+	field1: Integer
+	someOtherField: Text
+	function: (): Text
+)
 
-t2 = (b) =>
-	# should error
-	b = 3
+myValue: MyType = (
+	# hier sollte autoComplete nur die Feldnamen aus MyType vorschlagen
+	fiel
+)
+
+# nach / sollte autoComplete nur die Feldnamen aus MyType vorschlagen
+myValue/so
