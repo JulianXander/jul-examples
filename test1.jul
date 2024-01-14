@@ -11,3 +11,10 @@ myValue: MyType = (
 
 # nach / sollte autoComplete nur die Feldnamen aus MyType vorschlagen
 myValue/so
+
+myFn = (par1: MyType) => ()
+
+myFn((
+	# hier sollte autoComplete nur die Feldnamen aus MyType vorschlagen
+	fiel
+))
