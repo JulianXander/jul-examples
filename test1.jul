@@ -1,3 +1,12 @@
+a = (
+	f1 = 4
+	f2 = §asdf§
+	f3 = () =>
+		log(3)
+		4
+)
+a/
+
 MyType = (
 	field1: Integer
 	someOtherField: Text
@@ -10,9 +19,11 @@ myValue: MyType = (
 )
 
 # nach / sollte autoComplete nur die Feldnamen aus MyType vorschlagen
-myValue/so
+myValue/
 
-myFn = (par1: MyType) => ()
+myFn = (par1: MyType) =>
+	# nach / sollte autoComplete nur die Feldnamen aus MyType vorschlagen
+	par1/
 
 myFn((
 	# hier sollte autoComplete nur die Feldnamen aus MyType vorschlagen
