@@ -5,6 +5,7 @@ a = (
 		log(3)
 		4
 )
+# autoComplete funktioniert
 a/
 
 MyType = (
@@ -13,17 +14,14 @@ MyType = (
 	function: (): Text
 )
 
+myFn = (par1: MyType) =>
+	# autoComplete funktioniert
+	par1/
+
 myValue: MyType = (
 	# hier sollte autoComplete nur die Feldnamen aus MyType vorschlagen
 	fiel
 )
-
-# nach / sollte autoComplete nur die Feldnamen aus MyType vorschlagen
-myValue/
-
-myFn = (par1: MyType) =>
-	# nach / sollte autoComplete nur die Feldnamen aus MyType vorschlagen
-	par1/
 
 myFn((
 	# hier sollte autoComplete nur die Feldnamen aus MyType vorschlagen
