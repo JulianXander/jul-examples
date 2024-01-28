@@ -1,0 +1,33 @@
+a = (
+	f1 = 4
+	f2 = §asdf§
+	f3 = () =>
+		log(3)
+		4
+)
+# autocomplete funktioniert
+a/
+
+MyType = (
+	# hallo welt
+	field1: Integer
+	someOtherField: Text
+	function: (): Text
+)
+
+myFn = (par1: MyType) =>
+	# autocomplete funktioniert
+	par1/
+	# hover funktioniert
+	# TODO description
+	par1/field1
+
+myValue: MyType = (
+	# hier sollte autocomplete nur die Feldnamen aus MyType vorschlagen
+	fiel
+)
+
+myFn((
+	# hier sollte autocomplete nur die Feldnamen aus MyType vorschlagen
+	fiel
+))
