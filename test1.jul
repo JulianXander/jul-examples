@@ -9,6 +9,7 @@ a = (
 a/
 
 MyType = (
+	# hallo welt
 	field1: Integer
 	someOtherField: Text
 	function: (): Text
@@ -18,6 +19,7 @@ myFn = (par1: MyType) =>
 	# autoComplete funktioniert
 	par1/
 	# hover funktioniert
+	# TODO description
 	par1/field1
 
 myValue: MyType = (
