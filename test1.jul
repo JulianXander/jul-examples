@@ -17,6 +17,8 @@ MyType = (
 myFn = (par1: MyType) =>
 	# autoComplete funktioniert
 	par1/
+	# hover funktioniert
+	par1/field1
 
 myValue: MyType = (
 	# hier sollte autoComplete nur die Feldnamen aus MyType vorschlagen
