@@ -1,0 +1,7 @@
+hallo = 2
+
+test = (
+	hallo = 3
+)
+
+test/hallo
