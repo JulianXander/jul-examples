@@ -27,12 +27,20 @@ myFn = (
 	# hover funktioniert
 	par1/field1
 
-myValue: MyType = (
-	# hier sollte autocomplete nur die Feldnamen aus MyType vorschlagen
-	fiel
+myValue1: MyType = (
+	# hier schlägt autocomplete nur die Feldnamen aus MyType vor
+
+	# TODO hier sollte automplete wieder alle symbole vorschlagen
+	field1 = 
+)
+
+myValue2: MyType = (
+	someOtherField = §a§
+	# hier schlägt autocomplete nur die Feldnamen aus MyType vor, ausgenommen someOtherField
+	
 )
 
 myFn((
 	# hier sollte autocomplete nur die Feldnamen aus MyType vorschlagen
-	fiel
+	
 ))
