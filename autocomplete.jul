@@ -1,4 +1,5 @@
 a = (
+	# f1 desc
 	f1 = 4
 	f2 = §asdf§
 	f3 = () =>
@@ -7,6 +8,8 @@ a = (
 )
 # autocomplete funktioniert
 a/
+# hover funktioniert
+a/f1
 
 MyType = (
 	# hallo welt
@@ -15,11 +18,13 @@ MyType = (
 	function: (): Text
 )
 
-myFn = (par1: MyType) =>
+myFn = (
+	# parameter description
+	par1: MyType
+) =>
 	# autocomplete funktioniert
 	par1/
 	# hover funktioniert
-	# TODO description
 	par1/field1
 
 myValue: MyType = (
