@@ -35,6 +35,6 @@ myValue: MyType = (
 )
 
 myFn((
-	# TODO hier sollte autocomplete nur die Feldnamen aus MyType vorschlagen
+	# hier schlägt autocomplete nur die Feldnamen aus MyType vor
 	
 ))
