@@ -29,8 +29,8 @@ myFn = (
 
 myValue1: MyType = (
 	# hier schlägt autocomplete nur die Feldnamen aus MyType vor
-
-	# TODO hier sollte automplete wieder alle symbole vorschlagen
+	
+	# hier schlägt automplete wieder alle symbole vor
 	field1 = 
 )
 
