@@ -30,7 +30,7 @@ myFn = (
 myValue: MyType = (
 	# hier schlägt autocomplete nur die Feldnamen aus MyType vor, ausgenommen field1
 	
-	# hier schlägt automplete wieder alle symbole vor
+	# hier schlägt autocomplete wieder alle symbole vor
 	field1 = 
 )
 
