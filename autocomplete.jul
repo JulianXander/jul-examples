@@ -29,7 +29,7 @@ myFn = (
 
 myValue1: MyType = (
 	# hier schlägt autocomplete nur die Feldnamen aus MyType vor
-	
+
 	# hier schlägt automplete wieder alle symbole vor
 	field1 = 
 )
@@ -41,6 +41,6 @@ myValue2: MyType = (
 )
 
 myFn((
-	# hier sollte autocomplete nur die Feldnamen aus MyType vorschlagen
+	# TODO hier sollte autocomplete nur die Feldnamen aus MyType vorschlagen
 	
 ))
