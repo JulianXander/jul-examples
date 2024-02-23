@@ -40,4 +40,8 @@ myFn((
 	
 ))
 
-myFn()
+# hier kommt function signature help beim tippen von () 
+myFn
+
+# TODO beim tippen von Leerzeichen hinter () sollte function signature help mit parameter 2 kommen
+myFn(())
