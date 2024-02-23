@@ -18,6 +18,7 @@ MyType = (
 	function: (): Text
 )
 
+# description for myFn (symbol and function)
 myFn = (
 	# parameter description
 	par1: MyType
@@ -38,3 +39,5 @@ myFn((
 	# hier schlägt autocomplete nur die Feldnamen aus MyType vor
 	
 ))
+
+myFn()
