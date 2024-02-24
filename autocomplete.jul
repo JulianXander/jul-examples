@@ -20,8 +20,10 @@ MyType = (
 
 # description for myFn (symbol and function)
 myFn = (
-	# parameter description
+	# parameter 1 description
 	par1: MyType
+	# parameter 2 description
+	par2: Integer
 ) =>
 	# autocomplete funktioniert
 	par1/
@@ -43,5 +45,5 @@ myFn((
 # hier kommt function signature help beim tippen von () 
 myFn
 
-# TODO beim tippen von Leerzeichen hinter () sollte function signature help mit parameter 2 kommen
+# beim tippen von Leerzeichen hinter () kommt function signature help mit parameter 2
 myFn(())
