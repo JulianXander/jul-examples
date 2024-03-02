@@ -2,3 +2,5 @@ a = List(Text)
 b = Dictionary(Integer)
 c = Stream(4)
 d = Or(1 2)
+
+e = ()
