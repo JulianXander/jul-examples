@@ -78,33 +78,6 @@ testEmpty3: () = (4)
 # should error
 testEmpty4: () = (a = 4)
 # should not error
-testDictionary1: (a: 4) = (a = 4)
-# should error
-testDictionary2: (a: 4) = (a = 6)
-# should not error
-testDictionary3: (
-	a: 4
-	b: 6
-) = (
-	a = 4
-	b = 6
-)
-# should not error
-testDictionary3a: (
-	a: 4
-) = (
-	a = 4
-	b = 6
-)
-# should not error
-testDictionary4: (a: (b: 4)) = (a = (b = 4))
-# should error
-testDictionary5: (a: (b: 4)) = (a = (b = 5))
-# should error
-testDictionary6: (a: Float) = (a = (b = 4f))
-# should not error
-testDictionary7: (a: Float) = (a = 4f)
-# should not error
 testTuple1: (Float Integer) = (4f 1)
 # should error
 testTuple2: (Float 2) = (4f 1)
@@ -114,6 +87,39 @@ testList1: List(Text) = (§aa§)
 testList2: List(Text) = (§aa§ 4)
 # should error
 testList3: List(Text) = ()
+# should not error
+testDictionaryLiteral1: (a: 4) = (a = 4)
+# should error
+testDictionaryLiteral2: (a: 4) = (a = 6)
+# should not error
+testDictionaryLiteral3: (
+	a: 4
+	b: 6
+) = (
+	a = 4
+	b = 6
+)
+# should not error
+testDictionaryLiteral3a: (
+	a: 4
+) = (
+	a = 4
+	b = 6
+)
+# should not error
+testDictionaryLiteral4: (a: (b: 4)) = (a = (b = 4))
+# should error
+testDictionaryLiteral5: (a: (b: 4)) = (a = (b = 5))
+# should error
+testDictionaryLiteral6: (a: Float) = (a = (b = 4f))
+# should not error
+testDictionaryLiteral7: (a: Float) = (a = 4f)
+# should not error
+testDictionary1: Dictionary(Text) = (a = §4§)
+# should error
+testDictionary2: Dictionary(Text) = (a = 4)
+# should error
+testDictionary3: Dictionary(Text) = ()
 # should not error
 6.subtract(5)
 # should error
