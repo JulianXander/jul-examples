@@ -1,6 +1,9 @@
-a = List(Text)
-b = Dictionary(Integer)
-c = Stream(4)
-d = Or(1 2)
-
-e = ()
+timer1$ = timer$(1f)
+timer1$.subscribe(
+	(value) =>
+		value
+)
+mapped$ = timer1$.map$(
+	(value) =>
+		value
+)
