@@ -4,7 +4,9 @@ timer1$.subscribe(
 	(value) =>
 		value
 )
+transform = (value: Float) =>
+	value.addFloat(1f)
+TransformReturnType = transform/ReturnType
 mapped$ = timer1$.map$(
-	(value) =>
-		value
+	transform
 )
