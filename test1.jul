@@ -1,4 +1,5 @@
 timer1$ = timer$(1f)
+TimerType = timer1$/ValueType
 timer1$.subscribe(
 	(value) =>
 		value
