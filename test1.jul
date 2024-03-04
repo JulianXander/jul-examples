@@ -17,3 +17,5 @@ mapped$ = timer1$.map$(
 # 		value: source$/ValueType
 # 	): Any
 # ): Stream(transform$/ReturnType)
+
+combine$()
