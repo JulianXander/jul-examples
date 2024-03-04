@@ -1,19 +1,19 @@
-# timer1$ = timer$(1f)
+timer1$ = timer$(1f)
 # TimerType = timer1$/ValueType
-# timer1$.subscribe(
-# 	(value) =>
-# 		value
-# )
-# transform = (value: Float) =>
-# 	value.addFloat(1f)
+timer1$.subscribe(
+	(value) =>
+		value
+)
 # TransformReturnType = transform/ReturnType
-# mapped$ = timer1$.map$(
-# 	transform
-# )
+mapped$ = timer1$.map$(
+	(value) =>
+		value.addFloat(4f)
+)
 
-mapTest = (
-	source$: Stream(Any)
-	transform$: (
-		value: source$/ValueType
-	): Any
-): Stream(transform$/ReturnType)
+
+# mapTest = (
+# 	source$: Stream(Any)
+# 	transform$: (
+# 		value: source$/ValueType
+# 	): Any
+# ): Stream(transform$/ReturnType)
