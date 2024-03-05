@@ -1,16 +1,24 @@
-timer1$ = timer$(1f)
-# TimerType = timer1$/ValueType
-timer1$.subscribe(
-	(value) =>
-		value
-)
-# TransformReturnType = transform/ReturnType
-mapped$ = timer1$.map$(
-	(value) =>
-		value.addFloat(4f)
-)
+# timer1$ = timer$(1f)
+# # TimerType = timer1$/ValueType
+# timer1$.subscribe(
+# 	(value) =>
+# 		value
+# )
+# # TransformReturnType = transform/ReturnType
+# mapped$ = timer1$.map$(
+# 	(value) =>
+# 		value.addFloat(4f)
+# )
+# timer1$.flatSwitchMap$(
+# 	(value) =>
+# 		x = value ?
+# 			true => timer1$
+# 			false => 4
+# )
 
+x = completed$(4)
 
+#
 # mapTest = (
 # 	source$: Stream(Any)
 # 	transform$: (
@@ -18,4 +26,5 @@ mapped$ = timer1$.map$(
 # 	): Any
 # ): Stream(transform$/ReturnType)
 
-combine$()
+# (x: Text) =>
+# 	addFloat(x)
