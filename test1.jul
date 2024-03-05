@@ -16,7 +16,14 @@
 # 			false => 4
 # )
 
-x = completed$(4)
+(a: Boolean) =>
+	b = a ?
+		true =>
+			log(a)
+		false =>
+			log(a)
+
+# x = completed$(4)
 
 #
 # mapTest = (
