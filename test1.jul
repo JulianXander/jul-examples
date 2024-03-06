@@ -16,12 +16,16 @@
 # 			false => 4
 # )
 
+fn2 = (x: true) => ()
 (a: Boolean) =>
+	# TODO b type should be true instead of Or(a true)?
 	b = a ?
 		true =>
-			log(a)
+			a
 		false =>
-			log(a)
+			true
+	# TODO should not error
+	fn2(b)
 
 # x = completed$(4)
 
