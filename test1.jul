@@ -1,9 +1,12 @@
-timer1$ = timer$(1f)
-timer1$.subscribe(
-	(value) =>
-		value
-)
-mapped$ = timer1$.map$(
-	(value) =>
-		value.addFloat(4f)
-)
+# timer1$ = timer$(1f)
+# timer1$.subscribe(
+# 	(value) =>
+# 		value
+# )
+# mapped$ = timer1$.map$(
+# 	(value) =>
+# 		value.addFloat(4f)
+# )
+
+empty$ = completed$()
+empty2$ = completed$(())
