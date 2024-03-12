@@ -10,3 +10,6 @@
 
 empty$ = completed$()
 empty2$ = completed$(())
+
+# should return empty, but returns Any
+testEmpty = (): ()
