@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 timer1$ = timer$(1f)
 timer1$.subscribe(
 	(value) =>
@@ -8,27 +7,3 @@ mapped$ = timer1$.map$(
 	(value) =>
 		value.addFloat(4f)
 )
-ParamType = 1
-ParamsType = 1
-ReturnType = 1
-returnValue = 1
-
-fn = (paramName: ParamType) :> ReturnType
-(paramName: ParamType) :> ReturnType => returnValue
-=======
-# timer1$ = timer$(1f)
-# timer1$.subscribe(
-# 	(value) =>
-# 		value
-# )
-# mapped$ = timer1$.map$(
-# 	(value) =>
-# 		value.addFloat(4f)
-# )
-
-empty$ = completed$()
-empty2$ = completed$(())
-
-# should return empty, but returns Any
-testEmpty = (): ()
->>>>>>> 53c1c1457e7296431020a1408fde1d805f2685e1
