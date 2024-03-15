@@ -7,3 +7,10 @@ mapped$ = timer1$.map$(
 	(value) =>
 		value.addFloat(4f)
 )
+ParamType = 1
+ParamsType = 1
+ReturnType = 1
+returnValue = 1
+
+fn = (paramName: ParamType) :> ReturnType
+(paramName: ParamType) :> ReturnType => returnValue

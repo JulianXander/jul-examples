@@ -15,7 +15,7 @@ MyType = (
 	# hallo welt
 	field1: Integer
 	someOtherField: Text
-	function: (): Text
+	function: () :> Text
 )
 
 # description for myFn (symbol and function)

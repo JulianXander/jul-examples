@@ -31,14 +31,14 @@ myVar: 4 = 3 # => Error
 
 # Generische Funktion:
 # TODO syntax überdenken
-addNums = (num1: T num2: T): T where T: Number =>
+addNums = (num1: T num2: T) :> T where T: Number =>
 	(num1 num2) ?
 		(num1: Int32 num2: Int32) => addInt32(num1 num2)
 		(num1: Int64 num2: Int64) => addInt64(num1 num2)
 		...
 # Generische Funktion als Funktion höherer Ordnung:
 addNums = (T: Number) =>
-	(num1: T num2: T): T =>
+	(num1: T num2: T) :> T =>
 		(num1 num2) ?
 			(num1: Int32 num2: Int32) => addInt32(num1 num2)
 			(num1: Int64 num2: Int64) => addInt64(num1 num2)
