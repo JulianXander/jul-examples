@@ -1,9 +1,6 @@
-timer1$ = timer$(1f)
-timer1$.subscribe(
-	(value) =>
-		value
-)
-mapped$ = timer1$.map$(
-	(value) =>
-		value.addFloat(4f)
-)
+t = Any => ()
+t(1)
+t2 = (x: Any) => ()
+t2(1)
+T = Any :> ()
+T2 = (x: Any) => ()
