@@ -42,9 +42,6 @@ multiLineList = (
 # optionaler Parameter b
 (a: Text b: Or(() Integer))
 
-# Fallback 1 für b
-(a: Text b: Integer ?? 1)
-
 # rest arguments
 (a b ...rest)
 
