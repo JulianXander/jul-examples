@@ -1,10 +1,20 @@
-myDictionaryLiteralType = (
-	hallo: Text
-	welt: Integer
-)
+# myDictionaryLiteralType = (
+# 	hallo: Text
+# 	welt: Integer
+# )
 
-testVar: Dictionary(myDictionaryLiteralType) = (
-	§a§ = (
-		# hier sollte autoComplete hallo vorschlagen
-	)
-)
+# testVar: Dictionary(myDictionaryLiteralType) = (
+# 	§a§ = (
+# 		# hier sollte autoComplete hallo vorschlagen
+# 	)
+# )
+
+myFn = (values: List(Text)) =>
+	t = TypeOf(values)
+	e = t/ElementType
+	x = values.getElement(1)
+
+r = myFn((§a§))
+
+b = List(Text)
+c = b/ElementType
