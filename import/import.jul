@@ -13,8 +13,11 @@ log(file2/someText)
 (
 	someText
 	alias = logText
+	MyType
 ) = import(§./file2.jul§)
 alias(someText)
+(x: MyType) =>
+	x/
 #endregion jul
 
 # yaml

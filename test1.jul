@@ -9,12 +9,41 @@
 # 	)
 # )
 
-myFn = (values: List(Text)) =>
-	t = TypeOf(values)
+# myFn = (values: List(Text)) =>
+# 	t = TypeOf(values)
+# 	e = t/ElementType
+# 	x = values.getElement(1)
+
+# r = myFn((§a§))
+
+# b = List(Text)
+# c = b/ElementType
+
+myFn2 = (myVals: Dictionary(Text)) =>
+	t = TypeOf(myVals)
 	e = t/ElementType
-	x = values.getElement(1)
+	x = myVals.getField(§a§)
+test2 = myFn2((x = §a§))
 
-r = myFn((§a§))
+getField2 = nativeFunction(
+	(
+		dictionary: Dictionary(Any)
+		key: Text
+	) :> Or(() TypeOf(dictionary)/ElementType)
+	§TODO§
+)
 
-b = List(Text)
-c = b/ElementType
+test3 = getField2((x = §c§) §x§)
+
+getElement2 = nativeFunction(
+	(
+		values: List(Any)
+		# 1 basiert
+		# TODO positive
+		index: NonZeroInteger
+	) :>
+		index.greater(values.length()) ?
+			true => ()
+			false => TypeOf(values)/ElementType
+	§TODO§
+)

@@ -1,2 +1,7 @@
 someText = §test token 1§
 logText = (value: Text) => log(value)
+MyType = (
+	hallo: Integer
+)
+(x: MyType) =>
+	x/hallo
