@@ -19,38 +19,60 @@
 # b = List(Text)
 # c = b/ElementType
 
-myFn2 = (myVals: Dictionary(Text)) =>
-	t = TypeOf(myVals)
-	e = t/ElementType
-	x = myVals.getField(§a§)
-test2 = myFn2((x = §a§))
+# myFn2 = (myVals: Dictionary(Text)) =>
+# 	t = TypeOf(myVals)
+# 	e = t/ElementType
+# 	x = myVals.getField(§a§)
+# test2 = myFn2((x = §a§))
 
-getField2 = nativeFunction(
+# getField2 = nativeFunction(
+# 	(
+# 		dictionary: Dictionary(Any)
+# 		key: Text
+# 	) :> Or(() TypeOf(dictionary)/ElementType)
+# 	true
+# 	§TODO§
+# )
+
+# test3 = getField2((x = §c§) §x§)
+
+# GetElement = (values: List(Any) index: NonZeroInteger) =>
+# 	index.greater(values.length()) ?
+# 		true => ()
+# 		false => TypeOf(values)/ElementType
+
+# getElement2 = nativeFunction(
+# 	(
+# 		values: List(Any)
+# 		# 1 basiert
+# 		# TODO positive
+# 		index: NonZeroInteger
+# 	) :> GetElement(values index)
+# 	# index.greater(values.length()) ?
+# 	# 	true => ()
+# 	# 	false => TypeOf(values)/ElementType
+# 	true
+# 	§TODO§
+# )
+
+# combined = combine$(timer$(1f))
+
+combine2 = nativeFunction(
 	(
-		dictionary: Dictionary(Any)
-		key: Text
-	) :> Or(() TypeOf(dictionary)/ElementType)
-	true
+		...sources: Or(() List(Stream(Any)))
+	) :> Stream(Or(() List(TypeOf(sources)/ElementType/ValueType)))
+	false
 	§TODO§
 )
+test2 = combine2(timer$(1f))
 
-test3 = getField2((x = §c§) §x§)
-
-GetElement = (values: List(Any) index: NonZeroInteger) =>
-	index.greater(values.length()) ?
-		true => ()
-		false => TypeOf(values)/ElementType
-
-getElement2 = nativeFunction(
+combine3 = nativeFunction(
 	(
-		values: List(Any)
-		# 1 basiert
-		# TODO positive
-		index: NonZeroInteger
-	) :> GetElement(values index)
-	# index.greater(values.length()) ?
-	# 	true => ()
-	# 	false => TypeOf(values)/ElementType
-	true
+		sources: Or(() List(Stream(Any)))
+	) :> Stream(Or(() List(TypeOf(sources)/ElementType/ValueType)))
+	false
 	§TODO§
 )
+test3 = combine3((timer$(1f)))
+
+# mapped = timer$(1f).flatSwitchMap$(() => httpTextRequest$(§a§ §get§))
