@@ -1,78 +1,19 @@
-# myDictionaryLiteralType = (
-# 	hallo: Text
-# 	welt: Integer
-# )
+MyDictionaryLiteralType = (
+	hallo: Text
+	welt: Integer
+)
 
-# testVar: Dictionary(myDictionaryLiteralType) = (
+# testVar: Dictionary(MyDictionaryLiteralType) = (
 # 	§a§ = (
 # 		# hier sollte autoComplete hallo vorschlagen
 # 	)
 # )
 
-# myFn = (values: List(Text)) =>
-# 	t = TypeOf(values)
-# 	e = t/ElementType
-# 	x = values.getElement(1)
-
-# r = myFn((§a§))
-
-# b = List(Text)
-# c = b/ElementType
-
-# myFn2 = (myVals: Dictionary(Text)) =>
-# 	t = TypeOf(myVals)
-# 	e = t/ElementType
-# 	x = myVals.getField(§a§)
-# test2 = myFn2((x = §a§))
-
-# getField2 = nativeFunction(
-# 	(
-# 		dictionary: Dictionary(Any)
-# 		key: Text
-# 	) :> Or(() TypeOf(dictionary)/ElementType)
-# 	true
-# 	§TODO§
-# )
-
-# test3 = getField2((x = §c§) §x§)
-
-# GetElement = (values: List(Any) index: NonZeroInteger) =>
-# 	index.greater(values.length()) ?
-# 		true => ()
-# 		false => TypeOf(values)/ElementType
-
-# getElement2 = nativeFunction(
-# 	(
-# 		values: List(Any)
-# 		# 1 basiert
-# 		# TODO positive
-# 		index: NonZeroInteger
-# 	) :> GetElement(values index)
-# 	# index.greater(values.length()) ?
-# 	# 	true => ()
-# 	# 	false => TypeOf(values)/ElementType
-# 	true
-# 	§TODO§
-# )
-
-# combined = combine$(timer$(1f))
-
-combine2 = nativeFunction(
-	(
-		...sources: Or(() List(Stream(Any)))
-	) :> Stream(Or(() List(TypeOf(sources)/ElementType/ValueType)))
-	false
-	§TODO§
+test1 = (
+	h = 3
 )
-test2 = combine2(timer$(1f))
 
-combine3 = nativeFunction(
-	(
-		sources: Or(() List(Stream(Any)))
-	) :> Stream(Or(() List(TypeOf(sources)/ElementType/ValueType)))
-	false
-	§TODO§
+test: MyDictionaryLiteralType = (
+	...test1
+	
 )
-test3 = combine3((timer$(1f)))
-
-# mapped = timer$(1f).flatSwitchMap$(() => httpTextRequest$(§a§ §get§))
