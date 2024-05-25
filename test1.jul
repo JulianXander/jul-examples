@@ -8,12 +8,3 @@ MyDictionaryLiteralType = (
 # 		# hier sollte autoComplete hallo vorschlagen
 # 	)
 # )
-
-test1 = (
-	h = 3
-)
-
-test: MyDictionaryLiteralType = (
-	...test1
-	
-)
