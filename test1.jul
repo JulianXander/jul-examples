@@ -1,10 +1,26 @@
-MyDictionaryLiteralType = (
-	hallo: Text
-	welt: Integer
-)
+# MyDictionaryLiteralType = (
+# 	hallo: Text
+# 	welt: Integer
+# )
 
 # testVar: Dictionary(MyDictionaryLiteralType) = (
 # 	§a§ = (
 # 		# hier sollte autoComplete hallo vorschlagen
 # 	)
 # )
+
+Item = (
+	name: Text
+)
+
+(items: List(Item)) =>
+	items2 = items.filterMap(
+		(blobItem = value) =>
+			blobName = blobItem/name
+			match = regex(blobName §\.trn\.zip$§)
+			test = match/isMatch ?
+				true => blobItem
+				false => ()
+			# blobItem
+	)
+	items3: Or(() List(Item)) = items2
