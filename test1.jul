@@ -15,12 +15,11 @@ Item = (
 
 (items: List(Item)) =>
 	items2 = items.filterMap(
-		(blobItem = value) =>
-			blobName = blobItem/name
-			match = regex(blobName §\.trn\.zip$§)
-			test = match/isMatch ?
-				true => blobItem
+		(value) =>
+			blobName = value/name
+			test = true ?
+				true => value
 				false => ()
-			# blobItem
+			# value
 	)
 	items3: Or(() List(Item)) = items2
