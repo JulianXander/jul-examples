@@ -8,15 +8,3 @@
 # 		# hier sollte autoComplete hallo vorschlagen
 # 	)
 # )
-x1 = Text.And(Not(()))
-x = Without(Text ())
-
-# (items: List(Text)) =>
-# 	items2 = items.filterMap(
-# 		(value) =>
-# 			test = true ?
-# 				true => value
-# 				false => ()
-# 			# value
-# 	)
-# 	items3: Or(() List(Text)) = items2
