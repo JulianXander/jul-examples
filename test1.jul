@@ -1,10 +1,18 @@
-# MyDictionaryLiteralType = (
-# 	hallo: Text
-# 	welt: Integer
-# )
+MyDictionaryLiteralType = (
+	hallo: Text
+	welt: Integer
+)
 
 # testVar: Dictionary(MyDictionaryLiteralType) = (
 # 	§a§ = (
 # 		# hier sollte autoComplete hallo vorschlagen
 # 	)
 # )
+
+
+test: MyDictionaryLiteralType = (
+	hallo = §a§
+	welt = 1
+)
+
+log(test)
