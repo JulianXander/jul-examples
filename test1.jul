@@ -1,18 +1,38 @@
-MyDictionaryLiteralType = (
-	hallo: Text
-	welt: Integer
-)
-
-# testVar: Dictionary(MyDictionaryLiteralType) = (
-# 	§a§ = (
-# 		# hier sollte autoComplete hallo vorschlagen
-# 	)
+# MyDictionaryLiteralType = (
+# 	hallo: Text
+# 	welt: Integer
 # )
 
+# # testVar: Dictionary(MyDictionaryLiteralType) = (
+# # 	§a§ = (
+# # 		# hier sollte autoComplete hallo vorschlagen
+# # 	)
+# # )
 
-test: MyDictionaryLiteralType = (
-	hallo = §a§
-	welt = 1
+
+# test: MyDictionaryLiteralType = (
+# 	hallo = §a§
+# 	welt = 1
+# )
+
+# log(test)
+
+MyType1 = §hallo§
+MyType2 = Or(§bla§ §welt§)
+MyType3 = (
+	prop1: §blub§
+)
+MyType4 = (
+	prop2: MyType3
 )
 
-log(test)
+test1: MyType1 = §§
+test2: MyType2 = §§
+test3: MyType3 = (
+	prop1 = §§
+)
+test4: MyType4 = (
+	prop2 = (
+		prop1 = §blub§
+	)
+)
