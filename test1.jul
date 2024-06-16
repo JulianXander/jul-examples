@@ -17,13 +17,20 @@
 
 # log(test)
 
+# hi 1
 MyType1 = §hallo§
+# hi 2
 MyType2 = Or(§bla§ §welt§)
+# hi 3
 MyType3 = (
+	# descr 1
 	prop1: §blub§
 )
+# hi 4
 MyType4 = (
+	# descr 2
 	prop2: MyType3
+	# descr 3
 	list: List(MyType3)
 )
 
@@ -33,7 +40,7 @@ test5: Or(MyType3 MyType4) = (
 	)
 	list = (
 		(
-			
+			prop1 = §blub§
 		)
 	)
 )
