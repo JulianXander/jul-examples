@@ -24,15 +24,16 @@ MyType3 = (
 )
 MyType4 = (
 	prop2: MyType3
+	list: List(MyType3)
 )
 
-test1: MyType1 = §§
-test2: MyType2 = §§
-test3: MyType3 = (
-	prop1 = §§
-)
-test4: MyType4 = (
+test5: Or(MyType3 MyType4) = (
 	prop2 = (
 		prop1 = §blub§
+	)
+	list = (
+		(
+			
+		)
 	)
 )
