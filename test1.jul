@@ -34,7 +34,7 @@ MyType4 = (
 	list: List(MyType3)
 )
 
-test5: Or(MyType3 MyType4) = (
+test5: MyType4 = (
 	prop2 = (
 		prop1 = §blub§
 	)
@@ -44,3 +44,6 @@ test5: Or(MyType3 MyType4) = (
 		)
 	)
 )
+
+test6 = test5/
+test7 = test5/list/1/prop1
