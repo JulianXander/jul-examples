@@ -56,3 +56,9 @@ test7 = test5/list/1/prop1
 test8: Or(MyType3 MyType3b) = (
 	prop1 = §blii§
 )
+
+# TODO test9 Type should be Or(() List(Text))
+test9 = (§hallo§).filterMap(
+	(value) =>
+		value.regex(§bla§)/namedCaptures/blub
+)
