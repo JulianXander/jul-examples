@@ -26,6 +26,11 @@ MyType3 = (
 	# descr 1
 	prop1: §blub§
 )
+# 3b
+MyType3b = (
+	# descr 1
+	prop1: §blii§
+)
 # hi 4
 MyType4 = (
 	# descr 2
@@ -47,3 +52,7 @@ test5: MyType4 = (
 
 test6 = test5/
 test7 = test5/list/1/prop1
+
+test8: Or(MyType3 MyType3b) = (
+	prop1 = §blii§
+)
