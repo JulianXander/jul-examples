@@ -1,4 +1,18 @@
 # should not error
+testEmpty1: Empty = ()
+# should error
+testEmpty2: Empty = Empty
+# should error
+testEmpty3: Empty = (1)
+# should not error
+testEmptyLiteral1: () = ()
+# should error
+testEmptyLiteral2: () = 4
+# should error
+testEmptyLiteral3: () = (4)
+# should error
+testEmptyLiteral4: () = (a = 4)
+# should not error
 testIntegerLiteral1: 4 = 4
 # should error
 testIntegerLiteral2: 4 = 5
@@ -69,14 +83,6 @@ testWithout11: Boolean.And(Not(true)) = false
 # should error
 testWithout2: Boolean.Without(true) = true
 testWithout21: Boolean.And(Not(true)) = true
-# should not error
-testEmpty1: () = ()
-# should error
-testEmpty2: () = 4
-# should error
-testEmpty3: () = (4)
-# should error
-testEmpty4: () = (a = 4)
 # should not error
 testTuple1: (Float Integer) = (4f 1)
 # should error
