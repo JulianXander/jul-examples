@@ -1,0 +1,18 @@
+MyType1 = (
+	a: Text
+)
+
+MyType2 = (
+	li: Or(() List(MyType1))
+)
+
+var1: MyType2 = (
+	li = (
+		(a = §§)
+	)
+)
+
+var2 = var1/li/1/a
+
+myFn = (x: MyType2) =>
+	var3 = x/li/1/
