@@ -16,3 +16,11 @@ var2 = var1/li/1/a
 
 myFn = (x: MyType2) =>
 	var3 = x/li/1/
+
+# TODO test sollte type Integer/Or(1 2) haben, hat aber Any
+test = aggregate(
+	(1 2)
+	0
+	(accumulator value) =>
+		value
+)
