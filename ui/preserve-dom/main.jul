@@ -1,0 +1,6 @@
+(addMessage) = import(§./dom.ts§)
+
+timer$(2000f).subscribe(
+	(value) =>
+		addMessage(§message number: §(value)§)
+)
