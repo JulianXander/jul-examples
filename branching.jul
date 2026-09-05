@@ -8,13 +8,19 @@ myFunction2(1)
 
 # 2.
 1 ?
+	# dieser branch greift
 	1 => log(1)
+	# dieser branch würde greifen, wenn er vorne steht
 	(a: 1) => log(§a: 1§)
 
-# TODO nicht äquivalent?
+# nicht äquivalent
 (1) ?
+	# dieser branch greift nicht: geprüft wird die Liste (1), nicht 1
 	1 => log(1)
+	# dieser branch greift nicht: a bekommt (1), nicht 1
 	(a: 1) => log(§a: 1§)
+	# dieser branch greift
+	(a: (1)) => log(§a: (1)§)
 
 # 3.
 myFunction3 = (args: List(Any)) => log(...args)
@@ -24,17 +30,24 @@ myFunction3((1 2))
 	myFunction3
 
 # 4.
+MyType = (
+	a: 1
+	b: 2
+)
+myFunction = (a b) => log(a b)
 (1 2) ?
+	# dieser branch greift
 	MyType => log(§MyType§)
+	# würde greifen, wenn vorne
 	(
 		a: (
 			a: 1
 			b: 2
 		)
 	) => myFunction(...a)
-
-# TODO branching spreads? wrap in List only for primitive value?
-(1 2) ?
+	# greift nicht
 	(a: 1 b: 2) => log(a b)
+	# greift, rest bekommt (1, 2)
 	(...rest: MyType) => log(...rest)
+	# würde greifen, a bekommt (1 2), b bekommt ()
 	myFunction
