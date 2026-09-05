@@ -43,9 +43,19 @@ MyType = (
 )
 myFunction1 = (a: MyType) => log(§hi§)
 myFunction1((a = 1 b = 2))
-# äquivalent
+# nicht äquivalent
 typeFunction = MyType => log(§hi§)
 typeFunction((a = 1 b = 2))
+# stattdessen greift Type Parametered Function eine ebene tiefer
+typeFunction(a = 1 b = 2)
+
+# mit Primitiven Werten ist eine Type Parametered Function gar nicht mehr direkt aufrufbar
+primitiveTypeFunction = Integer => log(§hi§)
+primitiveTypeFunction(1)
+
+# stattdessen ist sie nur in branching sinnvoll einsetzbar
+5 ?
+	primitiveTypeFunction
 
 # TODO mit Parameternamen nicht erlaubt?
 typeFunction(a = (a = 1 b = 2))
