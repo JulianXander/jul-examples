@@ -16,36 +16,36 @@ myFunction(
 )
 
 # 3. Argumente in einer List mit spread-Operator
-myList = (1 2)
+myList = [1 2]
 myFunction(...myList)
 
 # 4. Argumente in einem Dictionary mit spread-Operator
-myDictionary = (
+myDictionary = [
 	a = 1
 	b = 2
-)
+]
 myFunction(...myDictionary)
 
 # 4.1 Die Reihenfolge der Argumente ist egal (anders als bei 3.)
-myDictionary1 = (
+myDictionary1 = [
 	b = 2
 	a = 1
-)
+]
 myFunction(...myDictionary1)
 
 # Bei 1. und 2. ist die Übergabe von nicht definierten Parametern nicht erlaubt.
 # Bei 3. und 4. ist die Übergabe von nicht definierten Parametern erlaubt.
 
 # Type Parametered Function
-MyType = (
+MyType = [
 	a: 1
 	b: 2
-)
+]
 myFunction1 = (a: MyType) => log(§hi§)
-myFunction1((a = 1 b = 2))
+myFunction1([a = 1 b = 2])
 # nicht äquivalent
 typeFunction = MyType => log(§hi§)
-typeFunction((a = 1 b = 2))
+typeFunction([a = 1 b = 2])
 # stattdessen greift Type Parametered Function eine ebene tiefer
 typeFunction(a = 1 b = 2)
 
@@ -62,9 +62,9 @@ restFunction = (...restParameter) => log(restParameter)
 
 restFunction(1 2)
 # äquivalent
-restFunction(...(1 2))
+restFunction(...[1 2])
 # nicht äquivalent
-restFunction((1 2))
+restFunction([1 2])
 
 # TODO mit Parameternamen nicht erlaubt?
 restFunction(
@@ -81,9 +81,9 @@ myFunction4 = (a: 1 b: 2) => log(§hi§)
 
 # alias
 aliasFn = (a1: Boolean = a b1 = b) => log(b1)
-higherOrderFn = (fn: (a: Boolean b: Text) :> ()) => ()
+higherOrderFn = (fn: (a: Boolean b: Text) :> []) => []
 higherOrderFn(aliasFn)
 
 # nicht äquivalent
-fn1 = (a: Boolean b: Text) => ()
-fn2 = (b: Text a: Boolean) => ()
+fn1 = (a: Boolean b: Text) => []
+fn2 = (b: Text a: Boolean) => []

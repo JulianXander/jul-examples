@@ -1,22 +1,22 @@
-a = (
+a = [
 	# f1 desc
 	f1 = 4
 	f2 = §asdf§
 	f3 = () =>
 		log(3)
 		4
-)
+]
 # autocomplete funktioniert
 a/
 # hover funktioniert
 a/f1
 
-MyType = (
+MyType = [
 	# hallo welt
 	field1: Integer
 	someOtherField: Text
 	function: () :> Text
-)
+]
 
 # description for myFn (symbol and function)
 myFn = (
@@ -30,20 +30,20 @@ myFn = (
 	# hover funktioniert
 	par1/field1
 
-myValue: MyType = (
+myValue: MyType = [
 	# hier schlägt autocomplete nur die Feldnamen aus MyType vor, ausgenommen field1
 	
 	# hier schlägt autocomplete wieder alle symbole vor
 	field1 = 
-)
+]
 
-myFn((
+myFn([
 	# hier schlägt autocomplete nur die Feldnamen aus MyType vor
 	
-))
+])
 
 # hier kommt function signature help beim tippen von () 
 myFn
 
 # beim tippen von Leerzeichen hinter () kommt function signature help mit parameter 2
-myFn(())
+myFn([])

@@ -7,19 +7,19 @@ myVar: Text = §hallo§
 # Wenn ein ungültiger Wert zur Laufzeit zugewiesen wird, wird stattdessen ein Error Object zugewiesen
 myVar: Text = 4
 # zur Laufzeit äquivalent zu:
-myVar = (
+myVar = [
 	type = TypeError
 	message = §4 can not be assigned to myVar because it is not of type Text§
-)
+]
 # prüfe ob eine Variable vom Typ ist
 myVarIsText = Text(myVar) # => true
 
 # Objekt Type Literal:
-Article = (
+Article = [
 	name: Text
 	price: Decimal
 	color: Text
-)
+]
 # Ist äquivalent zu:
 Article =
 # Union Type:
@@ -39,21 +39,21 @@ addNums = (num1: T num2: T) :> T where T: Number =>
 # Generische Funktion als Funktion höherer Ordnung:
 addNums = (T: Number) =>
 	(num1: T num2: T) :> T =>
-		(num1 num2) ?
+		[num1 num2] ?
 			(num1: Int32 num2: Int32) => addInt32(num1 num2)
 			(num1: Int64 num2: Int64) => addInt64(num1 num2)
 			...
 
 # Generische Typen:
-ParserResult(T: Text) = (
+ParserResult(T: Text) = [
 	type: T
 	errors: List<Text>
-)
+]
 # Generischer Typ als Funktion höherer Ordnung:
-ParserResult = (TypeParam: Text) => (
+ParserResult = (TypeParam: Text) => [
 	type: TypeParam
 	errors: List(Text)
-)
+]
 ParserResult = (TypeParam: Text) =>
 	x =>
 		and(TypeParam(x.type) List(Text)(x.errors))

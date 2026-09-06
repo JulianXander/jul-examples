@@ -14,25 +14,25 @@ myFunction2(1)
 	(a: 1) => log(§a: 1§)
 
 # 2.1 Collection Wert wird auto spreaded
-(1) ?
+[1] ?
 	# dieser branch greift nicht: Parameter Type bekommt (1), erwartet 1
 	1 => log(1)
 	# dieser branch greift: a bekommt 1
 	(a: 1) => log(§a: 1§)
 	# dieser branch greift nicht
-	(a: (1)) => log(§a: (1)§)
+	(a: [1]) => log(§a: (1)§)
 
 # 2.2 Collection Wert wird auto spreaded
 myFunction3 = (args: List(Any)) => log(...args)
-myFunction3((1 2))
+myFunction3([1 2])
 # nicht äquivalent, args bekommt 1
-(1 2) ?
+[1 2] ?
 	myFunction3
 
 # 2.4
-MyType = (1 2)
+MyType = [1 2]
 myFunction = (a b) => log(a b)
-(1 2) ?
+[1 2] ?
 	# dieser branch greift
 	MyType => log(§MyType§)
 	# würde greifen
@@ -45,7 +45,7 @@ myFunction = (a b) => log(a b)
 	myFunction
 
 # 3. TODO multi level destructuring in Parameterliste?
-(1 (2 3)) ?
+[1 [2 3]] ?
 	(
 		a: 1
 		(

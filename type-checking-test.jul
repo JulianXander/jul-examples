@@ -1,17 +1,17 @@
 # should not error
-testEmpty1: Empty = ()
+testEmpty1: Empty = []
 # should error
 testEmpty2: Empty = Empty
 # should error
-testEmpty3: Empty = (1)
+testEmpty3: Empty = [1]
 # should not error
-testEmptyLiteral1: () = ()
+testEmptyLiteral1: [] = []
 # should error
-testEmptyLiteral2: () = 4
+testEmptyLiteral2: [] = 4
 # should error
-testEmptyLiteral3: () = (4)
+testEmptyLiteral3: [] = [4]
 # should error
-testEmptyLiteral4: () = (a = 4)
+testEmptyLiteral4: [] = [a = 4]
 # should not error
 testIntegerLiteral1: 4 = 4
 # should error
@@ -56,20 +56,20 @@ testAnd2: And(4 5) = 5
 testAnd3: And(4 5) = 6
 # should not error
 testAnd4: And(
-	(a: 4)
-	(b: 5)
-) = (
+	[a: 4]
+	[b: 5]
+) = [
 	a = 4
 	b = 5
-)
+]
 # should error
 testAnd5: And(
-	(a: 4)
-	(b: 5)
-) = (
+	[a: 4]
+	[b: 5]
+) = [
 	a = 4
 	b = 6
-)
+]
 # should error
 testNot1: Not(true) = true
 # should not error
@@ -84,49 +84,49 @@ testWithout11: Boolean.And(Not(true)) = false
 testWithout2: Boolean.Without(true) = true
 testWithout21: Boolean.And(Not(true)) = true
 # should not error
-testTuple1: (Float Integer) = (4f 1)
+testTuple1: [Float Integer] = [4f 1]
 # should error
-testTuple2: (Float 2) = (4f 1)
+testTuple2: [Float 2] = [4f 1]
 # should not error
-testList1: List(Text) = (§aa§)
+testList1: List(Text) = [§aa§]
 # should error
-testList2: List(Text) = (§aa§ 4)
+testList2: List(Text) = [§aa§ 4]
 # should error
-testList3: List(Text) = ()
+testList3: List(Text) = []
 # should not error
-testDictionaryLiteral1: (a: 4) = (a = 4)
+testDictionaryLiteral1: [a: 4] = [a = 4]
 # should error
-testDictionaryLiteral2: (a: 4) = (a = 6)
+testDictionaryLiteral2: [a: 4] = [a = 6]
 # should not error
-testDictionaryLiteral3: (
+testDictionaryLiteral3: [
 	a: 4
 	b: 6
-) = (
+] = [
 	a = 4
 	b = 6
-)
+]
 # should not error
-testDictionaryLiteral3a: (
+testDictionaryLiteral3a: [
 	a: 4
-) = (
+] = [
 	a = 4
 	b = 6
-)
+]
 # should not error
-testDictionaryLiteral4: (a: (b: 4)) = (a = (b = 4))
+testDictionaryLiteral4: [a: [b: 4]] = [a = [b = 4]]
 # should error
-testDictionaryLiteral5: (a: (b: 4)) = (a = (b = 5))
+testDictionaryLiteral5: [a: [b: 4]] = [a = [b = 5]]
 # should error
-testDictionaryLiteral6: (a: Float) = (a = (b = 4f))
+testDictionaryLiteral6: [a: Float] = [a = [b = 4f]]
 # should not error
-testDictionaryLiteral7: (a: Float) = (a = 4f)
+testDictionaryLiteral7: [a: Float] = [a = 4f]
 # should not error
-testDictionary1: Dictionary(Text) = (a = §4§)
+testDictionary1: Dictionary(Text) = [a = §4§]
 # should error
-testDictionary2: Dictionary(Text) = (a = 4)
+testDictionary2: Dictionary(Text) = [a = 4]
 # should error
-testDictionary3: Dictionary(Text) = ()
+testDictionary3: Dictionary(Text) = []
 # should not error
 6.subtract(5)
 # should error
-().subtract(5)
+[].subtract(5)

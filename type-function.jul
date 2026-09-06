@@ -1,37 +1,37 @@
-BlubType = (
+BlubType = [
 	a: List(Text)
-	b: Or(() Text)
-)
+	b: Or([] Text)
+]
 
-typeFnShort = BlubType => ()
+typeFnShort = BlubType => []
 typeFnLong = (_: BlubType) => ()
 
-parameterFn2 = (x: (
+parameterFn2 = (x: [
 	blobNames: List(Text)
-	nextMarker: Or(() Text)
-)) => ()
+	nextMarker: Or([] Text)
+]) => []
 
 paramterFn = (
 	blobNames: List(Text)
-	nextMarker: Or(() Text)
-) => ()
+	nextMarker: Or([] Text)
+) => []
 
-(myA1 = a/a1 b) = (a = (a1 = 1 b1 = 3) b = 2)
+(myA1 = a/a1 b) = [a = [a1 = 1 b1 = 3] b = 2]
 log(myA1)
 log(b)
 
 # TODO fn parameters mit alias
-higherOrderFn = (lowerFn: (arg1: Text arg2: Boolean) => ()) => ()
+higherOrderFn = (lowerFn: (arg1: Text arg2: Boolean) => []) => []
 
 arg1 = true
-higherOrderFn((blub = arg2 foobar = arg1) => ())
+higherOrderFn((blub = arg2 foobar = arg1) => [])
 
 # branching
-(a = 1 b = 2) ?
-	BlubType => ()
+[a = 1 b = 2] ?
+	BlubType => []
 	(a = x/a) => log(a)
-	(c d) => ()
+	(c d) => []
 
-...(a = 1 b = 2) ?
+...[a = 1 b = 2] ?
 	(a b) => log(a)
-	(c d) => ()
+	(c d) => []

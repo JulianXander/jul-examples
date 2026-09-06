@@ -9,7 +9,7 @@ progress$.subscribe(
 			false =>
 				moveJs = value.greater(2) ?
 					true => §process.stdout.moveCursor(0, -2);§
-					false => ()
+					false => []
 				runJs(
 					§
 						§(moveJs)

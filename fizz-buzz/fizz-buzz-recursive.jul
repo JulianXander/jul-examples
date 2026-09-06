@@ -3,7 +3,7 @@ divisibleBy = (divisor: NonZeroInteger) =>
 
 fizzBuzz = (index: PositiveInteger) =>
 	index ?
-		1 => ()
+		1 => []
 		Any => fizzBuzz(index.subtract(1))
 	message = index ?
 		divisibleBy(15) => §FizzBuzz§

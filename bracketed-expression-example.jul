@@ -1,60 +1,63 @@
 # ObjectLiteral
-inlineObj = (a = 1 b = 4)
+inlineObj = [a = 1 b = 4]
 
-inlineList = (1 4)
+inlineList = [1 4]
 
 # spread ListLiteral
-someVar = (1 2 ...inlineList 4 5)
+someVar = [1 2 ...inlineList 4 5]
 
-multiLineObj = (
+multiLineObj = [
 	key1 = 4
 	key2 = §Hallo§
-	key3 = (
+	key3 = [
 		sub1 = 3
 		sub2 = 1
-	)
-	key4 = (3 4 5)
+	]
+	key4 = [3 4 5]
 	...inlineObj
 	# Fehler bei List spread in einem DictionaryLiteral
 	...inlineList
-)
+]
 
-multiLineList = (
+multiLineList = [
 	1
 	2
 	5
 	# Fehler bei DictionaryLiteral spread in einem ListLiteral
 	...inlineObj
-)
+]
 
 # NameList (für DestructuringDefinition/FunctionLiteral)
+# Eine Bindungsliste ist rund und steht immer vor => , :> oder = .
+# Freistehend wäre die runde Klammer ein Fehler, denn Daten sind eckig.
 
 # inline
-(a b)
+(a b) => a
 
 # mit Typen
-(a: Text b: Integer)
+(a: Text b: Integer) => a
 
 # alias c für Parameter b
 # alias nur für Destructuring oder auch für FunctionLiteral?
-(a: Text c: Text = b)
+(a: Text c: Text = b) => a
 
 # optionaler Parameter b
-(a: Text b: Or(() Integer))
+(a: Text b: Or([] Integer)) => a
 
 # rest arguments
-(a b ...rest)
+(a b ...rest) => a
 
 # Parameter nach rest erlauben?
-(a ...rest b)
+# Fehler: Rest argument must be last.
+(a ...rest b) => a
 
 # multiLine
 (
 	a: Text
-	d: Number
-	c: Number = b ?? 1
+	d: Float
+	c: Float = a
 	...rest: List(Text)
-)
+) => a
 
 # FunctionLiteral
 (a) => log(a)
@@ -63,6 +66,6 @@ multiLineList = (
 	log(§a§)
 
 # Branching
-(a b) ?
+[a b] ?
 	(a: Text) => 1
 	(b: Text) => 2

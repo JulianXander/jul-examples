@@ -9,7 +9,7 @@ counter$.subscribe(
 		# runJs(§document.body.innerText = §(value)§)
 		value ?
 			10f => counter$.complete()
-			() => ()
+			() => []
 )
 
 # test1 = ValueOf(test)
