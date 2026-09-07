@@ -66,6 +66,6 @@ multiLineList = [
 	log(§a§)
 
 # Branching
-[a b] ?
+?(a b)
 	(a: Text) => 1
 	(b: Text) => 2
