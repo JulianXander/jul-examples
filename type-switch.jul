@@ -1,9 +1,9 @@
 someVar = 32
 
-someVar ?
-	1 => §hallo§
-	2 => §sdf§
-	Number => add(someVar 2)
+?(someVar)
+	[1] => §hallo§
+	[2] => §sdf§
+	[Number] => add(someVar 2)
 	(first second) => add(first second)
 	(a: Text) =>
 		log(a)

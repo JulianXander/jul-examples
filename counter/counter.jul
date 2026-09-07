@@ -7,8 +7,8 @@ counter$.subscribe(
 			document.body.innerText = §(value)
 		§)
 		# runJs(§document.body.innerText = §(value)§)
-		value ?
-			10f => counter$.complete()
+		?(value)
+			[10f] => counter$.complete()
 			() => []
 )
 

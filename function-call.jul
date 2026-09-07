@@ -54,7 +54,7 @@ primitiveTypeFunction = Integer => log(§hi§)
 primitiveTypeFunction(1)
 
 # stattdessen ist sie nur in branching sinnvoll einsetzbar
-5 ?
+?(5)
 	primitiveTypeFunction
 
 # Rest Parameter

@@ -2,13 +2,13 @@ divisibleBy = (divisor: NonZeroInteger) =>
 	(dividend: Integer) => dividend.modulo(divisor).equal(0)
 
 fizzBuzz = (index: PositiveInteger) =>
-	index ?
-		1 => []
+	?(index)
+		[1] => []
 		Any => fizzBuzz(index.subtract(1))
-	message = index ?
-		divisibleBy(15) => §FizzBuzz§
-		divisibleBy(5) => §Buzz§
-		divisibleBy(3) => §Fizz§
+	message = ?(index)
+		[divisibleBy(15)] => §FizzBuzz§
+		[divisibleBy(5)] => §Buzz§
+		[divisibleBy(3)] => §Fizz§
 		Any => index
 	log(message)
 

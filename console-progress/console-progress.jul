@@ -3,13 +3,13 @@ progress$ = timer1$.map$((value) => value.multiplyFloat(2f))
 progress$.subscribe(
 	(value) =>
 		endReached = value.greater(100)
-		endReached ?
-			true =>
+		?(endReached)
+			[true] =>
 				timer1$.complete()
-			false =>
-				moveJs = value.greater(2) ?
-					true => §process.stdout.moveCursor(0, -2);§
-					false => []
+			[false] =>
+				moveJs = ?(value.greater(2))
+					[true] => §process.stdout.moveCursor(0, -2);§
+					[false] => []
 				runJs(
 					§
 						§(moveJs)

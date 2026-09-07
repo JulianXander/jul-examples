@@ -1,55 +1,60 @@
 # Branching
-# 1.1 primitiver Wert wird auto wrapped zum 1. Argument
-myFunction2 = (a) => log(a)
-myFunction2(1)
-# äquivalent
-1 ?
-	myFunction2
+# ? ist ein Präfix-Operator mit runder Argumentliste. Die branches darunter sind Funktionen,
+# die über ihren Kopf entscheiden, ob sie greifen — der erste Treffer gewinnt.
 
-# 1.2 Type Parametered Functions bekommen den rohen Wert
-1 ?
-	# dieser branch greift
-	1 => log(1)
-	# dieser branch würde greifen, wenn er vorne steht
-	(a: 1) => log(§a: 1§)
+myVal = 6
 
-# 2.1 Collection Wert wird auto spreaded
-[1] ?
-	# dieser branch greift nicht: Parameter Type bekommt (1), erwartet 1
-	1 => log(1)
-	# dieser branch greift: a bekommt 1
-	(a: 1) => log(§a: 1§)
-	# dieser branch greift nicht
-	(a: [1]) => log(§a: (1)§)
+# Ein Typ-Kopf wird gegen die Argumentkollektion geprüft, nie gegen einen einzelnen Wert.
+# ?(myVal) schreibt ein Argument, die Kollektion ist also [myVal] und der Kopf ein Tuple.
+?(myVal)
+	[5] => log(§fünf§)
+	[6] => log(§sechs§)
+	() => log(§etwas anderes§)
 
-# 2.2 Collection Wert wird auto spreaded
-myFunction3 = (args: List(Any)) => log(...args)
-myFunction3([1 2])
-# nicht äquivalent, args bekommt 1
-[1 2] ?
-	myFunction3
+# Eine Parameterliste beschreibt dieselbe Kollektion, bindet aber deren Elemente.
+?(myVal)
+	(x: 5) => log(x)
+	(x: Integer) => log(x)
 
-# 2.4
-MyType = [1 2]
-myFunction = (a b) => log(a b)
-[1 2] ?
-	# dieser branch greift
-	MyType => log(§MyType§)
-	# würde greifen
-	(a: 1 b: 2) => myFunction(a b)
-	# greift nicht, a bekommt 1
-	(a: MyType) => log(...a)
-	# würde greifen, rest bekommt (1, 2)
-	(...rest: MyType) => log(...rest)
-	# würde greifen, a bekommt 1, b bekommt 2
+# Any matcht auch die Kollektion und bleibt deshalb ungewickelt.
+# () bindet nichts und matcht ebenfalls alles.
+?(myVal)
+	Any => log(myVal)
+
+# Ohne geschriebenes Argument ist die Kollektion selbst Empty.
+?()
+	Empty => log(§keine Argumente§)
+
+# Ein leerer Wert ist dagegen ein Argument: die Kollektion hat ein Element, der Kopf ist [Empty].
+myEmpty = []
+?(myEmpty)
+	[Empty] => log(§ein leeres Argument§)
+	() => log(§etwas anderes§)
+
+# Branching über mehrere Werte, ohne sie in ein Tuple zu wickeln.
+?(1 2)
+	[1 2] => log(§eins zwei§)
+	(a: Integer b: Integer) => log(a b)
+	() => log(§etwas anderes§)
+
+# Weil die Argumentliste auch ein Dictionary sein kann, geht es benannt genauso.
+?(a = 4 b = 6)
+	(a b) => log(a b)
+	() => log(§etwas anderes§)
+
+# Erst ein geschriebenes ... macht die Elemente des Werts zu Argumenten.
+myList = [1 2]
+?(...myList)
+	(a: Integer b: Integer) => log(a b)
+	() => log(§etwas anderes§)
+
+# Ohne ... bleibt die Liste ein Argument.
+?(myList)
+	(a: List(Integer)) => log(a)
+	() => log(§etwas anderes§)
+
+# ?(x) und f(x) bilden dieselbe Argumentkollektion, x ? f ist also f(x).
+myFunction = (a: Integer) => log(a)
+myFunction(1)
+?(1)
 	myFunction
-
-# 3. TODO multi level destructuring in Parameterliste?
-[1 [2 3]] ?
-	(
-		a: 1
-		(
-			b: 2
-			c: 3
-		)
-	) => myFunction(a b)

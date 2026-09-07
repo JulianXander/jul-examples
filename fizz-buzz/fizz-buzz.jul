@@ -7,10 +7,10 @@ divisibleBy = (divisor: NonZeroInteger) =>
 repeat(
 	100
 	(index) =>
-		message = index ?
-			divisibleBy(15) => §FizzBuzz§
-			divisibleBy(5) => §Buzz§
-			divisibleBy(3) => §Fizz§
+		message = ?(index)
+			[divisibleBy(15)] => §FizzBuzz§
+			[divisibleBy(5)] => §Buzz§
+			[divisibleBy(3)] => §Fizz§
 			Any => index
 		log(message)
 )

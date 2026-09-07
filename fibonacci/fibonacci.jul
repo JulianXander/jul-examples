@@ -11,8 +11,8 @@ fibonacciHelper = (
 	current: Integer
 	previous: Integer
 ) =>
-	countdown ?
-		0 => previous
+	?(countdown)
+		[0] => previous
 		() => fibonacciHelper(subtract(countdown 1) add(current previous) current)
 fibonacci = (x: Integer) =>
 	fibonacciHelper(x 1 0)

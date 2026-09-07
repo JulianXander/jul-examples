@@ -14,8 +14,8 @@ todoItemHtml = §html
 
 subscribeEvent(
 	(sender event) =>
-		event ?
-			§add§ => addHtml(todoItemHtml)
-			§delete§ => removeElement(sender/parentElement)
+		?(event)
+			[§add§] => addHtml(todoItemHtml)
+			[§delete§] => removeElement(sender/parentElement)
 			() => []
 )
