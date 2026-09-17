@@ -2,3 +2,15 @@ myFn = (a: List(Or([] Integer))) =>
 	c = a.filterMap((value) => value)
 	# TODO warum wird der typ von b hier anders inferred als a?
 	b = [...a].filterMap((value) => value)
+
+
+x = [1 2 3 [] §asdf§].filter(
+	(value) =>
+		?(value)
+			[Integer] => true
+			() => false
+)
+f = (value) =>
+	?(value)
+		[Integer] => true
+		() => false
