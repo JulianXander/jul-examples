@@ -1,2 +1,36 @@
-myFn = (a: List(Integer)) =>
-	c = add(...a)
+SumType = (A: Type B: Type) => Or(And(Integer And(A B)) And(Fraction Or(A B)))
+mySubtract = (a: Rational b: Rational) -> SumType(TypeOf(a) TypeOf(b)) => subtract(a b)
+f = (x: Fraction y: Integer) :> Fraction =>
+	mySubtract(x y)
+
+f2 = (x: Integer y: Integer) =>
+	mySubtract(x y)
+
+# minuend - subtrahend
+subtract2 = nativeFunction(
+	(minuend: Rational subtrahend: Rational) ->
+		?(TypeOf(minuend) TypeOf(subtrahend))
+			[Integer Integer] => Integer
+			() => Fraction
+	§...§
+)
+
+MyType = (minuend: Rational subtrahend: Rational) -> TypeOf(
+	minuend
+)
+
+add2 = nativeFunction(
+	(...args: List(Rational)) -> :?(TypeOf(args))
+		[List(Integer)] => Integer
+		() => Fraction
+	§js … §
+)
+
+myAdd = (
+	a: Rational
+	b: Rational
+)
+	->
+		SumType(TypeOf(a) TypeOf(b))
+	=>
+		add(a b)
