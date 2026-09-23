@@ -8,10 +8,11 @@ f2 = (x: Integer y: Integer) =>
 
 # minuend - subtrahend
 subtract2 = nativeFunction(
-	(minuend: Rational subtrahend: Rational) ->
-		?(TypeOf(minuend) TypeOf(subtrahend))
-			[Integer Integer] => Integer
-			() => Fraction
+	(minuend: Rational subtrahend: Rational)
+		->
+			?(TypeOf(minuend) TypeOf(subtrahend))
+				[Integer Integer] => Integer
+				() => Fraction
 	§...§
 )
 
@@ -20,9 +21,11 @@ MyType = (minuend: Rational subtrahend: Rational) -> TypeOf(
 )
 
 add2 = nativeFunction(
-	(...args: List(Rational)) -> :?(TypeOf(args))
-		[List(Integer)] => Integer
-		() => Fraction
+	(...args: List(Rational))
+		->
+			:?(TypeOf(args))
+				[List(Integer)] => Integer
+				() => Fraction
 	§js … §
 )
 
@@ -34,3 +37,5 @@ myAdd = (
 		SumType(TypeOf(a) TypeOf(b))
 	=>
 		add(a b)
+
+t = myAdd(1 2)
