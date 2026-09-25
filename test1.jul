@@ -1,41 +1,33 @@
-SumType = (A: Type B: Type) => Or(And(Integer And(A B)) And(Fraction Or(A B)))
-mySubtract = (a: Rational b: Rational) -> SumType(TypeOf(a) TypeOf(b)) => subtract(a b)
-f = (x: Fraction y: Integer) :> Fraction =>
-	mySubtract(x y)
+# myFn = (x: Or([] MyComplexType)) =>
+# 	?(x)
+# 		[MyComplexType] => §hi§
+# 		() => §ho§
 
-f2 = (x: Integer y: Integer) =>
-	mySubtract(x y)
+# myFn = (a: List(Integer)) =>
+# 	(x y) = [...a 1]
+# 	[x y]
 
-# minuend - subtrahend
-subtract2 = nativeFunction(
-	(minuend: Rational subtrahend: Rational)
-		->
-			?(TypeOf(minuend) TypeOf(subtrahend))
-				[Integer Integer] => Integer
-				() => Fraction
-	§...§
-)
+# g = (t: Text) => t
+# h = (n: And(Integer Not(0))) => g(n)
 
-MyType = (minuend: Rational subtrahend: Rational) -> TypeOf(
-	minuend
-)
 
-add2 = nativeFunction(
-	(...args: List(Rational))
-		->
-			:?(TypeOf(args))
-				[List(Integer)] => Integer
-				() => Fraction
-	§js … §
-)
+f = (i: Integer) => i
+myFn = (a: List(Integer)) =>
+	(x y) = a
+	[f(x) y]
 
-myAdd = (
-	a: Rational
-	b: Rational
-)
-	->
-		SumType(TypeOf(a) TypeOf(b))
-	=>
-		add(a b)
 
-t = myAdd(1 2)
+divisibleBy = (divisor: NonZeroInteger) =>
+	(dividend: Integer) =>
+		dividend.modulo(divisor).equal(0)
+
+# x: divisibleBy(5) = 45
+
+fizzBuzzMessage = (index: Integer) =>
+	?(index)
+		[divisibleBy(15)] => §FizzBuzz§
+		[divisibleBy(5)] => §Buzz§
+		[divisibleBy(3)] => §Fizz§
+		Any => index
+
+fizzBuzzMessage(12)
