@@ -30,4 +30,4 @@ fizzBuzzMessage = (index: Integer) =>
 		[divisibleBy(3)] => §Fizz§
 		Any => index
 
-fizzBuzzMessage(12)
+z = fizzBuzzMessage(12)
