@@ -1,4 +1,4 @@
-# jul --test
+# jul test
 (fibonacci) = import(§./fibonacci.jul§)
 
 test(§die ersten beiden Zahlen sind 1§ () => and(equal(fibonacci(1) 1) equal(fibonacci(2) 1)))
