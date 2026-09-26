@@ -1,0 +1,9 @@
+# jul --test
+(fibonacci) = import(§./fibonacci.jul§)
+
+test(§die ersten beiden Zahlen sind 1§ () => and(equal(fibonacci(1) 1) equal(fibonacci(2) 1)))
+test(§die 12. Zahl ist 144§ () => equal(fibonacci(12) 144))
+test(
+	§jede Zahl ist die Summe ihrer Vorgänger§
+	() => deepEqual(map([1 2 3 4 5 6] (value) => fibonacci(value)) [1 1 2 3 5 8])
+)

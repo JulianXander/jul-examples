@@ -24,5 +24,5 @@ fibonacci = (x: Integer) =>
 # 			(prev fibMinus2) = fibonacciHelper(subtract(n 1) )
 # 			(prev add(fibMinus1 fibMinus2))
 
-test = fibonacci(12)
-log(test)
+result = fibonacci(12)
+log(result)
