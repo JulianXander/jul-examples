@@ -1,0 +1,9 @@
+list = [1 2]
+(longName) = list
+
+dict = [fieldName = 1]
+(fieldName) = dict
+
+useLocal = (a: List(Integer)) =>
+	(inner second) = a
+	[inner second]
