@@ -7,12 +7,12 @@
 # Öffnet einen modalen Bestätigungsdialog.
 # title und question können fest oder ein Stream sein, der den Text laufend aktualisiert.
 # Startwert: []
-# Danach der value des geklickten Buttons, bei Escape §§.
+# Danach §ok§ oder §cancel§, auch Escape zählt als §cancel§.
 confirm$ = (
 	title: Or(Text Stream(Text))
 	question: Or(Text Stream(Text))
 ) =>
-	result$ = create$(Or([] Text) [])
+	result$ = create$(Or([] §ok§ §cancel§) [])
 	showDialog(
 		§html
 			<dialog>
@@ -29,7 +29,11 @@ confirm$ = (
 			question = question
 		]
 		(returnValue) =>
-			result$.push(returnValue)
+			# returnValue ist der value des geklickten Buttons, bei Escape §§.
+			answer = ?(returnValue)
+				[§ok§] => §ok§
+				() => §cancel§
+			result$.push(answer)
 			result$.complete()
 	)
 	result$
@@ -47,14 +51,13 @@ onClick(
 		result$.subscribe(
 			(value) =>
 				?(value)
-					(answer: Text) =>
+					(answer: Or(§ok§ §cancel§)) =>
 						# Der Timer gehört dem Aufrufer, also beendet ihn auch der Aufrufer, sobald der Dialog zu ist.
 						# Das completed auch den daraus abgeleiteten Text-Stream.
 						seconds$.complete()
 						message = ?(answer)
 							[§ok§] => §gelöscht§
 							[§cancel§] => §abgebrochen§
-							() => §mit Escape geschlossen§
 						setText(§log§ message)
 					() => []
 		)
