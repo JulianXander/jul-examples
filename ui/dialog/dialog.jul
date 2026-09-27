@@ -1,17 +1,79 @@
+(
+	onClick
+	setText
+	showDialog
+) = import(§./dom.ts§)
 
-body.push(
-	button(
-		label = §create dialog§
-		onClick = () =>
-			createDialog(
-				title = §SomeTitle§
-				content = stackPanel(
-					button(
-						label = §OK§
-						onClick = () =>
-							# TODO
-					)
-				)
-			)
+# Öffnet einen modalen Bestätigungsdialog.
+# title und question können fest oder ein Stream sein, der den Text laufend aktualisiert.
+# Startwert: []
+# Danach der value des geklickten Buttons, bei Escape §§.
+confirm$ = (
+	title: Or(Text Stream(Text))
+	question: Or(Text Stream(Text))
+) =>
+	result$ = create$(Or([] Text) [])
+	showDialog(
+		§html
+			<dialog>
+				<form method="dialog">
+					<h2 data-text="title"></h2>
+					<p data-text="question"></p>
+					<button value="ok" autofocus>OK</button>
+					<button value="cancel">Abbrechen</button>
+				</form>
+			</dialog>
+		§
+		[
+			title = title
+			question = question
+		]
+		(returnValue) =>
+			result$.push(returnValue)
+			result$.complete()
 	)
+	result$
+
+onClick(
+	§delete§
+	() =>
+		seconds$ = timer$(1000f)
+		result$ = confirm$(
+			§Löschen§
+			seconds$.map$(
+				(value) => §Wirklich löschen? Seit dem Öffnen vergangen: §(value) s§
+			)
+		)
+		result$.subscribe(
+			(value) =>
+				?(value)
+					(answer: Text) =>
+						# Der Timer gehört dem Aufrufer, also beendet ihn auch der Aufrufer, sobald der Dialog zu ist.
+						# Das completed auch den daraus abgeleiteten Text-Stream.
+						seconds$.complete()
+						message = ?(answer)
+							[§ok§] => §gelöscht§
+							[§cancel§] => §abgebrochen§
+							() => §mit Escape geschlossen§
+						setText(§log§ message)
+					() => []
+		)
 )
+
+# Idee für eine spätere ui-Bibliothek:
+# body.push(
+# 	button(
+# 		label = §create dialog§
+# 		onClick = () =>
+# 			createDialog(
+# 				title = §SomeTitle§
+# 				content = stackPanel(
+# 					button(
+# 						label = §OK§
+# 						onClick = () =>
+# 							# TODO
+# 					)
+# 				)
+# 			)
+# 	)
+# )
