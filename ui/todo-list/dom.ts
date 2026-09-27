@@ -1,15 +1,16 @@
-const listeners: ((sender, event: string) => void)[] = [];
-globalThis.emit = (sender, event: string) => {
+type Listener = (sender: any, event: string) => void;
+const listeners: Listener[] = [];
+globalThis.emit = (sender: any, event: string) => {
   listeners.forEach(listener => {
     listener(sender, event);
   });
 }
 
-export function subscribeEvent(listener: (sender, event: string) => void) {
+export function subscribeEvent(listener: Listener) {
   listeners.push(listener);
 }
 
-export function removeElement(element) {
+export function removeElement(element: any) {
   document.body.removeChild(element);
 }
 
