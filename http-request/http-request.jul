@@ -1,4 +1,4 @@
 # jul http-request.jul
 # node http-request.js
 
-httpTextRequest$(§https://api.ipify.org/?format=json§ §get§).subscribe(log)
+httpTextRequest$(§https://api.ipify.org/?format=json§ §get§ 5000f).subscribe(log)
