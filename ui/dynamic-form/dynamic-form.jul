@@ -23,19 +23,19 @@ ageField = elementById(§age-field§)
 output = elementById(§output§)
 name$ = inputValue$(elementById(§name§) Text textValue)
 age$ = inputValue$(elementById(§age§) Or([] Integer) integerValue)
-visible$ = inputValue$(elementById(§visible§) Boolean isChecked)
+ageVisible$ = inputValue$(elementById(§visible§) Boolean isChecked)
 
-visible$.subscribe(
+ageVisible$.subscribe(
 	(value) => ageField.setHidden(not(value))
 )
 
 # Ein verstecktes Feld zählt nicht zu den Formulardaten.
-data$ = combine$(name$ age$ visible$).map$(
+data$ = combine$(name$ age$ ageVisible$).map$(
 	(value) =>
-		(name age visible) = value
+		(name age ageVisible) = value
 		[
 			name = name
-			age = ?(visible)
+			age = ?(ageVisible)
 				[true] => age
 				() => []
 		]
