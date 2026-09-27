@@ -23,7 +23,7 @@ ageField = elementById(§age-field§)
 output = elementById(§output§)
 name$ = inputValue$(elementById(§name§) Text textValue)
 age$ = inputValue$(elementById(§age§) Or([] Integer) integerValue)
-ageVisible$ = inputValue$(elementById(§visible§) Boolean isChecked)
+ageVisible$ = inputValue$(elementById(§age-visible§) Boolean isChecked)
 
 ageVisible$.subscribe(
 	(value) => ageField.setHidden(not(value))
