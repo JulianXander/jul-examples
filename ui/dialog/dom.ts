@@ -17,7 +17,7 @@ export function setText(id: string, text: string) {
 // wird per textContent eingesetzt, also nie als HTML geparst, und bei einem Stream mit
 // jedem neuen Wert aktualisiert, bis der Dialog geschlossen ist.
 // Beim Schließen wird onClose mit dem value des auslösenden Buttons aufgerufen
-// (bei Escape mit '') und das Element wieder entfernt.
+// (bei Escape mit 'cancel') und das Element wieder entfernt.
 export function showDialog(
 	html: string,
 	texts: Record<string, string | TextStream>,
@@ -41,7 +41,7 @@ export function showDialog(
 		unsubscribes.forEach(unsubscribe => {
 			unsubscribe();
 		});
-		onClose(dialog.returnValue);
+		onClose(dialog.returnValue || 'cancel');
 		dialog.remove();
 	}, { once: true });
 	dialog.showModal();

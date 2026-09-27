@@ -29,11 +29,7 @@ confirm$ = (
 			question = question
 		]
 		(returnValue) =>
-			# returnValue ist der value des geklickten Buttons, bei Escape §§.
-			answer = ?(returnValue)
-				[§ok§] => §ok§
-				() => §cancel§
-			result$.push(answer)
+			result$.push(returnValue)
 			result$.complete()
 	)
 	result$
