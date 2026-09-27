@@ -1,24 +1,71 @@
-(body stackPanel label textInput numberInput booleanInput htmlIf inputValue$) = import(§ui§)
+(
+	elementById
+	integerValue
+	isChecked
+	onInput
+	setHidden
+	setText
+	textValue
+) = import(§./dom.ts§)
 
-body.push(
-	stackPanel(
-		label(
-			§textfield1§
-			textInput()
-		)
-		htmlIf(
-			inputValue$(§visible§)
-			label(
-				§numberfield1§
-				numberInput()
-			)
-		)
-		label(
-			§visible§
-			booleanInput(
-				id = §visible§
-				default = true
-			)
-		)
-	)
+# Der Wert, den read aus dem Eingabefeld liest, als Stream, der bei jeder Eingabe neu gelesen wird.
+# Startwert: der Wert beim Aufruf.
+inputValue$ = (
+	element
+	ValueType: Type
+	read: (input: Any) :> ValueType
+) =>
+	value$ = create$(ValueType element.read())
+	element.onInput(() => value$.push(element.read()))
+	value$
+
+ageField = elementById(§age-field§)
+output = elementById(§output§)
+name$ = inputValue$(elementById(§name§) Text textValue)
+age$ = inputValue$(elementById(§age§) Or([] Integer) integerValue)
+visible$ = inputValue$(elementById(§visible§) Boolean isChecked)
+
+visible$.subscribe(
+	(value) => ageField.setHidden(not(value))
 )
+
+# Ein verstecktes Feld zählt nicht zu den Formulardaten.
+data$ = combine$(name$ age$ visible$).map$(
+	(value) =>
+		(name age visible) = value
+		[
+			name = name
+			age = ?(visible)
+				[true] => age
+				() => []
+		]
+)
+data$.subscribe(
+	(value) => output.setText(toJson(value))
+)
+
+# Idee für eine spätere ui-Bibliothek:
+# (body stackPanel label textInput numberInput booleanInput htmlIf inputValue$) = import(§ui§)
+
+# body.push(
+# 	stackPanel(
+# 		label(
+# 			§textfield1§
+# 			textInput()
+# 		)
+# 		htmlIf(
+# 			inputValue$(§visible§)
+# 			label(
+# 				§numberfield1§
+# 				numberInput()
+# 			)
+# 		)
+# 		label(
+# 			§visible§
+# 			booleanInput(
+# 				id = §visible§
+# 				default = true
+# 			)
+# 		)
+# 	)
+# )
