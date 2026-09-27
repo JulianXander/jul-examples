@@ -1,48 +1,46 @@
-interface TextStream {
-	subscribe(listener: (value: string) => void): () => void;
+export function elementById(id: string): Element {
+	return document.getElementById(id)!;
 }
 
-export function onClick(id: string, listener: () => void) {
-	document.getElementById(id)!.addEventListener('click', () => {
+export function findElement(parent: Element, selector: string): Element {
+	return parent.querySelector(selector)!;
+}
+
+/**
+ * Hängt das HTML ans Ende des body an und liefert dessen letztes Element.
+ */
+export function appendHtml(html: string): Element {
+	document.body.insertAdjacentHTML('beforeend', html);
+	return document.body.lastElementChild!;
+}
+
+export function removeElement(element: Element) {
+	element.remove();
+}
+
+/**
+ * Setzt den Text per textContent, er wird also nie als HTML geparst.
+ */
+export function setText(element: Element, text: string) {
+	element.textContent = text;
+}
+
+export function onClick(element: Element, listener: () => void) {
+	element.addEventListener('click', () => {
 		listener();
 	});
 }
 
-export function setText(id: string, text: string) {
-	document.getElementById(id)!.textContent = text;
+export function showModal(dialog: HTMLDialogElement) {
+	dialog.showModal();
 }
 
-// Hängt das HTML (ein <dialog>-Element) an den body an und öffnet es modal.
-// texts ordnet jedem Wert von data-text im HTML einen Text oder Text-Stream zu. Der Text
-// wird per textContent eingesetzt, also nie als HTML geparst, und bei einem Stream mit
-// jedem neuen Wert aktualisiert, bis der Dialog geschlossen ist.
-// Beim Schließen wird onClose mit dem value des auslösenden Buttons aufgerufen
-// (bei Escape mit 'cancel') und das Element wieder entfernt.
-export function showDialog(
-	html: string,
-	texts: Record<string, string | TextStream>,
-	onClose: (returnValue: string) => void,
-) {
-	document.body.insertAdjacentHTML('beforeend', html);
-	const dialog = document.body.lastElementChild as HTMLDialogElement;
-	const unsubscribes: (() => void)[] = [];
-	for (const [name, text] of Object.entries(texts)) {
-		const element = dialog.querySelector(`[data-text="${name}"]`)!;
-		if (typeof text === 'string') {
-			element.textContent = text;
-		}
-		else {
-			unsubscribes.push(text.subscribe(value => {
-				element.textContent = value;
-			}));
-		}
-	}
+/**
+ * Ruft listener einmal beim Schließen auf, mit dem value des auslösenden Buttons,
+ * bei Escape mit ''.
+ */
+export function onDialogClose(dialog: HTMLDialogElement, listener: (returnValue: string) => void) {
 	dialog.addEventListener('close', () => {
-		unsubscribes.forEach(unsubscribe => {
-			unsubscribe();
-		});
-		onClose(dialog.returnValue || 'cancel');
-		dialog.remove();
+		listener(dialog.returnValue);
 	}, { once: true });
-	dialog.showModal();
 }

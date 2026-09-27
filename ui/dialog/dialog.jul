@@ -1,8 +1,26 @@
 (
+	appendHtml
+	elementById
+	findElement
 	onClick
+	onDialogClose
+	removeElement
 	setText
-	showDialog
+	showModal
 ) = import(§./dom.ts§)
+
+# Setzt den Text des Elements, bei einem Stream mit jedem neuen Wert.
+# Liefert die Bindung als Stream: complete darauf löst sie, der übergebene Stream bleibt unberührt.
+bindText$ = (
+	element
+	text: Or(Text Stream(Text))
+) =>
+	text$ = ?(text)
+		(fixedText: Text) => completed$(fixedText)
+		(textStream: Stream(Text)) => textStream
+	text$.map$(
+		(value) => element.setText(value)
+	)
 
 # Öffnet einen modalen Bestätigungsdialog.
 # title und question können fest oder ein Stream sein, der den Text laufend aktualisiert.
@@ -13,29 +31,35 @@ confirm$ = (
 	question: Or(Text Stream(Text))
 ) =>
 	result$ = create$(Or([] §ok§ §cancel§) [])
-	showDialog(
+	dialog = appendHtml(
 		§html
 			<dialog>
 				<form method="dialog">
-					<h2 data-text="title"></h2>
-					<p data-text="question"></p>
+					<h2></h2>
+					<p></p>
 					<button value="ok" autofocus>OK</button>
 					<button value="cancel">Abbrechen</button>
 				</form>
 			</dialog>
 		§
-		[
-			title = title
-			question = question
-		]
+	)
+	titleBinding$ = bindText$(dialog.findElement(§h2§) title)
+	questionBinding$ = bindText$(dialog.findElement(§p§) question)
+	dialog.onDialogClose(
 		(returnValue) =>
-			result$.push(returnValue)
+			titleBinding$.complete()
+			questionBinding$.complete()
+			dialog.removeElement()
+			answer = ?(returnValue)
+				[§ok§] => §ok§
+				() => §cancel§
+			result$.push(answer)
 			result$.complete()
 	)
+	dialog.showModal()
 	result$
 
-onClick(
-	§delete§
+elementById(§delete§).onClick(
 	() =>
 		seconds$ = timer$(1000f)
 		result$ = confirm$(
@@ -54,7 +78,7 @@ onClick(
 						message = ?(answer)
 							[§ok§] => §gelöscht§
 							[§cancel§] => §abgebrochen§
-						setText(§log§ message)
+						elementById(§log§).setText(message)
 					() => []
 		)
 )
