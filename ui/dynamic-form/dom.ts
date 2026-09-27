@@ -5,11 +5,11 @@ export function elementById(id: string): Element {
 /**
  * Setzt den Text per textContent, er wird also nie als HTML geparst.
  */
-export function setText(element: Element, text: string) {
+export function setText(element: Element, text: string) : void {
 	element.textContent = text;
 }
 
-export function setHidden(element: Element, hidden: boolean) {
+export function setHidden(element: Element, hidden: boolean) : void {
 	(element as HTMLElement).hidden = hidden;
 }
 
@@ -32,7 +32,7 @@ export function isChecked(input: Element): boolean {
 /**
  * Ruft listener bei jeder Eingabe auf, auch beim Umschalten einer Checkbox.
  */
-export function onInput(input: Element, listener: () => void) {
+export function onInput(input: Element, listener: () => void): void {
 	input.addEventListener('input', () => {
 		listener();
 	});
