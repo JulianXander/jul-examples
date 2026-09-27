@@ -9,18 +9,19 @@
 	showModal
 ) = import(§./dom.ts§)
 
-# Setzt den Text des Elements, bei einem Stream mit jedem neuen Wert.
-# Liefert die Bindung als Stream: complete darauf löst sie, der übergebene Stream bleibt unberührt.
-bindText$ = (
+# Setzt den Text des Elements, bei einem Stream mit jedem neuen Wert, bis until$ einen neuen Wert
+# liefert. Der übergebene Stream bleibt unberührt.
+bindText = (
 	element
 	text: Or(Text Stream(Text))
+	until$: Stream(Any)
 ) =>
-	text$ = ?(text)
-		(fixedText: Text) => completed$(fixedText)
-		(textStream: Stream(Text)) => textStream
-	text$.map$(
-		(value) => element.setText(value)
-	)
+	?(text)
+		(fixedText: Text) => element.setText(fixedText)
+		(textStream: Stream(Text)) =>
+			textStream.takeUntil$(until$).subscribe(
+				(value) => element.setText(value)
+			)
 
 # Öffnet einen modalen Bestätigungsdialog.
 # title und question können fest oder ein Stream sein, der den Text laufend aktualisiert.
@@ -43,12 +44,11 @@ confirm$ = (
 			</dialog>
 		§
 	)
-	titleBinding$ = bindText$(dialog.findElement(§h2§) title)
-	questionBinding$ = bindText$(dialog.findElement(§p§) question)
+	# Die Bindungen enden, sobald result$ die Antwort liefert.
+	bindText(dialog.findElement(§h2§) title result$)
+	bindText(dialog.findElement(§p§) question result$)
 	dialog.onDialogClose(
 		(returnValue) =>
-			titleBinding$.complete()
-			questionBinding$.complete()
 			dialog.removeElement()
 			answer = ?(returnValue)
 				[§ok§] => §ok§
