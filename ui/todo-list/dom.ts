@@ -1,6 +1,6 @@
 type Listener = (sender: any, event: string) => void;
 const listeners: Listener[] = [];
-(globalThis as any).emit =(sender: any, event: string) => {
+(globalThis as any).emit = (sender: any, event: string) => {
   listeners.forEach(listener => {
     listener(sender, event);
   });
