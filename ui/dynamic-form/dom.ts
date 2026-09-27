@@ -5,11 +5,11 @@ export function elementById(id: string): Element {
 /**
  * Setzt den Text per textContent, er wird also nie als HTML geparst.
  */
-export function setText(element: Element, text: string) : void {
+export function setText(element: Element, text: string): void {
 	element.textContent = text;
 }
 
-export function setHidden(element: Element, hidden: boolean) : void {
+export function setHidden(element: Element, hidden: boolean): void {
 	(element as HTMLElement).hidden = hidden;
 }
 
