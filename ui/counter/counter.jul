@@ -1,5 +1,5 @@
 # jul
-counter$ = timer$(1000f)
+counter$ = interval$(1000f 10)
 counter$.subscribe(
 	(value) =>
 		log(value)
@@ -7,9 +7,6 @@ counter$.subscribe(
 			document.body.innerText = §(value)
 		§)
 		# runJs(§document.body.innerText = §(value)§)
-		?(value)
-			[10f] => counter$.complete()
-			() => []
 )
 
 # test1 = ValueOf(test)

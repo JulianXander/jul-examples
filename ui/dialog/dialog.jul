@@ -61,7 +61,7 @@ confirm$ = (
 
 elementById(§delete§).onClick(
 	() =>
-		seconds$ = timer$(1000f)
+		seconds$ = interval$(1000f)
 		result$ = confirm$(
 			§Löschen§
 			seconds$.map$(
@@ -72,7 +72,7 @@ elementById(§delete§).onClick(
 			(value) =>
 				?(value)
 					(answer: Or(§ok§ §cancel§)) =>
-						# Der Timer gehört dem Aufrufer, also beendet ihn auch der Aufrufer, sobald der Dialog zu ist.
+						# Das Intervall gehört dem Aufrufer, also beendet es auch der Aufrufer, sobald der Dialog zu ist.
 						# Das completed auch den daraus abgeleiteten Text-Stream.
 						seconds$.complete()
 						message = ?(answer)

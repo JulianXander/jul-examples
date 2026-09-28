@@ -1,5 +1,5 @@
-timer1$ = timer$(500f)
-progress$ = timer1$.map$((value) => value.multiplyFloat(2f))
+timer1$ = interval$(500f)
+progress$ = timer1$.map$((value) => value.multiply(2))
 progress$.subscribe(
 	(value) =>
 		endReached = value.greater(100)
@@ -15,7 +15,7 @@ progress$.subscribe(
 						§(moveJs)
 						# vorherigen Text löschen, falls weniger neu geschrieben wird
 						# process.stdout.clearScreenDown();
-						process.stdout.write('§(value.multiplyFloat(2f))%\n');
+						process.stdout.write('§(value.multiply(2))%\n');
 						process.stdout.write('§(value)%\n');
 					§
 				)
