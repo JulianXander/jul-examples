@@ -20,8 +20,11 @@ inputValue$ = (
 
 ageField = elementById(§age-field§)
 output = elementById(§output§)
+#ignore JUL2800
 name$ = inputValue$(elementById(§name§) textValue)
+#ignore JUL2800
 age$ = inputValue$(elementById(§age§) integerValue)
+#ignore JUL2800
 ageVisible$ = inputValue$(elementById(§age-visible§) isChecked)
 
 ageVisible$.subscribe(
