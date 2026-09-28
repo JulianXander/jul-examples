@@ -66,14 +66,14 @@ restFunction(...[1 2])
 # nicht äquivalent
 restFunction([1 2])
 
-# TODO mit Parameternamen nicht erlaubt?
+#TODO mit Parameternamen nicht erlaubt?
 restFunction(
 	a = 1
 	b = 2
 )
 
 # Rest Parameter getypt
-# TODO rest type nur List oder auch Dictionary? bei rest Dictionary Parameternamen spreaden?
+#TODO rest type nur List oder auch Dictionary? bei rest Dictionary Parameternamen spreaden?
 # bei rest type Tuple/DictionaryLiteral: feste Anzahl Argumente erzwingen?
 restFunction2 = (...restParameter: MyType) => log(§hi§)
 # äquivalent?

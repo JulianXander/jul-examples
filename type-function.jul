@@ -20,7 +20,7 @@ paramterFn = (
 log(myA1)
 log(b)
 
-# TODO fn parameters mit alias
+#TODO fn parameters mit alias
 higherOrderFn = (lowerFn: (arg1: Text arg2: Boolean) => []) => []
 
 arg1 = true
