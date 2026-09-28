@@ -8,12 +8,7 @@ getFizzBuzzMessage = (value: PositiveInteger) =>
 		[divisibleBy(3)] => §Fizz§
 		Any => value
 
-range = (count: Or(0 PositiveInteger)) =>
-	?(count)
-		[0] => []
-		Any => [...range(count.subtract(1)) count]
-
-numbers = range(100)
+numbers = range(1 100)
 fizzBuzzMessages = numbers.map(getFizzBuzzMessage)
 
 fizzBuzzMessages.forEach((value) => log(value))
