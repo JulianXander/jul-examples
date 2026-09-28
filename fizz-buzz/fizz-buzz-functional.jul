@@ -1,0 +1,19 @@
+divisibleBy = (divisor: NonZeroInteger) =>
+	(dividend: Integer) => dividend.modulo(divisor).equal(0)
+
+getFizzBuzzMessage = (value: PositiveInteger) =>
+	?(value)
+		[divisibleBy(15)] => §FizzBuzz§
+		[divisibleBy(5)] => §Buzz§
+		[divisibleBy(3)] => §Fizz§
+		Any => value
+
+range = (count: Or(0 PositiveInteger)) =>
+	?(count)
+		[0] => []
+		Any => [...range(count.subtract(1)) count]
+
+numbers = range(100)
+fizzBuzzMessages = numbers.map(getFizzBuzzMessage)
+
+fizzBuzzMessages.forEach(log)
