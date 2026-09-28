@@ -16,4 +16,4 @@ range = (count: Or(0 PositiveInteger)) =>
 numbers = range(100)
 fizzBuzzMessages = numbers.map(getFizzBuzzMessage)
 
-fizzBuzzMessages.forEach(log)
+fizzBuzzMessages.forEach((value) => log(value))
