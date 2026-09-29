@@ -71,10 +71,10 @@ subscribeEvent(
 				row.forEach(
 					(column = value columnIndex = index) =>
 						?(column)
-						[Or(§x§ §o§)] =>
-							cellElement = elementById(§§(rowIndex)-§(columnIndex)§)
-							setText(cellElement §§)
-							setEnabled(cellElement true)
+							[Or(§x§ §o§)] =>
+								cellElement = elementById(§§(rowIndex)-§(columnIndex)§)
+								setText(cellElement §§)
+								setEnabled(cellElement true)
 				)
 		)
 
