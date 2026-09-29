@@ -62,6 +62,8 @@ repeat(
 								[§o§] => §x§
 						]
 						gameState$.push(newGameState)
+
+						#TODO check winner
 				)
 		)
 )
