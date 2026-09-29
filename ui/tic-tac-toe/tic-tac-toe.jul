@@ -15,8 +15,13 @@
 
 test1 = () => log(§hello§)
 
+Cell = Or(§§ §x§ §o§)
 GameState = [
-	gameBoard: List(List(Or(§§ §x§ §o§)))
+	gameBoard: [
+		[Cell Cell Cell]
+		[Cell Cell Cell]
+		[Cell Cell Cell]
+	]
 	currentPlayer: Or(§x§ §o§)
 ]
 initialGameState: GameState = [
@@ -30,10 +35,12 @@ initialGameState: GameState = [
 #ignore JUL2800
 gameState$ = create$(GameState initialGameState)
 
-initialGameState/gameBoard.forEach(
-	(row = value rowIndex = index) =>
-		row.forEach(
-			(column = value columnIndex = index) =>
+repeat(
+	3
+	(rowIndex = index) =>
+		repeat(
+			3
+			(columnIndex = index) =>
 				cellElement = elementById(§§(rowIndex)-§(columnIndex)§)
 				subscribeEvent(
 					cellElement
@@ -46,7 +53,8 @@ initialGameState/gameBoard.forEach(
 						setText(cellElement currentGameState/currentPlayer)
 
 						# update state
-						newRow = row.setElement(columnIndex currentGameState/currentPlayer)
+						currentRow = currentGameState/gameBoard.getElement(assume(rowIndex Or(1 2 3)))
+						newRow = currentRow.setElement(columnIndex currentGameState/currentPlayer)
 						newGameState: GameState = [
 							gameBoard = currentGameState/gameBoard.setElement(rowIndex newRow)
 							currentPlayer = ?(currentGameState/currentPlayer)
