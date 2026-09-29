@@ -1,5 +1,6 @@
 (addMessage) = import(§./dom.ts§)
 
+#ignore JUL2800
 interval$(2000f).subscribe(
 	(value) =>
 		addMessage(§message number: §(value)§)
