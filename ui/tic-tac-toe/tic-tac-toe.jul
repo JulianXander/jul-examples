@@ -1,0 +1,83 @@
+(
+	elementById
+	setEnabled
+	setText
+	subscribeEvent
+) = import(§./dom.ts§)
+
+#TODO support nativeFunction at runtime in userland
+# subscribeEvent = nativeFunction(
+# 	(listener) :> []
+# 	§js
+# 		document.addEventListener('click', listener);
+# 	§
+# )
+
+test1 = () => log(§hello§)
+
+GameState = [
+	gameBoard: List(List(Or(§§ §x§ §o§)))
+	currentPlayer: Or(§x§ §o§)
+]
+initialGameState: GameState = [
+	gameBoard = [
+		[§§ §§ §§]
+		[§§ §§ §§]
+		[§§ §§ §§]
+	]
+	currentPlayer = §x§
+]
+#ignore JUL2800
+gameState$ = create$(GameState initialGameState)
+
+initialGameState/gameBoard.forEach(
+	(row = value rowIndex = index) =>
+		row.forEach(
+			(column = value columnIndex = index) =>
+				cellElement = elementById(§§(rowIndex)-§(columnIndex)§)
+				subscribeEvent(
+					cellElement
+					§click§
+					() =>
+						currentGameState = gameState$/getValue()
+
+						# update ui
+						setEnabled(cellElement false)
+						setText(cellElement currentGameState/currentPlayer)
+
+						# update state
+						newRow = row.setElement(columnIndex currentGameState/currentPlayer)
+						newGameState: GameState = [
+							gameBoard = currentGameState/gameBoard.setElement(rowIndex newRow)
+							currentPlayer = ?(currentGameState/currentPlayer)
+								[§x§] => §o§
+								[§o§] => §x§
+						]
+						gameState$.push(newGameState)
+				)
+		)
+)
+
+resetElement = elementById(§reset§)
+subscribeEvent(
+	resetElement
+	§click§
+	() =>
+		currentGameState = gameState$/getValue()
+
+		# reset ui
+		currentGameState/gameBoard.forEach(
+			(row = value rowIndex = index) =>
+				row.forEach(
+					(column = value columnIndex = index) =>
+						?(column)
+						[Or(§x§ §o§)] =>
+							cellElement = elementById(§§(rowIndex)-§(columnIndex)§)
+							setText(cellElement §§)
+							setEnabled(cellElement true)
+				)
+		)
+
+		# reset state
+		gameState$.push(initialGameState)
+)
