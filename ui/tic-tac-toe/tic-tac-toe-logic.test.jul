@@ -1,0 +1,16 @@
+(checkWinner) = import(§./tic-tac-toe-logic.jul§)
+
+test(
+	§checkWinner§
+	() =>
+		not(checkWinner(
+			[
+				[§x§ §§ §x§]
+				[§x§ §§ §§]
+				[§x§ §x§ §x§]
+			]
+			§x§
+			1
+			3
+		))
+)

@@ -1,0 +1,39 @@
+Player = Or(§x§ §o§)
+Cell = Or(§§ Player)
+GameBoard = [
+	[Cell Cell Cell]
+	[Cell Cell Cell]
+	[Cell Cell Cell]
+]
+GameState = [
+	gameBoard: GameBoard
+	currentPlayer: Player
+]
+
+allEqual = (values: List(Any) expected) -> Boolean =>
+	values.all((value) => value.equal(expected))
+
+checkWinner = (
+	gameBoard: GameBoard
+	player: Player
+	rowIndex: Or(1 2 3)
+	columnIndex: Or(1 2 3)
+) -> Boolean =>
+	row = gameBoard.getElement(rowIndex)
+	column = range(1 3).map((value) => gameBoard.getElement(value).getElement(columnIndex))
+	topLeftDiagonal = [
+		gameBoard.getElement(1).getElement(1)
+		gameBoard.getElement(2).getElement(2)
+		gameBoard.getElement(3).getElement(3)
+	]
+	bottomLeftDiagonal = [
+		gameBoard.getElement(3).getElement(1)
+		gameBoard.getElement(2).getElement(2)
+		gameBoard.getElement(1).getElement(3)
+	]
+	isWinner = or(
+		allEqual(row player)
+		allEqual(column player)
+		allEqual(topLeftDiagonal player)
+		allEqual(bottomLeftDiagonal player)
+	)

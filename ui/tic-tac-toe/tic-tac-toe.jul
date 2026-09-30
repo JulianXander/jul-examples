@@ -4,6 +4,7 @@
 	setText
 	subscribeEvent
 ) = import(§./dom.ts§)
+(checkWinner GameState) = import(§tic-tac-toe-logic.jul§)
 
 #TODO support nativeFunction at runtime in userland
 # subscribeEvent = nativeFunction(
@@ -15,15 +16,6 @@
 
 test1 = () => log(§hello§)
 
-Cell = Or(§§ §x§ §o§)
-GameState = [
-	gameBoard: [
-		[Cell Cell Cell]
-		[Cell Cell Cell]
-		[Cell Cell Cell]
-	]
-	currentPlayer: Or(§x§ §o§)
-]
 initialGameState: GameState = [
 	gameBoard = [
 		[§§ §§ §§]
@@ -53,17 +45,22 @@ repeat(
 						setText(cellElement currentGameState/currentPlayer)
 
 						# update state
+						currentPlayer = currentGameState/currentPlayer
 						currentRow = currentGameState/gameBoard.getElement(rowIndex)
-						newRow = currentRow.setElement(columnIndex currentGameState/currentPlayer)
+						newRow = currentRow.setElement(columnIndex currentPlayer)
 						newGameState: GameState = [
 							gameBoard = currentGameState/gameBoard.setElement(rowIndex newRow)
-							currentPlayer = ?(currentGameState/currentPlayer)
+							currentPlayer = ?(currentPlayer)
 								[§x§] => §o§
 								[§o§] => §x§
 						]
 						gameState$.push(newGameState)
 
-						#TODO check winner
+						isWinner = checkWinner(newGameState/gameBoard currentPlayer rowIndex columnIndex)
+						?(isWinner)
+							[true] =>
+								log(§winner§ currentPlayer)
+								# TOOD disable gameboard, show winner
 				)
 		)
 )
