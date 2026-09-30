@@ -10,7 +10,6 @@ test(
 	() => not(allEqual([§x§ §o§ §x§] §x§))
 )
 
-
 test(
 	§checkWinner§
 	() =>
