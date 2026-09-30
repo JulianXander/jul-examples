@@ -53,7 +53,7 @@ repeat(
 						setText(cellElement currentGameState/currentPlayer)
 
 						# update state
-						currentRow = currentGameState/gameBoard.getElement(assume(rowIndex Or(1 2 3)))
+						currentRow = currentGameState/gameBoard.getElement(rowIndex)
 						newRow = currentRow.setElement(columnIndex currentGameState/currentPlayer)
 						newGameState: GameState = [
 							gameBoard = currentGameState/gameBoard.setElement(rowIndex newRow)
