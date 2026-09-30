@@ -1,4 +1,15 @@
-(checkWinner) = import(§./tic-tac-toe-logic.jul§)
+(allEqual checkWinner) = import(§./tic-tac-toe-logic.jul§)
+
+test(
+	§allEqual-positive§
+	() => allEqual([§x§ §x§ §x§] §x§)
+)
+
+test(
+	§allEqual-negative§
+	() => not(allEqual([§x§ §o§ §x§] §x§))
+)
+
 
 test(
 	§checkWinner§
