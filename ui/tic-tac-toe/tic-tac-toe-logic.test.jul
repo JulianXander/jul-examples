@@ -1,4 +1,4 @@
-(allEqual checkWinner) = import(§./tic-tac-toe-logic.jul§)
+(allEqual checkWinner isTied) = import(§./tic-tac-toe-logic.jul§)
 
 test(
 	§allEqual-positive§
@@ -8,6 +8,16 @@ test(
 test(
 	§allEqual-negative§
 	() => not(allEqual([§x§ §o§ §x§] §x§))
+)
+
+test(
+	§isTied§
+	() =>
+		isTied([
+			[§x§ §x§ §x§]
+			[§x§ §x§ §x§]
+			[§x§ §x§ §x§]
+		])
 )
 
 test(

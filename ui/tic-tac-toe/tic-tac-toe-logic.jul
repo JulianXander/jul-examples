@@ -13,6 +13,9 @@ GameState = [
 allEqual = (values: List(Any) expected) -> Boolean =>
 	values.all((value) => value.equal(expected))
 
+isTied = (gameBoard: GameBoard) -> Boolean =>
+	gameBoard.all((row = value) => row.all((cell = value) => not(cell.equal(§§))))
+
 checkWinner = (
 	gameBoard: GameBoard
 	player: Player

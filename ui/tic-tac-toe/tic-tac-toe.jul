@@ -4,7 +4,12 @@
 	setText
 	subscribeEvent
 ) = import(§./dom.ts§)
-(checkWinner GameState) = import(§tic-tac-toe-logic.jul§)
+(
+	checkWinner
+	GameBoard
+	GameState
+	isTied
+) = import(§./tic-tac-toe-logic.jul§)
 
 #TODO support nativeFunction at runtime in userland
 # subscribeEvent = nativeFunction(
@@ -14,8 +19,6 @@
 # 	§
 # )
 
-test1 = () => log(§hello§)
-
 initialGameState: GameState = [
 	gameBoard = [
 		[§§ §§ §§]
@@ -24,44 +27,71 @@ initialGameState: GameState = [
 	]
 	currentPlayer = §x§
 ]
+
+walk = (
+	gameBoard: GameBoard
+	iteratee: (
+		rowIndex: Or(1 2 3)
+		columnIndex: Or(1 2 3)
+		cellElement: Any
+	) ~> Any
+) =>
+	gameBoard.forEach(
+		(row = value rowIndex = index) => row.forEach(
+			(cellValue = value columnIndex = index) =>
+				cellElement = elementById(§§(rowIndex)-§(columnIndex)§)
+				iteratee(rowIndex columnIndex cellElement)
+		)
+	)
+
 #ignore JUL2800
 gameState$ = create$(GameState initialGameState)
 
-repeat(
-	3
-	(rowIndex = index) =>
-		repeat(
-			3
-			(columnIndex = index) =>
-				cellElement = elementById(§§(rowIndex)-§(columnIndex)§)
-				subscribeEvent(
-					cellElement
-					§click§
-					() =>
-						currentGameState = gameState$/getValue()
+statusElement = elementById(§status§)
 
-						# update ui
-						setEnabled(cellElement false)
-						setText(cellElement currentGameState/currentPlayer)
+disableGameBoard = (gameBoard: GameBoard) =>
+	walk(
+		gameBoard
+		(rowIndex columnIndex cellElement) =>
+			cellElement.setEnabled(false)
+	)
 
-						# update state
-						currentPlayer = currentGameState/currentPlayer
-						currentRow = currentGameState/gameBoard.getElement(rowIndex)
-						newRow = currentRow.setElement(columnIndex currentPlayer)
-						newGameState: GameState = [
-							gameBoard = currentGameState/gameBoard.setElement(rowIndex newRow)
-							currentPlayer = ?(currentPlayer)
-								[§x§] => §o§
-								[§o§] => §x§
-						]
-						gameState$.push(newGameState)
+walk(
+	initialGameState/gameBoard
+	(rowIndex columnIndex cellElement) =>
+		subscribeEvent(
+			cellElement
+			§click§
+			() =>
+				currentGameState = gameState$/getValue()
 
-						isWinner = checkWinner(newGameState/gameBoard currentPlayer rowIndex columnIndex)
-						?(isWinner)
-							[true] =>
-								log(§winner§ currentPlayer)
-								# TOOD disable gameboard, show winner
-				)
+				# update ui
+				setEnabled(cellElement false)
+				setText(cellElement currentGameState/currentPlayer)
+
+				# update state
+				currentPlayer = currentGameState/currentPlayer
+				currentRow = currentGameState/gameBoard.getElement(rowIndex)
+				newRow = currentRow.setElement(columnIndex currentPlayer)
+				newGameBoard = currentGameState/gameBoard.setElement(rowIndex newRow)
+				newGameState: GameState = [
+					gameBoard = newGameBoard
+					currentPlayer = ?(currentPlayer)
+						[§x§] => §o§
+						[§o§] => §x§
+				]
+				gameState$.push(newGameState)
+
+				isWinner = checkWinner(newGameBoard currentPlayer rowIndex columnIndex)
+				?(isWinner)
+					[true] =>
+						disableGameBoard(newGameBoard)
+						statusElement.setText(§Spieler §(currentPlayer) hat gewonnen§)
+					[false] =>
+						tie = isTied(newGameBoard)
+						?(tie)
+							[true] => statusElement.setText(§Unentschieden§)
+							[false] => statusElement.setText(§Aktueller Spieler: §(newGameState/currentPlayer)§)
 		)
 )
 
@@ -70,20 +100,14 @@ subscribeEvent(
 	resetElement
 	§click§
 	() =>
-		currentGameState = gameState$/getValue()
-
 		# reset ui
-		currentGameState/gameBoard.forEach(
-			(row = value rowIndex = index) =>
-				row.forEach(
-					(column = value columnIndex = index) =>
-						?(column)
-							[Or(§x§ §o§)] =>
-								cellElement = elementById(§§(rowIndex)-§(columnIndex)§)
-								setText(cellElement §§)
-								setEnabled(cellElement true)
-				)
+		walk(
+			initialGameState/gameBoard
+			(rowIndex columnIndex cellElement) =>
+				setText(cellElement §§)
+				setEnabled(cellElement true)
 		)
+		statusElement.setText(§Aktueller Spieler: x§)
 
 		# reset state
 		gameState$.push(initialGameState)
