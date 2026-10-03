@@ -40,7 +40,7 @@ walk = (
 		(row = value rowIndex = index) => row.forEach(
 			(cellValue = value columnIndex = index) =>
 				cellElement = elementById(§§(rowIndex)-§(columnIndex)§)
-				iteratee(rowIndex columnIndex cellElement §TODO should warn extra arg§)
+				iteratee(rowIndex columnIndex cellElement)
 		)
 	)
 
