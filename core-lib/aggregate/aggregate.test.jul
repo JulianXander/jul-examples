@@ -1,0 +1,18 @@
+(aggregateRecursive) = import(§./aggregate.jul§)
+
+testValues = [
+	1
+	2
+	3
+]
+
+test(
+	§aggrec§
+	() =>
+		testValues.aggregateRecursive(
+			0
+			(acc val) => acc.add(val)
+			1
+			0
+		).equal(6)
+)

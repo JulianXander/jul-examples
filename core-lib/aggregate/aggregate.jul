@@ -1,0 +1,27 @@
+aggregateRecursive = (
+	values: List(Any)
+	init
+	fn: (acc val i) :> Any
+	index
+	curr
+) =>
+	?(index)
+		[values.length().add(1)] => curr
+		() =>
+			prev = aggregateRecursive(init fn index.add(1) curr)
+			fn(prev values.getElement(index) index)
+
+testValues = [
+	1
+	2
+	3
+]
+
+sumBuiltin = testValues.aggregate(0 (accumulator value) => accumulator.add(value))
+
+sumRecursive = testValues.aggregateRecursive(
+	0
+	(acc val) => acc.add(val)
+	1
+	0
+)
