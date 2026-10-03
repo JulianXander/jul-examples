@@ -1,18 +1,9 @@
-# myFn = (x: Or([] MyComplexType)) =>
-# 	?(x)
-# 		[MyComplexType] => §hi§
-# 		() => §ho§
-
-# myFn = (a: List(Integer)) =>
-# 	(x y) = [...a 1]
-# 	[x y]
-
-# g = (t: Text) => t
-# h = (n: And(Integer Not(0))) => g(n)
-
-
-f = (i: Integer) => i
-myFn = (a: List(Any)) =>
-	(x y) = a
-	z = x/1
-	f(x)
+isInteger = (x: Any) :> Boolean =>
+	?(x)
+		[Integer] => true
+		() => false
+g = (t: Text) => t
+f = (someVar: Or(Integer Text)) =>
+	?(someVar)
+		[isInteger] => 0
+		() => g(someVar)
