@@ -4,7 +4,7 @@ aggregateRecursive = (
 	fn: (acc val i) :> Any
 	index
 	curr
-) =>
+) :> TypeOf(fn)/ReturnType =>
 	?(index)
 		[values.length().add(1)] => curr
 		() =>
