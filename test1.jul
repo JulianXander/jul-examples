@@ -1,9 +1,2 @@
-isInteger = (x: Any) :> Boolean =>
-	?(x)
-		[Integer] => true
-		() => false
-g = (t: Text) => t
-f = (someVar: Or(Integer Text)) =>
-	?(someVar)
-		[isInteger] => 0
-		() => g(someVar)
+f = (T: Type callback: (accumulator: T) :> T) :> T => 0
+f(Integer (accumulator) => §text§)
