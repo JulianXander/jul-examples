@@ -8,7 +8,7 @@ aggregateRecursive = (
 	?(index)
 		[values.length().add(1)] => curr
 		() =>
-			prev = aggregateRecursive(init fn index.add(1) curr)
+			prev = aggregateRecursive(values init fn index.add(1) curr)
 			fn(prev values.getElement(index) index)
 
 testValues = [
