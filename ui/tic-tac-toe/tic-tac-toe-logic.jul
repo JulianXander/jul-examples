@@ -128,8 +128,17 @@ computeResetDelta = (gameState: GameState) -> GameStateChange =>
 	cellChanges = changedCells.map(
 		(cell = value) =>
 			?(cell/value.equal(§§))
-				[true] => [rowIndex = cell/rowIndex columnIndex = cell/columnIndex enabled = true]
-				[false] => [rowIndex = cell/rowIndex columnIndex = cell/columnIndex value = §§ enabled = true]
+				[true] => [
+					rowIndex = cell/rowIndex
+					columnIndex = cell/columnIndex
+					enabled = true
+				]
+				[false] => [
+					rowIndex = cell/rowIndex
+					columnIndex = cell/columnIndex
+					value = §§
+					enabled = true
+				]
 	)
 	[
 		cellChanges = cellChanges
