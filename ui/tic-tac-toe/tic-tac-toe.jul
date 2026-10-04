@@ -5,10 +5,9 @@
 	subscribeEvent
 ) = import(§./dom.ts§)
 (
-	checkWinner
+	applyMove
 	GameBoard
 	GameState
-	isTied
 ) = import(§./tic-tac-toe-logic.jul§)
 
 #TODO support nativeFunction at runtime in userland
@@ -26,6 +25,7 @@ initialGameState: GameState = [
 		[§§ §§ §§]
 	]
 	currentPlayer = §x§
+	status = §running§
 ]
 
 walk = (
@@ -70,28 +70,15 @@ walk(
 				setText(cellElement currentGameState/currentPlayer)
 
 				# update state
-				currentPlayer = currentGameState/currentPlayer
-				currentRow = currentGameState/gameBoard.getElement(rowIndex)
-				newRow = currentRow.setElement(columnIndex currentPlayer)
-				newGameBoard = currentGameState/gameBoard.setElement(rowIndex newRow)
-				newGameState: GameState = [
-					gameBoard = newGameBoard
-					currentPlayer = ?(currentPlayer)
-						[§x§] => §o§
-						[§o§] => §x§
-				]
+				newGameState = applyMove(currentGameState rowIndex columnIndex)
 				gameState$.push(newGameState)
 
-				isWinner = checkWinner(newGameBoard currentPlayer rowIndex columnIndex)
-				?(isWinner)
-					[true] =>
-						disableGameBoard(newGameBoard)
-						statusElement.setText(§Spieler §(currentPlayer) hat gewonnen§)
-					[false] =>
-						tie = isTied(newGameBoard)
-						?(tie)
-							[true] => statusElement.setText(§Unentschieden§)
-							[false] => statusElement.setText(§Aktueller Spieler: §(newGameState/currentPlayer)§)
+				?(newGameState/status)
+					[§win§] =>
+						disableGameBoard(newGameState/gameBoard)
+						statusElement.setText(§Spieler §(newGameState/currentPlayer) hat gewonnen§)
+					[§tie§] => statusElement.setText(§Unentschieden§)
+					[§running§] => statusElement.setText(§Aktueller Spieler: §(newGameState/currentPlayer)§)
 		)
 )
 

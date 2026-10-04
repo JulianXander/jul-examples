@@ -1,4 +1,4 @@
-(allEqual checkWinner isTied) = import(§./tic-tac-toe-logic.jul§)
+(allEqual applyMove checkWinner isTied) = import(§./tic-tac-toe-logic.jul§)
 
 test(
 	§allEqual-positive§
@@ -33,4 +33,67 @@ test(
 			1
 			3
 		))
+)
+
+test(
+	§applyMove-running-switches-player§
+	() =>
+		newState = applyMove(
+			[
+				gameBoard = [
+					[§§ §§ §§]
+					[§§ §§ §§]
+					[§§ §§ §§]
+				]
+				currentPlayer = §x§
+				status = §running§
+			]
+			1
+			1
+		)
+		and(
+			newState/status.equal(§running§)
+			newState/currentPlayer.equal(§o§)
+		)
+)
+
+test(
+	§applyMove-win-keeps-winner§
+	() =>
+		newState = applyMove(
+			[
+				gameBoard = [
+					[§x§ §x§ §§]
+					[§o§ §o§ §§]
+					[§§ §§ §§]
+				]
+				currentPlayer = §x§
+				status = §running§
+			]
+			1
+			3
+		)
+		and(
+			newState/status.equal(§win§)
+			newState/currentPlayer.equal(§x§)
+		)
+)
+
+test(
+	§applyMove-tie§
+	() =>
+		newState = applyMove(
+			[
+				gameBoard = [
+					[§x§ §o§ §x§]
+					[§x§ §o§ §o§]
+					[§o§ §x§ §§]
+				]
+				currentPlayer = §x§
+				status = §running§
+			]
+			3
+			3
+		)
+		newState/status.equal(§tie§)
 )

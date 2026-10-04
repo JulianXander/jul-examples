@@ -5,9 +5,12 @@ GameBoard = [
 	[Cell Cell Cell]
 	[Cell Cell Cell]
 ]
+GameStatus = Or(§running§ §tie§ §win§)
+# Bei status §win§ ist currentPlayer der Gewinner.
 GameState = [
 	gameBoard: GameBoard
 	currentPlayer: Player
+	status: GameStatus
 ]
 
 allEqual = (values: List(Any) expected) -> Boolean =>
@@ -40,3 +43,34 @@ checkWinner = (
 		allEqual(topLeftDiagonal player)
 		allEqual(bottomLeftDiagonal player)
 	)
+
+# Setzt currentPlayer auf das Feld und liefert den neuen Spielzustand.
+# Nur bei status §running§ wechselt der Spieler, sonst bleibt er stehen.
+applyMove = (
+	gameState: GameState
+	rowIndex: Or(1 2 3)
+	columnIndex: Or(1 2 3)
+) -> GameState =>
+	currentPlayer = gameState/currentPlayer
+	currentRow = gameState/gameBoard.getElement(rowIndex)
+	newRow = currentRow.setElement(columnIndex currentPlayer)
+	newGameBoard = gameState/gameBoard.setElement(rowIndex newRow)
+	isWinner = checkWinner(newGameBoard currentPlayer rowIndex columnIndex)
+	status: GameStatus = ?(isWinner)
+		[true] => §win§
+		[false] =>
+			tie = isTied(newGameBoard)
+			?(tie)
+				[true] => §tie§
+				[false] => §running§
+	[
+		gameBoard = newGameBoard
+		currentPlayer = ?(status)
+			[§running§] =>
+				?(currentPlayer)
+					[§x§] => §o§
+					[§o§] => §x§
+			[§win§] => currentPlayer
+			[§tie§] => currentPlayer
+		status = status
+	]
