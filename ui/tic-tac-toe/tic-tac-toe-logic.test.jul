@@ -1,4 +1,4 @@
-(allEqual applyDelta checkWinner computeMoveDelta computeResetDelta isTied) = import(§./tic-tac-toe-logic.jul§)
+(allEqual applyDelta checkWinner computeMoveDelta computeResetDelta isBoardEmpty isTied) = import(§./tic-tac-toe-logic.jul§)
 
 test(
 	§allEqual-positive§
@@ -52,7 +52,7 @@ test(
 			1
 		)
 		and(
-			delta/status.deepEqual([])
+			delta/status.equal(§running§)
 			delta/currentPlayer.equal(§o§)
 		)
 )
@@ -75,7 +75,7 @@ test(
 		)
 		and(
 			delta/status.equal(§win§)
-			delta/currentPlayer.deepEqual([])
+			delta/currentPlayer.equal(§x§)
 		)
 )
 
@@ -133,6 +133,7 @@ test(
 			[
 				cellChanges = [[rowIndex = 2 columnIndex = 3 value = §x§ enabled = false]]
 				currentPlayer = §o§
+				status = §running§
 			]
 		)
 		newState.deepEqual([
@@ -163,8 +164,8 @@ test(
 				[rowIndex = 1 columnIndex = 1 value = §§ enabled = true]
 				[rowIndex = 3 columnIndex = 3 value = §§ enabled = true]
 			]
-			currentPlayer = []
-			status = []
+			currentPlayer = §x§
+			status = §running§
 		])
 )
 
@@ -234,61 +235,20 @@ test(
 )
 
 test(
-	§computeResetDelta-initial-state-has-no-state-change§
+	§computeResetDelta-after-game-over-resets-player-and-status§
 	() =>
 		delta = computeResetDelta([
 			gameBoard = [
-				[§§ §§ §§]
-				[§§ §§ §§]
+				[§x§ §x§ §x§]
+				[§o§ §o§ §§]
 				[§§ §§ §§]
 			]
 			currentPlayer = §x§
-			status = §running§
-		])
-		and(
-			delta/currentPlayer.deepEqual([])
-			delta/status.deepEqual([])
-		)
-)
-
-test(
-	§computeResetDelta-after-move-resets-player§
-	() =>
-		delta = computeResetDelta([
-			gameBoard = [
-				[§x§ §§ §§]
-				[§§ §§ §§]
-				[§§ §§ §§]
-			]
-			currentPlayer = §o§
-			status = §running§
+			status = §win§
 		])
 		and(
 			delta/currentPlayer.equal(§x§)
-			delta/status.deepEqual([])
-		)
-)
-
-test(
-	§applyDelta-without-state-change-keeps-player-and-status§
-	() =>
-		newState = applyDelta(
-			[
-				gameBoard = [
-					[§§ §§ §§]
-					[§§ §§ §§]
-					[§§ §§ §§]
-				]
-				currentPlayer = §o§
-				status = §running§
-			]
-			[
-				cellChanges = []
-			]
-		)
-		and(
-			newState/currentPlayer.equal(§o§)
-			newState/status.equal(§running§)
+			delta/status.equal(§running§)
 		)
 )
 
@@ -308,7 +268,29 @@ test(
 			gameState
 			[
 				cellChanges = [[rowIndex = 2 columnIndex = 2 enabled = false]]
+				currentPlayer = §o§
+				status = §win§
 			]
 		)
 		newState.deepEqual(gameState)
+)
+
+test(
+	§isBoardEmpty-positive§
+	() =>
+		isBoardEmpty([
+			[§§ §§ §§]
+			[§§ §§ §§]
+			[§§ §§ §§]
+		])
+)
+
+test(
+	§isBoardEmpty-negative§
+	() =>
+		not(isBoardEmpty([
+			[§§ §§ §§]
+			[§§ §x§ §§]
+			[§§ §§ §§]
+		]))
 )

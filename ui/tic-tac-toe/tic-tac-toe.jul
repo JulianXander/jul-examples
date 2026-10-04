@@ -10,6 +10,7 @@
 	computeResetDelta
 	GameStateChange
 	GameState
+	isBoardEmpty
 ) = import(§./tic-tac-toe-logic.jul§)
 
 #TODO support nativeFunction at runtime in userland
@@ -21,7 +22,11 @@
 # )
 
 #region GameState
-initialDelta: GameStateChange = [cellChanges = []]
+initialDelta: GameStateChange = [
+	cellChanges = []
+	currentPlayer = §x§
+	status = §running§
+]
 #ignore JUL2800
 delta$ = create$(GameStateChange initialDelta)
 
@@ -71,6 +76,13 @@ statusText$ = map$(gameState$ (gameState = value) => statusText(gameState))
 statusText$.subscribe(
 	(text = value) => statusElement.setText(text)
 )
+
+# reset: nur aktiv, wenn es etwas zurückzusetzen gibt
+resetElement = elementById(§reset§)
+resetEnabled$ = map$(gameState$ (gameState = value) => not(isBoardEmpty(gameState/gameBoard)))
+resetEnabled$.subscribe(
+	(enabled = value) => resetElement.setEnabled(enabled)
+)
 #endregion reactive ui updates
 
 #region register events
@@ -86,7 +98,6 @@ initialGameState/gameBoard.forEach(
 	)
 )
 
-resetElement = elementById(§reset§)
 subscribeEvent(
 	resetElement
 	§click§
