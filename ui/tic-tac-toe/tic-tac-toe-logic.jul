@@ -117,11 +117,6 @@ computeMoveDelta = (
 		]
 	]
 
-initialDelta: Delta = [
-	cellChanges = []
-	stateChange = []
-]
-
 # Ein Reset leert die belegten Zellen. Nach einem Spielende werden auch die leeren wieder aktiviert.
 # Spieler und Status ändern sich nur, wenn das Spiel nicht schon im Anfangszustand ist.
 computeResetDelta = (gameState: GameState) -> Delta =>
