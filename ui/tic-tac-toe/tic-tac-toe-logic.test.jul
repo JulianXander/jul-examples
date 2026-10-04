@@ -1,4 +1,4 @@
-(allEqual applyMove checkWinner isTied) = import(§./tic-tac-toe-logic.jul§)
+(allEqual applyDelta checkWinner computeMoveDelta computeResetDelta isTied) = import(§./tic-tac-toe-logic.jul§)
 
 test(
 	§allEqual-positive§
@@ -36,9 +36,9 @@ test(
 )
 
 test(
-	§applyMove-running-switches-player§
+	§computeMoveDelta-running-switches-player§
 	() =>
-		newState = applyMove(
+		delta = computeMoveDelta(
 			[
 				gameBoard = [
 					[§§ §§ §§]
@@ -52,15 +52,15 @@ test(
 			1
 		)
 		and(
-			newState/status.equal(§running§)
-			newState/currentPlayer.equal(§o§)
+			delta/status.equal(§running§)
+			delta/currentPlayer.equal(§o§)
 		)
 )
 
 test(
-	§applyMove-win-keeps-winner§
+	§computeMoveDelta-win-keeps-winner§
 	() =>
-		newState = applyMove(
+		delta = computeMoveDelta(
 			[
 				gameBoard = [
 					[§x§ §x§ §§]
@@ -74,15 +74,15 @@ test(
 			3
 		)
 		and(
-			newState/status.equal(§win§)
-			newState/currentPlayer.equal(§x§)
+			delta/status.equal(§win§)
+			delta/currentPlayer.equal(§x§)
 		)
 )
 
 test(
-	§applyMove-tie§
+	§computeMoveDelta-tie§
 	() =>
-		newState = applyMove(
+		delta = computeMoveDelta(
 			[
 				gameBoard = [
 					[§x§ §o§ §x§]
@@ -95,5 +95,131 @@ test(
 			3
 			3
 		)
-		newState/status.equal(§tie§)
+		delta/status.equal(§tie§)
+)
+
+test(
+	§computeMoveDelta-changes-only-the-clicked-cell§
+	() =>
+		delta = computeMoveDelta(
+			[
+				gameBoard = [
+					[§§ §§ §§]
+					[§§ §§ §§]
+					[§§ §§ §§]
+				]
+				currentPlayer = §x§
+				status = §running§
+			]
+			2
+			3
+		)
+		delta/cellChanges.deepEqual([[rowIndex = 2 columnIndex = 3 value = §x§ enabled = false]])
+)
+
+test(
+	§applyDelta-applies-cell-changes§
+	() =>
+		newState = applyDelta(
+			[
+				gameBoard = [
+					[§§ §§ §§]
+					[§§ §§ §§]
+					[§§ §§ §§]
+				]
+				currentPlayer = §x§
+				status = §running§
+			]
+			[
+				cellChanges = [[rowIndex = 2 columnIndex = 3 value = §x§ enabled = false]]
+				currentPlayer = §o§
+				status = §running§
+			]
+		)
+		newState.deepEqual([
+			gameBoard = [
+				[§§ §§ §§]
+				[§§ §§ §x§]
+				[§§ §§ §§]
+			]
+			currentPlayer = §o§
+			status = §running§
+		])
+)
+
+test(
+	§computeResetDelta-clears-only-filled-cells§
+	() =>
+		delta = computeResetDelta([
+			gameBoard = [
+				[§x§ §§ §§]
+				[§§ §§ §§]
+				[§§ §§ §o§]
+			]
+			currentPlayer = §x§
+			status = §running§
+		])
+		delta.deepEqual([
+			cellChanges = [
+				[rowIndex = 1 columnIndex = 1 value = §§ enabled = true]
+				[rowIndex = 3 columnIndex = 3 value = §§ enabled = true]
+			]
+			currentPlayer = §x§
+			status = §running§
+		])
+)
+
+test(
+	§computeResetDelta-empty-board-has-no-changes§
+	() =>
+		delta = computeResetDelta([
+			gameBoard = [
+				[§§ §§ §§]
+				[§§ §§ §§]
+				[§§ §§ §§]
+			]
+			currentPlayer = §x§
+			status = §running§
+		])
+		delta/cellChanges.deepEqual([])
+)
+
+test(
+	§computeMoveDelta-win-disables-empty-cells§
+	() =>
+		delta = computeMoveDelta(
+			[
+				gameBoard = [
+					[§x§ §x§ §§]
+					[§o§ §o§ §§]
+					[§§ §§ §§]
+				]
+				currentPlayer = §x§
+				status = §running§
+			]
+			1
+			3
+		)
+		delta/cellChanges.deepEqual([
+			[rowIndex = 1 columnIndex = 3 value = §x§ enabled = false]
+			[rowIndex = 2 columnIndex = 3 value = §§ enabled = false]
+			[rowIndex = 3 columnIndex = 1 value = §§ enabled = false]
+			[rowIndex = 3 columnIndex = 2 value = §§ enabled = false]
+			[rowIndex = 3 columnIndex = 3 value = §§ enabled = false]
+		])
+)
+
+test(
+	§computeResetDelta-after-game-over-enables-empty-cells§
+	() =>
+		delta = computeResetDelta([
+			gameBoard = [
+				[§x§ §x§ §x§]
+				[§o§ §o§ §§]
+				[§§ §§ §§]
+			]
+			currentPlayer = §x§
+			status = §win§
+		])
+		delta/cellChanges.length().equal(9)
 )

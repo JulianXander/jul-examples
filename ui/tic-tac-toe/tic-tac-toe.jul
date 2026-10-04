@@ -5,9 +5,13 @@
 	subscribeEvent
 ) = import(§./dom.ts§)
 (
-	applyMove
+	applyDelta
+	computeMoveDelta
+	computeResetDelta
+	Delta
 	GameBoard
 	GameState
+	initialDelta
 ) = import(§./tic-tac-toe-logic.jul§)
 
 #TODO support nativeFunction at runtime in userland
@@ -45,16 +49,33 @@ walk = (
 	)
 
 #ignore JUL2800
+delta$ = create$(Delta initialDelta)
+#ignore JUL2800
 gameState$ = create$(GameState initialGameState)
 
 statusElement = elementById(§status§)
 
-disableGameBoard = (gameBoard: GameBoard) =>
-	walk(
-		gameBoard
-		(rowIndex columnIndex cellElement) =>
-			cellElement.setEnabled(false)
-	)
+# state: wird nur aus den Deltas aufgebaut
+subscribe(
+	delta$
+	(delta = value) => gameState$.push(applyDelta(gameState$/getValue() delta))
+)
+
+# ui: reagiert nur auf die Deltas
+subscribe(
+	delta$
+	(delta = value) =>
+		delta/cellChanges.forEach(
+			(cellChange = value) =>
+				cellElement = elementById(§§(cellChange/rowIndex)-§(cellChange/columnIndex)§)
+				setText(cellElement cellChange/value)
+				setEnabled(cellElement cellChange/enabled)
+		)
+		?(delta/status)
+			[§win§] => statusElement.setText(§Spieler §(delta/currentPlayer) hat gewonnen§)
+			[§tie§] => statusElement.setText(§Unentschieden§)
+			[§running§] => statusElement.setText(§Aktueller Spieler: §(delta/currentPlayer)§)
+)
 
 walk(
 	initialGameState/gameBoard
@@ -62,23 +83,7 @@ walk(
 		subscribeEvent(
 			cellElement
 			§click§
-			() =>
-				currentGameState = gameState$/getValue()
-
-				# update ui
-				setEnabled(cellElement false)
-				setText(cellElement currentGameState/currentPlayer)
-
-				# update state
-				newGameState = applyMove(currentGameState rowIndex columnIndex)
-				gameState$.push(newGameState)
-
-				?(newGameState/status)
-					[§win§] =>
-						disableGameBoard(newGameState/gameBoard)
-						statusElement.setText(§Spieler §(newGameState/currentPlayer) hat gewonnen§)
-					[§tie§] => statusElement.setText(§Unentschieden§)
-					[§running§] => statusElement.setText(§Aktueller Spieler: §(newGameState/currentPlayer)§)
+			() => delta$.push(computeMoveDelta(gameState$/getValue() rowIndex columnIndex))
 		)
 )
 
@@ -86,16 +91,5 @@ resetElement = elementById(§reset§)
 subscribeEvent(
 	resetElement
 	§click§
-	() =>
-		# reset ui
-		walk(
-			initialGameState/gameBoard
-			(rowIndex columnIndex cellElement) =>
-				setText(cellElement §§)
-				setEnabled(cellElement true)
-		)
-		statusElement.setText(§Aktueller Spieler: x§)
-
-		# reset state
-		gameState$.push(initialGameState)
+	() => delta$.push(computeResetDelta(gameState$/getValue()))
 )

@@ -12,6 +12,20 @@ GameState = [
 	currentPlayer: Player
 	status: GameStatus
 ]
+CellChange = [
+	rowIndex: Or(1 2 3)
+	columnIndex: Or(1 2 3)
+	value: Cell
+	enabled: Boolean
+]
+# Änderung am GameState: die geänderten Zellen und die neuen Werte von currentPlayer und status.
+# enabled gehört nicht zum GameState: Eine Zelle ist aktiv, wenn sie leer ist und status §running§ ist.
+# Das Delta nennt die Zellen, deren Wert oder Aktivierung sich dadurch ändert.
+Delta = [
+	cellChanges: Or([] List(CellChange))
+	currentPlayer: Player
+	status: GameStatus
+]
 
 allEqual = (values: List(Any) expected) -> Boolean =>
 	values.all((value) => value.equal(expected))
@@ -44,13 +58,26 @@ checkWinner = (
 		allEqual(bottomLeftDiagonal player)
 	)
 
-# Setzt currentPlayer auf das Feld und liefert den neuen Spielzustand.
-# Nur bei status §running§ wechselt der Spieler, sonst bleibt er stehen.
-applyMove = (
+# Berechnet die Änderung, die ein Zug am GameState bewirkt.
+# Nur bei status §running§ wechselt der Spieler, bei §win§ ist currentPlayer der Gewinner.
+# Liefert alle Zellen des Bretts mit ihrer Position.
+cellsOf = (gameBoard: GameBoard) =>
+	cellsByRow = range(1 3).map(
+		(rowIndex = value) => range(1 3).map(
+			(columnIndex = value) => [
+				rowIndex = rowIndex
+				columnIndex = columnIndex
+				value = gameBoard.getElement(rowIndex).getElement(columnIndex)
+			]
+		)
+	)
+	cellsByRow.flatten()
+
+computeMoveDelta = (
 	gameState: GameState
 	rowIndex: Or(1 2 3)
 	columnIndex: Or(1 2 3)
-) -> GameState =>
+) -> Delta =>
 	currentPlayer = gameState/currentPlayer
 	currentRow = gameState/gameBoard.getElement(rowIndex)
 	newRow = currentRow.setElement(columnIndex currentPlayer)
@@ -63,8 +90,17 @@ applyMove = (
 			?(tie)
 				[true] => §tie§
 				[false] => §running§
+	clickedChange = [rowIndex = rowIndex columnIndex = columnIndex value = currentPlayer enabled = false]
+	# nach Spielende werden die übrigen leeren Zellen deaktiviert
+	emptyCells = cellsOf(newGameBoard).filter((cell = value) => cell/value.equal(§§))
+	disabledChanges = emptyCells.map(
+		(cell = value) => [rowIndex = cell/rowIndex columnIndex = cell/columnIndex value = §§ enabled = false]
+	)
 	[
-		gameBoard = newGameBoard
+		cellChanges = ?(status)
+			[§running§] => [clickedChange]
+			[§win§] => flatten([[clickedChange] disabledChanges])
+			[§tie§] => flatten([[clickedChange] disabledChanges])
 		currentPlayer = ?(status)
 			[§running§] =>
 				?(currentPlayer)
@@ -73,4 +109,40 @@ applyMove = (
 			[§win§] => currentPlayer
 			[§tie§] => currentPlayer
 		status = status
+	]
+
+initialDelta: Delta = [
+	cellChanges = []
+	currentPlayer = §x§
+	status = §running§
+]
+
+# Ein Reset leert die belegten Zellen. Nach einem Spielende werden auch die leeren wieder aktiviert.
+computeResetDelta = (gameState: GameState) -> Delta =>
+	isRunning = gameState/status.equal(§running§)
+	changedCells = cellsOf(gameState/gameBoard).filter(
+		(cell = value) => or(not(cell/value.equal(§§)) not(isRunning))
+	)
+	cellChanges = changedCells.map(
+		(cell = value) => [rowIndex = cell/rowIndex columnIndex = cell/columnIndex value = §§ enabled = true]
+	)
+	[
+		cellChanges = cellChanges
+		currentPlayer = §x§
+		status = §running§
+	]
+
+applyDelta = (gameState: GameState delta: Delta) -> GameState =>
+	newGameBoard = delta/cellChanges.aggregate(
+		GameBoard
+		gameState/gameBoard
+		(gameBoard = accumulator cellChange = value) =>
+			row = gameBoard.getElement(cellChange/rowIndex)
+			newRow = row.setElement(cellChange/columnIndex cellChange/value)
+			gameBoard.setElement(cellChange/rowIndex newRow)
+	)
+	[
+		gameBoard = newGameBoard
+		currentPlayer = delta/currentPlayer
+		status = delta/status
 	]
