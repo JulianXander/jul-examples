@@ -12,6 +12,12 @@ GameState = [
 	currentPlayer: Player
 	status: GameStatus
 ]
+# Eine Zelle des Bretts mit ihrer Position.
+PositionedCell = [
+	rowIndex: Or(1 2 3)
+	columnIndex: Or(1 2 3)
+	value: Cell
+]
 CellChange = [
 	rowIndex: Or(1 2 3)
 	columnIndex: Or(1 2 3)
@@ -62,7 +68,7 @@ checkWinner = (
 	)
 
 # Liefert alle Zellen des Bretts mit ihrer Position.
-cellsOf = (gameBoard: GameBoard) =>
+cellsOf = (gameBoard: GameBoard) -> Or([] List(PositionedCell)) =>
 	cellsByRow = range(1 3).map(
 		(rowIndex = value) => range(1 3).map(
 			(columnIndex = value) => [
