@@ -200,15 +200,15 @@ test(
 		)
 		delta/cellChanges.deepEqual([
 			[rowIndex = 1 columnIndex = 3 value = §x§ enabled = false]
-			[rowIndex = 2 columnIndex = 3 value = §§ enabled = false]
-			[rowIndex = 3 columnIndex = 1 value = §§ enabled = false]
-			[rowIndex = 3 columnIndex = 2 value = §§ enabled = false]
-			[rowIndex = 3 columnIndex = 3 value = §§ enabled = false]
+			[rowIndex = 2 columnIndex = 3 enabled = false]
+			[rowIndex = 3 columnIndex = 1 enabled = false]
+			[rowIndex = 3 columnIndex = 2 enabled = false]
+			[rowIndex = 3 columnIndex = 3 enabled = false]
 		])
 )
 
 test(
-	§computeResetDelta-after-game-over-enables-empty-cells§
+	§computeResetDelta-after-game-over-only-enables-empty-cells§
 	() =>
 		delta = computeResetDelta([
 			gameBoard = [
@@ -219,7 +219,17 @@ test(
 			currentPlayer = §x§
 			status = §win§
 		])
-		delta/cellChanges.length().equal(9)
+		delta/cellChanges.deepEqual([
+			[rowIndex = 1 columnIndex = 1 value = §§ enabled = true]
+			[rowIndex = 1 columnIndex = 2 value = §§ enabled = true]
+			[rowIndex = 1 columnIndex = 3 value = §§ enabled = true]
+			[rowIndex = 2 columnIndex = 1 value = §§ enabled = true]
+			[rowIndex = 2 columnIndex = 2 value = §§ enabled = true]
+			[rowIndex = 2 columnIndex = 3 enabled = true]
+			[rowIndex = 3 columnIndex = 1 enabled = true]
+			[rowIndex = 3 columnIndex = 2 enabled = true]
+			[rowIndex = 3 columnIndex = 3 enabled = true]
+		])
 )
 
 test(
@@ -274,4 +284,26 @@ test(
 			newState/currentPlayer.equal(§o§)
 			newState/status.equal(§running§)
 		)
+)
+
+test(
+	§applyDelta-enabled-only-change-keeps-board§
+	() =>
+		gameState = [
+			gameBoard = [
+				[§x§ §§ §§]
+				[§§ §§ §§]
+				[§§ §§ §§]
+			]
+			currentPlayer = §o§
+			status = §win§
+		]
+		newState = applyDelta(
+			gameState
+			[
+				cellChanges = [[rowIndex = 2 columnIndex = 2 enabled = false]]
+				stateChange = []
+			]
+		)
+		newState.deepEqual(gameState)
 )
