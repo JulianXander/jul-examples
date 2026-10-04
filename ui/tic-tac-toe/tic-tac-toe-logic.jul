@@ -18,13 +18,17 @@ CellChange = [
 	value: Cell
 	enabled: Boolean
 ]
-# Änderung am GameState: die geänderten Zellen und die neuen Werte von currentPlayer und status.
+StateChange = [
+	currentPlayer: Player
+	status: GameStatus
+]
+# Änderung am GameState: die geänderten Zellen und, falls sie sich ändern, die neuen Werte von
+# currentPlayer und status.
 # enabled gehört nicht zum GameState: Eine Zelle ist aktiv, wenn sie leer ist und status §running§ ist.
 # Das Delta nennt die Zellen, deren Wert oder Aktivierung sich dadurch ändert.
 Delta = [
 	cellChanges: Or([] List(CellChange))
-	currentPlayer: Player
-	status: GameStatus
+	stateChange: Or([] StateChange)
 ]
 
 allEqual = (values: List(Any) expected) -> Boolean =>
@@ -101,23 +105,25 @@ computeMoveDelta = (
 			[§running§] => [clickedChange]
 			[§win§] => flatten([[clickedChange] disabledChanges])
 			[§tie§] => flatten([[clickedChange] disabledChanges])
-		currentPlayer = ?(status)
-			[§running§] =>
-				?(currentPlayer)
-					[§x§] => §o§
-					[§o§] => §x§
-			[§win§] => currentPlayer
-			[§tie§] => currentPlayer
-		status = status
+		stateChange = [
+			currentPlayer = ?(status)
+				[§running§] =>
+					?(currentPlayer)
+						[§x§] => §o§
+						[§o§] => §x§
+				[§win§] => currentPlayer
+				[§tie§] => currentPlayer
+			status = status
+		]
 	]
 
 initialDelta: Delta = [
 	cellChanges = []
-	currentPlayer = §x§
-	status = §running§
+	stateChange = []
 ]
 
 # Ein Reset leert die belegten Zellen. Nach einem Spielende werden auch die leeren wieder aktiviert.
+# Spieler und Status ändern sich nur, wenn das Spiel nicht schon im Anfangszustand ist.
 computeResetDelta = (gameState: GameState) -> Delta =>
 	isRunning = gameState/status.equal(§running§)
 	changedCells = cellsOf(gameState/gameBoard).filter(
@@ -126,10 +132,13 @@ computeResetDelta = (gameState: GameState) -> Delta =>
 	cellChanges = changedCells.map(
 		(cell = value) => [rowIndex = cell/rowIndex columnIndex = cell/columnIndex value = §§ enabled = true]
 	)
+	isInitialPlayer = gameState/currentPlayer.equal(§x§)
+	stateChange = ?(and(isRunning isInitialPlayer))
+		[true] => []
+		[false] => [currentPlayer = §x§ status = §running§]
 	[
 		cellChanges = cellChanges
-		currentPlayer = §x§
-		status = §running§
+		stateChange = stateChange
 	]
 
 applyDelta = (gameState: GameState delta: Delta) -> GameState =>
@@ -141,8 +150,16 @@ applyDelta = (gameState: GameState delta: Delta) -> GameState =>
 			newRow = row.setElement(cellChange/columnIndex cellChange/value)
 			gameBoard.setElement(cellChange/rowIndex newRow)
 	)
-	[
-		gameBoard = newGameBoard
-		currentPlayer = delta/currentPlayer
-		status = delta/status
-	]
+	?(delta/stateChange)
+		(stateChange: StateChange) =>
+			[
+				gameBoard = newGameBoard
+				currentPlayer = stateChange/currentPlayer
+				status = stateChange/status
+			]
+		() =>
+			[
+				gameBoard = newGameBoard
+				currentPlayer = gameState/currentPlayer
+				status = gameState/status
+			]

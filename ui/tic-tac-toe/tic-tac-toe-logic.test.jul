@@ -52,8 +52,8 @@ test(
 			1
 		)
 		and(
-			delta/status.equal(§running§)
-			delta/currentPlayer.equal(§o§)
+			delta/stateChange/status.equal(§running§)
+			delta/stateChange/currentPlayer.equal(§o§)
 		)
 )
 
@@ -74,8 +74,8 @@ test(
 			3
 		)
 		and(
-			delta/status.equal(§win§)
-			delta/currentPlayer.equal(§x§)
+			delta/stateChange/status.equal(§win§)
+			delta/stateChange/currentPlayer.equal(§x§)
 		)
 )
 
@@ -95,7 +95,7 @@ test(
 			3
 			3
 		)
-		delta/status.equal(§tie§)
+		delta/stateChange/status.equal(§tie§)
 )
 
 test(
@@ -132,8 +132,7 @@ test(
 			]
 			[
 				cellChanges = [[rowIndex = 2 columnIndex = 3 value = §x§ enabled = false]]
-				currentPlayer = §o§
-				status = §running§
+				stateChange = [currentPlayer = §o§ status = §running§]
 			]
 		)
 		newState.deepEqual([
@@ -164,8 +163,7 @@ test(
 				[rowIndex = 1 columnIndex = 1 value = §§ enabled = true]
 				[rowIndex = 3 columnIndex = 3 value = §§ enabled = true]
 			]
-			currentPlayer = §x§
-			status = §running§
+			stateChange = []
 		])
 )
 
@@ -222,4 +220,58 @@ test(
 			status = §win§
 		])
 		delta/cellChanges.length().equal(9)
+)
+
+test(
+	§computeResetDelta-initial-state-has-no-state-change§
+	() =>
+		delta = computeResetDelta([
+			gameBoard = [
+				[§§ §§ §§]
+				[§§ §§ §§]
+				[§§ §§ §§]
+			]
+			currentPlayer = §x§
+			status = §running§
+		])
+		delta/stateChange.deepEqual([])
+)
+
+test(
+	§computeResetDelta-after-move-resets-player§
+	() =>
+		delta = computeResetDelta([
+			gameBoard = [
+				[§x§ §§ §§]
+				[§§ §§ §§]
+				[§§ §§ §§]
+			]
+			currentPlayer = §o§
+			status = §running§
+		])
+		delta/stateChange.deepEqual([currentPlayer = §x§ status = §running§])
+)
+
+test(
+	§applyDelta-without-state-change-keeps-player-and-status§
+	() =>
+		newState = applyDelta(
+			[
+				gameBoard = [
+					[§§ §§ §§]
+					[§§ §§ §§]
+					[§§ §§ §§]
+				]
+				currentPlayer = §o§
+				status = §running§
+			]
+			[
+				cellChanges = []
+				stateChange = []
+			]
+		)
+		and(
+			newState/currentPlayer.equal(§o§)
+			newState/status.equal(§running§)
+		)
 )

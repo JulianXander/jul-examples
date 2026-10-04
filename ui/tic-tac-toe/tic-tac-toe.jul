@@ -12,6 +12,7 @@
 	GameBoard
 	GameState
 	initialDelta
+	StateChange
 ) = import(§./tic-tac-toe-logic.jul§)
 
 #TODO support nativeFunction at runtime in userland
@@ -53,14 +54,13 @@ delta$ = create$(Delta initialDelta)
 #ignore JUL2800
 gameState$ = create$(GameState initialGameState)
 
-statusElement = elementById(§status§)
-
 # state: wird nur aus den Deltas aufgebaut
 subscribe(
 	delta$
 	(delta = value) => gameState$.push(applyDelta(gameState$/getValue() delta))
 )
 
+statusElement = elementById(§status§)
 # ui: reagiert nur auf die Deltas
 subscribe(
 	delta$
@@ -71,12 +71,16 @@ subscribe(
 				setText(cellElement cellChange/value)
 				setEnabled(cellElement cellChange/enabled)
 		)
-		?(delta/status)
-			[§win§] => statusElement.setText(§Spieler §(delta/currentPlayer) hat gewonnen§)
-			[§tie§] => statusElement.setText(§Unentschieden§)
-			[§running§] => statusElement.setText(§Aktueller Spieler: §(delta/currentPlayer)§)
+		?(delta/stateChange)
+			(stateChange: StateChange) =>
+				?(stateChange/status)
+					[§win§] => statusElement.setText(§Spieler §(stateChange/currentPlayer) hat gewonnen§)
+					[§tie§] => statusElement.setText(§Unentschieden§)
+					[§running§] => statusElement.setText(§Aktueller Spieler: §(stateChange/currentPlayer)§)
+			() => []
 )
 
+# registriere cell clicks
 walk(
 	initialGameState/gameBoard
 	(rowIndex columnIndex cellElement) =>
