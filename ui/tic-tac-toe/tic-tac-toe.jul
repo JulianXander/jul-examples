@@ -38,17 +38,16 @@ initialGameState: GameState = [
 gameState$ = create$(GameState initialGameState)
 
 # state: wird nur aus den Deltas aufgebaut
-subscribe(
-	delta$
-	(delta = value) => gameState$.push(applyDelta(gameState$/getValue() delta))
+delta$.subscribe(
+	(delta = value) =>
+		gameState$.push(applyDelta(gameState$/getValue() delta))
 )
 #endregion GameState
 
 #region reactive ui updates
 statusElement = elementById(§status§)
-# zellen: reagieren nur auf die Deltas
-subscribe(
-	delta$
+# Zellen: reagieren nur auf die Deltas
+delta$.subscribe(
 	(delta = value) =>
 		delta/cellChanges.forEach(
 			(cellChange = value) =>
@@ -68,8 +67,8 @@ statusText = (gameState: GameState) =>
 		[§win§] => §Spieler §(gameState/currentPlayer) hat gewonnen§
 		[§tie§] => §Unentschieden§
 		[§running§] => §Aktueller Spieler: §(gameState/currentPlayer)§
-subscribe(
-	map$(gameState$ (gameState = value) => statusText(gameState))
+statusText$ = map$(gameState$ (gameState = value) => statusText(gameState))
+statusText$.subscribe(
 	(text = value) => statusElement.setText(text)
 )
 #endregion reactive ui updates
