@@ -18,7 +18,7 @@ CellChange = [
 	value: Cell
 	enabled: Boolean
 ]
-StateChange = [
+StatusChange = [
 	currentPlayer: Player
 	status: GameStatus
 ]
@@ -26,9 +26,9 @@ StateChange = [
 # currentPlayer und status.
 # enabled gehört nicht zum GameState: Eine Zelle ist aktiv, wenn sie leer ist und status §running§ ist.
 # Das Delta nennt die Zellen, deren Wert oder Aktivierung sich dadurch ändert.
-Delta = [
+GameStateChange = [
 	cellChanges: Or([] List(CellChange))
-	stateChange: Or([] StateChange)
+	stateChange: Or([] StatusChange)
 ]
 
 allEqual = (values: List(Any) expected) -> Boolean =>
@@ -81,7 +81,7 @@ computeMoveDelta = (
 	gameState: GameState
 	rowIndex: Or(1 2 3)
 	columnIndex: Or(1 2 3)
-) -> Delta =>
+) -> GameStateChange =>
 	currentPlayer = gameState/currentPlayer
 	currentRow = gameState/gameBoard.getElement(rowIndex)
 	newRow = currentRow.setElement(columnIndex currentPlayer)
@@ -119,7 +119,7 @@ computeMoveDelta = (
 
 # Ein Reset leert die belegten Zellen. Nach einem Spielende werden auch die leeren wieder aktiviert.
 # Spieler und Status ändern sich nur, wenn das Spiel nicht schon im Anfangszustand ist.
-computeResetDelta = (gameState: GameState) -> Delta =>
+computeResetDelta = (gameState: GameState) -> GameStateChange =>
 	isRunning = gameState/status.equal(§running§)
 	changedCells = cellsOf(gameState/gameBoard).filter(
 		(cell = value) => or(not(cell/value.equal(§§)) not(isRunning))
@@ -136,7 +136,7 @@ computeResetDelta = (gameState: GameState) -> Delta =>
 		stateChange = stateChange
 	]
 
-applyDelta = (gameState: GameState delta: Delta) -> GameState =>
+applyDelta = (gameState: GameState delta: GameStateChange) -> GameState =>
 	newGameBoard = delta/cellChanges.aggregate(
 		GameBoard
 		gameState/gameBoard
@@ -146,7 +146,7 @@ applyDelta = (gameState: GameState delta: Delta) -> GameState =>
 			gameBoard.setElement(cellChange/rowIndex newRow)
 	)
 	?(delta/stateChange)
-		(stateChange: StateChange) =>
+		(stateChange: StatusChange) =>
 			[
 				gameBoard = newGameBoard
 				currentPlayer = stateChange/currentPlayer

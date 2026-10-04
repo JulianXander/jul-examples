@@ -8,9 +8,9 @@
 	applyDelta
 	computeMoveDelta
 	computeResetDelta
-	Delta
+	GameStateChange
 	GameState
-	StateChange
+	StatusChange
 ) = import(§./tic-tac-toe-logic.jul§)
 
 #TODO support nativeFunction at runtime in userland
@@ -22,12 +22,12 @@
 # )
 
 #region GameState
-initialDelta: Delta = [
+initialDelta: GameStateChange = [
 	cellChanges = []
 	stateChange = []
 ]
 #ignore JUL2800
-delta$ = create$(Delta initialDelta)
+delta$ = create$(GameStateChange initialDelta)
 
 initialGameState: GameState = [
 	gameBoard = [
@@ -61,7 +61,7 @@ subscribe(
 				setEnabled(cellElement cellChange/enabled)
 		)
 		?(delta/stateChange)
-			(stateChange: StateChange) =>
+			(stateChange: StatusChange) =>
 				?(stateChange/status)
 					[§win§] => statusElement.setText(§Spieler §(stateChange/currentPlayer) hat gewonnen§)
 					[§tie§] => statusElement.setText(§Unentschieden§)
