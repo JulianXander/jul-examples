@@ -2,7 +2,7 @@ aggregateRecursive = (
 	values: List(Any)
 	init
 	fn: (acc val i) :> Any
-	index
+	index: PositiveInteger
 	curr
 ) :> TypeOf(fn)/ReturnType =>
 	?(index)
