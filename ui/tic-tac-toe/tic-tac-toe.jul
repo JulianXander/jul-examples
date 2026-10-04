@@ -9,7 +9,6 @@
 	computeMoveDelta
 	computeResetDelta
 	Delta
-	GameBoard
 	GameState
 	initialDelta
 	StateChange
@@ -23,6 +22,7 @@
 # 	§
 # )
 
+#region GameState
 initialGameState: GameState = [
 	gameBoard = [
 		[§§ §§ §§]
@@ -32,22 +32,6 @@ initialGameState: GameState = [
 	currentPlayer = §x§
 	status = §running§
 ]
-
-walk = (
-	gameBoard: GameBoard
-	iteratee: (
-		rowIndex: Or(1 2 3)
-		columnIndex: Or(1 2 3)
-		cellElement: Any
-	) ~> Any
-) =>
-	gameBoard.forEach(
-		(row = value rowIndex = index) => row.forEach(
-			(cellValue = value columnIndex = index) =>
-				cellElement = elementById(§§(rowIndex)-§(columnIndex)§)
-				iteratee(rowIndex columnIndex cellElement)
-		)
-	)
 
 #ignore JUL2800
 delta$ = create$(Delta initialDelta)
@@ -59,7 +43,9 @@ subscribe(
 	delta$
 	(delta = value) => gameState$.push(applyDelta(gameState$/getValue() delta))
 )
+#endregion GameState
 
+#region reactive ui updates
 statusElement = elementById(§status§)
 # ui: reagiert nur auf die Deltas
 subscribe(
@@ -79,16 +65,19 @@ subscribe(
 					[§running§] => statusElement.setText(§Aktueller Spieler: §(stateChange/currentPlayer)§)
 			() => []
 )
+#endregion reactive ui updates
 
+#region register events
 # registriere cell clicks
-walk(
-	initialGameState/gameBoard
-	(rowIndex columnIndex cellElement) =>
-		subscribeEvent(
-			cellElement
-			§click§
-			() => delta$.push(computeMoveDelta(gameState$/getValue() rowIndex columnIndex))
-		)
+initialGameState/gameBoard.forEach(
+	(row = value rowIndex = index) => row.forEach(
+		(cellValue = value columnIndex = index) =>
+			subscribeEvent(
+				elementById(§§(rowIndex)-§(columnIndex)§)
+				§click§
+				() => delta$.push(computeMoveDelta(gameState$/getValue() rowIndex columnIndex))
+			)
+	)
 )
 
 resetElement = elementById(§reset§)
@@ -97,3 +86,4 @@ subscribeEvent(
 	§click§
 	() => delta$.push(computeResetDelta(gameState$/getValue()))
 )
+#endregion register events
