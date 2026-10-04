@@ -50,7 +50,6 @@ delta$.subscribe(
 #endregion GameState
 
 #region reactive ui updates
-statusElement = elementById(§status§)
 # Zellen: reagieren nur auf die Deltas
 delta$.subscribe(
 	(delta = value) =>
@@ -67,6 +66,7 @@ delta$.subscribe(
 )
 
 # status: wird aus dem State abgeleitet, ein gleichbleibender Text wird nicht neu geschrieben
+statusElement = elementById(§status§)
 statusText = (gameState: GameState) =>
 	?(gameState/status)
 		[§win§] => §Spieler §(gameState/currentPlayer) hat gewonnen§
