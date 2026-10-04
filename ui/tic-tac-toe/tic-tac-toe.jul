@@ -10,7 +10,6 @@
 	computeResetDelta
 	GameStateChange
 	GameState
-	StatusChange
 ) = import(§./tic-tac-toe-logic.jul§)
 
 #TODO support nativeFunction at runtime in userland
@@ -22,10 +21,7 @@
 # )
 
 #region GameState
-initialDelta: GameStateChange = [
-	cellChanges = []
-	stateChange = []
-]
+initialDelta: GameStateChange = [cellChanges = []]
 #ignore JUL2800
 delta$ = create$(GameStateChange initialDelta)
 
@@ -50,7 +46,7 @@ subscribe(
 
 #region reactive ui updates
 statusElement = elementById(§status§)
-# ui: reagiert nur auf die Deltas
+# zellen: reagieren nur auf die Deltas
 subscribe(
 	delta$
 	(delta = value) =>
@@ -64,13 +60,17 @@ subscribe(
 					(enabled: Boolean) => setEnabled(cellElement enabled)
 					() => []
 		)
-		?(delta/stateChange)
-			(stateChange: StatusChange) =>
-				?(stateChange/status)
-					[§win§] => statusElement.setText(§Spieler §(stateChange/currentPlayer) hat gewonnen§)
-					[§tie§] => statusElement.setText(§Unentschieden§)
-					[§running§] => statusElement.setText(§Aktueller Spieler: §(stateChange/currentPlayer)§)
-			() => []
+)
+
+# status: wird aus dem State abgeleitet, ein gleichbleibender Text wird nicht neu geschrieben
+statusText = (gameState: GameState) =>
+	?(gameState/status)
+		[§win§] => §Spieler §(gameState/currentPlayer) hat gewonnen§
+		[§tie§] => §Unentschieden§
+		[§running§] => §Aktueller Spieler: §(gameState/currentPlayer)§
+subscribe(
+	map$(gameState$ (gameState = value) => statusText(gameState))
+	(text = value) => statusElement.setText(text)
 )
 #endregion reactive ui updates
 

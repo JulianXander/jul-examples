@@ -52,8 +52,8 @@ test(
 			1
 		)
 		and(
-			delta/stateChange/status.equal(§running§)
-			delta/stateChange/currentPlayer.equal(§o§)
+			delta/status.deepEqual([])
+			delta/currentPlayer.equal(§o§)
 		)
 )
 
@@ -74,8 +74,8 @@ test(
 			3
 		)
 		and(
-			delta/stateChange/status.equal(§win§)
-			delta/stateChange/currentPlayer.equal(§x§)
+			delta/status.equal(§win§)
+			delta/currentPlayer.deepEqual([])
 		)
 )
 
@@ -95,7 +95,7 @@ test(
 			3
 			3
 		)
-		delta/stateChange/status.equal(§tie§)
+		delta/status.equal(§tie§)
 )
 
 test(
@@ -132,7 +132,7 @@ test(
 			]
 			[
 				cellChanges = [[rowIndex = 2 columnIndex = 3 value = §x§ enabled = false]]
-				stateChange = [currentPlayer = §o§ status = §running§]
+				currentPlayer = §o§
 			]
 		)
 		newState.deepEqual([
@@ -163,7 +163,8 @@ test(
 				[rowIndex = 1 columnIndex = 1 value = §§ enabled = true]
 				[rowIndex = 3 columnIndex = 3 value = §§ enabled = true]
 			]
-			stateChange = []
+			currentPlayer = []
+			status = []
 		])
 )
 
@@ -244,7 +245,10 @@ test(
 			currentPlayer = §x§
 			status = §running§
 		])
-		delta/stateChange.deepEqual([])
+		and(
+			delta/currentPlayer.deepEqual([])
+			delta/status.deepEqual([])
+		)
 )
 
 test(
@@ -259,7 +263,10 @@ test(
 			currentPlayer = §o§
 			status = §running§
 		])
-		delta/stateChange.deepEqual([currentPlayer = §x§ status = §running§])
+		and(
+			delta/currentPlayer.equal(§x§)
+			delta/status.deepEqual([])
+		)
 )
 
 test(
@@ -277,7 +284,6 @@ test(
 			]
 			[
 				cellChanges = []
-				stateChange = []
 			]
 		)
 		and(
@@ -302,7 +308,6 @@ test(
 			gameState
 			[
 				cellChanges = [[rowIndex = 2 columnIndex = 2 enabled = false]]
-				stateChange = []
 			]
 		)
 		newState.deepEqual(gameState)

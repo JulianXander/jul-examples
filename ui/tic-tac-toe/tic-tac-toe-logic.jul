@@ -18,17 +18,14 @@ CellChange = [
 	value: Or([] Cell)
 	enabled: Or([] Boolean)
 ]
-StatusChange = [
-	currentPlayer: Player
-	status: GameStatus
-]
 # Änderung am GameState: die geänderten Zellen und, falls sie sich ändern, die neuen Werte von
 # currentPlayer und status.
 # enabled gehört nicht zum GameState: Eine Zelle ist aktiv, wenn sie leer ist und status §running§ ist.
 # Eine CellChange nennt nur die Felder, die sich an der Zelle ändern, die übrigen fehlen.
 GameStateChange = [
 	cellChanges: Or([] List(CellChange))
-	stateChange: Or([] StatusChange)
+	currentPlayer: Or([] Player)
+	status: Or([] GameStatus)
 ]
 
 allEqual = (values: List(Any) expected) -> Boolean =>
@@ -75,6 +72,13 @@ cellsOf = (gameBoard: GameBoard) =>
 	)
 	cellsByRow.flatten()
 
+# Deaktiviert alle leeren Zellen, nach einem Sieg kann keine mehr gespielt werden.
+disableEmptyCells = (gameBoard: GameBoard) -> Or([] List(CellChange)) =>
+	emptyCells = cellsOf(gameBoard).filter((cell = value) => cell/value.equal(§§))
+	emptyCells.map(
+		(cell = value) => [rowIndex = cell/rowIndex columnIndex = cell/columnIndex enabled = false]
+	)
+
 # Berechnet die Änderung, die ein Zug am GameState bewirkt.
 # Nur bei status §running§ wechselt der Spieler, bei §win§ ist currentPlayer der Gewinner.
 computeMoveDelta = (
@@ -95,26 +99,24 @@ computeMoveDelta = (
 				[true] => §tie§
 				[false] => §running§
 	clickedChange = [rowIndex = rowIndex columnIndex = columnIndex value = currentPlayer enabled = false]
-	# nach Spielende werden die übrigen leeren Zellen deaktiviert
-	emptyCells = cellsOf(newGameBoard).filter((cell = value) => cell/value.equal(§§))
-	disabledChanges = emptyCells.map(
-		(cell = value) => [rowIndex = cell/rowIndex columnIndex = cell/columnIndex enabled = false]
-	)
 	[
 		cellChanges = ?(status)
 			[§running§] => [clickedChange]
-			[§win§] => flatten([[clickedChange] disabledChanges])
-			[§tie§] => flatten([[clickedChange] disabledChanges])
-		stateChange = [
-			currentPlayer = ?(status)
-				[§running§] =>
-					?(currentPlayer)
-						[§x§] => §o§
-						[§o§] => §x§
-				[§win§] => currentPlayer
-				[§tie§] => currentPlayer
-			status = status
-		]
+			[§win§] => [clickedChange ...disableEmptyCells(newGameBoard)]
+			# bei einem Unentschieden ist das Brett voll, es gibt keine leeren Zellen zu deaktivieren
+			[§tie§] => [clickedChange]
+		# Der Spieler wechselt nur im laufenden Spiel, der Status ändert sich nur bei Sieg oder Unentschieden.
+		currentPlayer = ?(status)
+			[§running§] =>
+				?(currentPlayer)
+					[§x§] => §o§
+					[§o§] => §x§
+			[§win§] => []
+			[§tie§] => []
+		status = ?(status)
+			[§running§] => []
+			[§win§] => §win§
+			[§tie§] => §tie§
 	]
 
 # Ein Reset leert die belegten Zellen. Nach einem Spielende werden auch die leeren wieder aktiviert.
@@ -132,12 +134,14 @@ computeResetDelta = (gameState: GameState) -> GameStateChange =>
 				[false] => [rowIndex = cell/rowIndex columnIndex = cell/columnIndex value = §§ enabled = true]
 	)
 	isInitialPlayer = gameState/currentPlayer.equal(§x§)
-	stateChange = ?(and(isRunning isInitialPlayer))
-		[true] => []
-		[false] => [currentPlayer = §x§ status = §running§]
 	[
 		cellChanges = cellChanges
-		stateChange = stateChange
+		currentPlayer = ?(isInitialPlayer)
+			[true] => []
+			[false] => §x§
+		status = ?(isRunning)
+			[true] => []
+			[false] => §running§
 	]
 
 applyDelta = (gameState: GameState delta: GameStateChange) -> GameState =>
@@ -152,16 +156,14 @@ applyDelta = (gameState: GameState delta: GameStateChange) -> GameState =>
 					gameBoard.setElement(cellChange/rowIndex newRow)
 				() => gameBoard
 	)
-	?(delta/stateChange)
-		(stateChange: StatusChange) =>
-			[
-				gameBoard = newGameBoard
-				currentPlayer = stateChange/currentPlayer
-				status = stateChange/status
-			]
-		() =>
-			[
-				gameBoard = newGameBoard
-				currentPlayer = gameState/currentPlayer
-				status = gameState/status
-			]
+	newCurrentPlayer = ?(delta/currentPlayer)
+		(player: Player) => player
+		() => gameState/currentPlayer
+	newStatus = ?(delta/status)
+		(status: GameStatus) => status
+		() => gameState/status
+	[
+		gameBoard = newGameBoard
+		currentPlayer = newCurrentPlayer
+		status = newStatus
+	]
