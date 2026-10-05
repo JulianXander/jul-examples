@@ -9,6 +9,9 @@
 )
 # 3
 [].map((value) => §test§)
-# 4
+# 4 TODO: sollte als lambda parsen, aber trotzdem ein parser fehler liefern, ähnlich wie falsche line endings, außerdem eine formatierer logik bauen die das automatisch auf die richtige form bringt
 [].map((value) =>
 	§test§)
+
+# 5 TODO: beim tippen einer öffnenden klammer ( in map(): automatisch lambda mit params generieren: (value index) => und curser position hinter dem space hinter =>
+[].map()
