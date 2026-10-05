@@ -1,2 +1,14 @@
-f = (T: Type callback: (accumulator: T) :> T) :> T => 0
-f(Integer (accumulator) => §text§)
+# 1
+[].map(
+	(value) => §test§
+)
+# 2
+[].map(
+	(value) =>
+		§test§
+)
+# 3
+[].map((value) => §test§)
+# 4
+[].map((value) =>
+	§test§)
