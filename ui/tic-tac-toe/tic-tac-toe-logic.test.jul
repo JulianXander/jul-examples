@@ -4,8 +4,8 @@
 	checkWinner
 	computeMoveDelta
 	computeResetDelta
-	isBoardEmpty
 	hasFreeCell
+	isBoardEmpty
 ) = import(§./tic-tac-toe-logic.jul§)
 
 test(
