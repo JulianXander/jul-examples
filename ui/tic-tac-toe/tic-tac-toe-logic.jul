@@ -36,8 +36,8 @@ GameStateChange = [
 allEqual = (values: List(Any) expected) -> Boolean =>
 	values.all((value) => value.equal(expected))
 
-isTied = (gameBoard: GameBoard) -> Boolean =>
-	gameBoard.all((row = value) => row.all((cell = value) => not(cell.equal(§§))))
+hasFreeCell = (gameBoard: GameBoard) -> Boolean =>
+	gameBoard.exists((row = value) => row.exists((cell = value) => cell.equal(§§)))
 
 isBoardEmpty = (gameBoard: GameBoard) -> Boolean =>
 	gameBoard.all((row = value) => row.all((cell = value) => cell.equal(§§)))
@@ -102,10 +102,10 @@ computeMoveDelta = (
 	status: GameStatus = ?(isWinner)
 		[true] => §win§
 		[false] =>
-			tie = isTied(newGameBoard)
-			?(tie)
-				[true] => §tie§
-				[false] => §running§
+			ongoing = hasFreeCell(newGameBoard)
+			?(ongoing)
+				[true] => §running§
+				[false] => §tie§
 	clickedChange = [rowIndex = rowIndex columnIndex = columnIndex value = currentPlayer enabled = false]
 	[
 		cellChanges = ?(status)

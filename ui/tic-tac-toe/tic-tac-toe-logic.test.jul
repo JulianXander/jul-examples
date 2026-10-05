@@ -1,4 +1,12 @@
-(allEqual applyDelta checkWinner computeMoveDelta computeResetDelta isBoardEmpty isTied) = import(§./tic-tac-toe-logic.jul§)
+(
+	allEqual
+	applyDelta
+	checkWinner
+	computeMoveDelta
+	computeResetDelta
+	isBoardEmpty
+	hasFreeCell
+) = import(§./tic-tac-toe-logic.jul§)
 
 test(
 	§allEqual-positive§
@@ -11,12 +19,12 @@ test(
 )
 
 test(
-	§isTied§
+	§hasFreeCell§
 	() =>
-		isTied([
+		hasFreeCell([
 			[§x§ §x§ §x§]
 			[§x§ §x§ §x§]
-			[§x§ §x§ §x§]
+			[§x§ §x§ §§]
 		])
 )
 
