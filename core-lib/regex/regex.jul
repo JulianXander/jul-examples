@@ -1,0 +1,37 @@
+#region einzeilig
+# Text vor einem # (Rauten im Text sind normaler Text)
+beforeHash = regex(§abc # def§ §^([^#]*)§)/unnamedCaptures
+
+# benannte Captures
+date = regex(§2026-10-10§ §(?<year>[0-9]{4})-(?<month>[0-9]{2})-(?<day>[0-9]{2})§)/namedCaptures
+
+# kein Treffer
+noMatch = regex(§abc§ §^[0-9]+$§)/isMatch
+#endregion einzeilig
+
+#region mehrzeilig
+# §regex: Die Zeilen werden ohne Zeilenumbruch und ohne Einrückung verbunden,
+# Kommentarzeilen sind erlaubt.
+dateMultiline = regex(
+	§2026-10-10§
+	§regex
+		^
+		# Jahr
+		(?<year>[0-9]{4})-
+		# Monat
+		(?<month>[0-9]{2})-
+		# Tag
+		(?<day>[0-9]{2})
+		$
+	§
+)/namedCaptures
+
+# Text mit Interpolation im Regex
+separator = §-§
+dateWithSeparator = regex(
+	§2026-10-10§
+	§regex
+		^([0-9]{4})§(separator)([0-9]{2})§(separator)([0-9]{2})$
+	§
+)/unnamedCaptures
+#endregion mehrzeilig
