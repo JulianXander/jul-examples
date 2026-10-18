@@ -3,38 +3,18 @@ myFunction = (a b) => log(a b)
 # 1. Argumente direkt übergeben
 myFunction(1 2)
 
-# 2. Argumente mit Parameternamen übergeben
+# 2. Argumente mit Parameternamen übergeben, in der Reihenfolge der Parameter
 myFunction(
 	a = 1
 	b = 2
-)
-
-# 2.1 Die Reihenfolge der Argumente ist egal (anders als bei 1.)
-myFunction(
-	b = 2
-	a = 1
 )
 
 # 3. Argumente in einer List mit spread-Operator
 myList = [1 2]
 myFunction(...myList)
 
-# 4. Argumente in einem Dictionary mit spread-Operator
-myDictionary = [
-	a = 1
-	b = 2
-]
-myFunction(...myDictionary)
-
-# 4.1 Die Reihenfolge der Argumente ist egal (anders als bei 3.)
-myDictionary1 = [
-	b = 2
-	a = 1
-]
-myFunction(...myDictionary1)
-
 # Bei 1. und 2. ist die Übergabe von nicht definierten Parametern nicht erlaubt.
-# Bei 3. und 4. ist die Übergabe von nicht definierten Parametern erlaubt.
+# Bei 3. ist die Übergabe von nicht definierten Parametern erlaubt.
 
 # Type Parametered Function
 MyType = [
