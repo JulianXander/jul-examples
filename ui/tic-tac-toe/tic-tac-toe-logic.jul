@@ -21,8 +21,8 @@ PositionedCell = [
 CellChange = [
 	rowIndex: Or(1 2 3)
 	columnIndex: Or(1 2 3)
-	value: Or([] Cell)
-	enabled: Or([] Boolean)
+	value?: Cell
+	enabled?: Boolean
 ]
 # Änderung am GameState: die geänderten Zellen und die neuen Werte von currentPlayer und status.
 # enabled gehört nicht zum GameState: Eine Zelle ist aktiv, wenn sie leer ist und status §running§ ist.
