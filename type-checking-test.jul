@@ -54,7 +54,7 @@ testAnd1: And(4 4) = 4
 testAnd2: And(4 5) = 5
 # should error
 testAnd3: And(4 5) = 6
-# should not error
+# should error: Records sind geschlossen, ein Wert hat nicht a und zugleich nur b
 testAnd4: And(
 	[a: 4]
 	[b: 5]
@@ -105,7 +105,7 @@ testDictionaryLiteral3: [
 	a = 4
 	b = 6
 ]
-# should not error
+# should error: Records sind geschlossen, b ist ein weiteres Feld
 testDictionaryLiteral3a: [
 	a: 4
 ] = [
