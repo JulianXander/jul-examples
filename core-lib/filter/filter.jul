@@ -1,0 +1,24 @@
+# Ein Prädikat, das nur für einen Teil des Elementtyps true liefert, schränkt den Elementtyp
+# des Ergebnisses ein: filter liefert hier List(Integer), nicht List(Or(Integer Text)).
+isInteger = (value: Any) :> Boolean =>
+	?(value)
+		[Integer] => true
+		() => false
+
+#region filter
+integersOf = (values: List(Or(Integer Text))) :> Or([] List(Integer)) =>
+	values.filter(isInteger)
+
+# Ohne erkennbares Prädikat bleibt der Elementtyp, wie er ist.
+allOf = (values: List(Or(Integer Text))) :> Or([] List(Or(Integer Text))) =>
+	values.filter((value) => true)
+#endregion filter
+
+#region findFirst und findLast
+# Dasselbe Narrowing gilt für einzelne Treffer.
+firstIntegerOf = (values: List(Or(Integer Text))) :> Or([] Integer) =>
+	values.findFirst(isInteger)
+
+lastIntegerOf = (values: List(Or(Integer Text))) :> Or([] Integer) =>
+	values.findLast(isInteger)
+#endregion findFirst und findLast
