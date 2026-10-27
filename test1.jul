@@ -6,9 +6,14 @@ check2 = (value: Integer) =>
 		[GreaterInteger(1)] => true
 		() => false
 
-#TODO ? do1 narrowed nicht
 do1 = (arr: List(Integer)) =>
 	filtered1 = arr.filter(check1)
 # do2 narrowed auf List(GreaterInteger(1))
 do2 = (arr: List(Integer)) =>
 	filtered2 = arr.filter(check2)
+
+branchCheck1 = (value: Integer) =>
+	?(value.greaterInteger(1))
+		#TODO value narrowed nicht auf GreaterInteger(1)
+		[true] => value
+		[false] => value
