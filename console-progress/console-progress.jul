@@ -2,12 +2,12 @@ timer1$ = interval$(500f)
 progress$ = timer1$.map$((value) => value.multiply(2))
 progress$.subscribe(
 	(value) =>
-		endReached = value.greater(100)
+		endReached = value.greaterInteger(100)
 		?(endReached)
 			[true] =>
 				timer1$.complete()
 			[false] =>
-				moveJs = ?(value.greater(2))
+				moveJs = ?(value.greaterInteger(2))
 					[true] => §process.stdout.moveCursor(0, -2);§
 					[false] => []
 				runJs(

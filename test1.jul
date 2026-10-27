@@ -1,5 +1,5 @@
 check1 = (value: Integer) =>
-	value.greater(1)
+	value.greaterInteger(1)
 
 check2 = (value: Integer) =>
 	?(value)
