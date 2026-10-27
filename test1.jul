@@ -14,7 +14,6 @@ do2 = (arr: List(Integer)) =>
 
 branchCheck1 = (value: Integer) =>
 	?(value.greaterInteger(1))
-		#TODO value narrowed nicht auf GreaterInteger(1)
 		[true] => value
 		[false] => value
 
