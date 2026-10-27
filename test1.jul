@@ -11,4 +11,4 @@ do1 = (arr: List(Integer)) =>
 	filtered1 = arr.filter(check1)
 # do2 narrowed auf List(GreaterInteger(1))
 do2 = (arr: List(Integer)) =>
-	filtered1 = arr.filter(check2)
+	filtered2 = arr.filter(check2)
