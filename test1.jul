@@ -17,3 +17,9 @@ branchCheck1 = (value: Integer) =>
 		#TODO value narrowed nicht auf GreaterInteger(1)
 		[true] => value
 		[false] => value
+
+branchCheck2 = (value: Integer) =>
+	?(value)
+		#TODO value narrowed ?
+		[check1] => value
+		() => value
