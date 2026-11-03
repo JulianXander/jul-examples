@@ -1,0 +1,6 @@
+# getElement liefert Empty, wenn die Position nicht existiert. Der Aufrufer sichert zu,
+# dass die Liste lang genug ist; jul test prüft das, ein normaler Build nicht.
+second = (values: List(Integer)) =>
+	assume(values.getElement(2) Integer)
+
+log(second([1 2 3]))
