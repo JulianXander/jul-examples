@@ -162,7 +162,7 @@ applyDelta = (gameState: GameState delta: GameStateChange) -> GameState =>
 				(newValue: Cell) =>
 					newRow = row.setElement(cellChange/columnIndex newValue)
 					gameBoard.setElement(cellChange/rowIndex newRow)
-				() => gameBoard
+			gameBoard
 	)
 	[
 		gameBoard = newGameBoard

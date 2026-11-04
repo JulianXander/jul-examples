@@ -56,12 +56,12 @@ delta$.subscribe(
 		delta/cellChanges.forEach(
 			(cellChange = value) =>
 				cellElement = elementById(§§(cellChange/rowIndex)-§(cellChange/columnIndex)§)
-				?(cellChange/value)
+				_ = ?(cellChange/value)
 					(newValue: Text) => setText(cellElement newValue)
 					() => []
 				?(cellChange/enabled)
 					(enabled: Boolean) => setEnabled(cellElement enabled)
-					() => []
+				[]
 		)
 )
 

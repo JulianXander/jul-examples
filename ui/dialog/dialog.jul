@@ -79,7 +79,7 @@ elementById(§delete§).onClick(
 							[§ok§] => §gelöscht§
 							[§cancel§] => §abgebrochen§
 						elementById(§log§).setText(message)
-					() => []
+				[]
 		)
 )
 

@@ -6,55 +6,55 @@ myVal = 6
 
 # Ein Typ-Kopf wird gegen die Argumentkollektion geprüft, nie gegen einen einzelnen Wert.
 # ?(myVal) schreibt ein Argument, die Kollektion ist also [myVal] und der Kopf ein Tuple.
-?(myVal)
+_ = ?(myVal)
 	[5] => log(§fünf§)
 	[6] => log(§sechs§)
 	() => log(§etwas anderes§)
 
 # Eine Parameterliste beschreibt dieselbe Kollektion, bindet aber deren Elemente.
-?(myVal)
+_ = ?(myVal)
 	(x: 5) => log(x)
 	(x: Integer) => log(x)
 
 # Any matcht auch die Kollektion und bleibt deshalb ungewickelt.
 # () bindet nichts und matcht ebenfalls alles.
-?(myVal)
+_ = ?(myVal)
 	Any => log(myVal)
 
 # Ohne geschriebenes Argument ist die Kollektion selbst Empty.
-?()
+_ = ?()
 	Empty => log(§keine Argumente§)
 
 # Ein leerer Wert ist dagegen ein Argument: die Kollektion hat ein Element, der Kopf ist [Empty].
 myEmpty = []
-?(myEmpty)
+_ = ?(myEmpty)
 	[Empty] => log(§ein leeres Argument§)
 	() => log(§etwas anderes§)
 
 # Branching über mehrere Werte, ohne sie in ein Tuple zu wickeln.
-?(1 2)
+_ = ?(1 2)
 	[1 2] => log(§eins zwei§)
 	(a: Integer b: Integer) => log(a b)
 	() => log(§etwas anderes§)
 
 # Weil die Argumentliste auch ein Dictionary sein kann, geht es benannt genauso.
-?(a = 4 b = 6)
+_ = ?(a = 4 b = 6)
 	(a b) => log(a b)
 	() => log(§etwas anderes§)
 
 # Erst ein geschriebenes ... macht die Elemente des Werts zu Argumenten.
 myList = [1 2]
-?(...myList)
+_ = ?(...myList)
 	(a: Integer b: Integer) => log(a b)
 	() => log(§etwas anderes§)
 
 # Ohne ... bleibt die Liste ein Argument.
-?(myList)
+_ = ?(myList)
 	(a: List(Integer)) => log(a)
 	() => log(§etwas anderes§)
 
 # ?(x) und f(x) bilden dieselbe Argumentkollektion, x ? f ist also f(x).
 myFunction = (a: Integer) => log(a)
 myFunction(1)
-?(1)
+_ = ?(1)
 	myFunction

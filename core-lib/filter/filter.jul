@@ -3,7 +3,7 @@
 isInteger = (value: Any) :> Boolean =>
 	?(value)
 		[Integer] => true
-		() => false
+	false
 
 #region filter
 integersOf = (values: List(Or(Integer Text))) :> Or([] List(Integer)) =>

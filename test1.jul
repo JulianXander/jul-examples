@@ -4,7 +4,7 @@ check1 = (value: Integer) =>
 check2 = (value: Integer) =>
 	?(value)
 		[GreaterInteger(1)] => true
-		() => false
+	false
 
 do1 = (arr: List(Integer)) =>
 	filtered1 = arr.filter(check1)
@@ -21,4 +21,4 @@ branchCheck2 = (value: Integer) =>
 	?(value)
 		#TODO value narrowed ?
 		[check1] => value
-		() => value
+	value

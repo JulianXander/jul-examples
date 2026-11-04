@@ -1,6 +1,6 @@
 someVar = 32
 
-?(someVar)
+_ = ?(someVar)
 	[1] => §hallo§
 	[2] => §sdf§
 	[Number] => add(someVar 2)
