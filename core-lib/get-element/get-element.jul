@@ -9,21 +9,21 @@ elementOrEmpty = (values: List(Integer) index: PositiveInteger) :> Or([] Integer
 # Ist index nicht größer als die Länge, ist es ein gültiger Index.
 elementOrZero = (values: List(Integer) index: PositiveInteger) :> Integer =>
 	?(index.greaterInteger(values.length()))
+		[true] => 0
 		[false] => values.getElement(index)
-	0
 
 # Bei einem beliebigen Integer gehören beide Grenzen in die Bedingung.
 elementOrZeroAnyIndex = (values: List(Integer) index: Integer) :> Integer =>
 	?(and(index.greaterInteger(0) index.greaterInteger(values.length()).not()))
 		[true] => values.getElement(index)
-	0
+		[false] => 0
 
 # Die Länge darf auch über einen Namen in die Bedingung gehen.
 elementOrZeroByCount = (values: List(Integer) index: PositiveInteger) :> Integer =>
 	count = values.length()
 	?(index.greaterInteger(count))
+		[true] => 0
 		[false] => values.getElement(index)
-	0
 #endregion Prüfung als Bedingung
 
 #region Prüfung als Typmuster
@@ -31,5 +31,5 @@ elementOrZeroByCount = (values: List(Integer) index: PositiveInteger) :> Integer
 elementOrZeroByPattern = (values: List(Integer) index: PositiveInteger) :> Integer =>
 	?(index)
 		[Not(GreaterInteger(values.length()))] => values.getElement(index)
-	0
+		() => 0
 #endregion Prüfung als Typmuster
