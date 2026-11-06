@@ -1,0 +1,35 @@
+# getElement liefert Empty, wenn der Index hinter dem Ende liegt. Ist geprüft, dass der Index
+# höchstens so groß ist wie die Länge derselben Liste, fällt Empty aus dem Ergebnis.
+
+#region Prüfung als Bedingung
+# Ohne Prüfung: Or([] Integer).
+elementOrEmpty = (values: List(Integer) index: PositiveInteger) :> Or([] Integer) =>
+	values.getElement(index)
+
+# Ist index nicht größer als die Länge, ist es ein gültiger Index.
+elementOrZero = (values: List(Integer) index: PositiveInteger) :> Integer =>
+	?(index.greaterInteger(values.length()))
+		[false] => values.getElement(index)
+	0
+
+# Bei einem beliebigen Integer gehören beide Grenzen in die Bedingung.
+elementOrZeroAnyIndex = (values: List(Integer) index: Integer) :> Integer =>
+	?(and(index.greaterInteger(0) index.greaterInteger(values.length()).not()))
+		[true] => values.getElement(index)
+	0
+
+# Die Länge darf auch über einen Namen in die Bedingung gehen.
+elementOrZeroByCount = (values: List(Integer) index: PositiveInteger) :> Integer =>
+	count = values.length()
+	?(index.greaterInteger(count))
+		[false] => values.getElement(index)
+	0
+#endregion Prüfung als Bedingung
+
+#region Prüfung als Typmuster
+# Ein Index ist ein PositiveInteger, der nicht größer ist als die Länge.
+elementOrZeroByPattern = (values: List(Integer) index: PositiveInteger) :> Integer =>
+	?(index)
+		[Not(GreaterInteger(values.length()))] => values.getElement(index)
+	0
+#endregion Prüfung als Typmuster

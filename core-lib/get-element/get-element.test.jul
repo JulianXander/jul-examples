@@ -1,0 +1,59 @@
+(
+	elementOrEmpty
+	elementOrZero
+	elementOrZeroAnyIndex
+	elementOrZeroByCount
+	elementOrZeroByPattern
+) = import(§./get-element.jul§)
+
+values = [
+	10
+	20
+	30
+]
+
+test(
+	§ohne Prüfung Empty hinter dem Ende§
+	() =>
+		elementOrEmpty(values 4).equal()
+)
+
+test(
+	§Bedingung innerhalb der Länge§
+	() =>
+		elementOrZero(values 3).equal(30)
+)
+
+test(
+	§Bedingung hinter dem Ende§
+	() =>
+		elementOrZero(values 4).equal(0)
+)
+
+test(
+	§Bedingung mit beiden Grenzen§
+	() =>
+		and(
+			elementOrZeroAnyIndex(values 1).equal(10)
+			elementOrZeroAnyIndex(values 0).equal(0)
+			elementOrZeroAnyIndex(values 4).equal(0)
+		)
+)
+
+test(
+	§Bedingung über einen Namen§
+	() =>
+		and(
+			elementOrZeroByCount(values 2).equal(20)
+			elementOrZeroByCount(values 4).equal(0)
+		)
+)
+
+test(
+	§Typmuster§
+	() =>
+		and(
+			elementOrZeroByPattern(values 2).equal(20)
+			elementOrZeroByPattern(values 4).equal(0)
+		)
+)
