@@ -34,8 +34,10 @@ testNonZeroInteger2: NonZeroInteger = 0
 testNonZeroInteger2: NonZeroInteger = 3.5
 # should not error
 testFloat1: Float = 6f
-# should error
+# should not error: ganze Zahl im sicheren Bereich
 testFloat2: Float = 6
+# should error: Integer ohne Grenzen könnte gerundet werden
+testFloat3 = (a: Integer) => divideFloat(a 2f)
 # should not error
 testText1: Text = §§
 # should not  error
