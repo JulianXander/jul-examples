@@ -31,6 +31,19 @@ log(yamlImport)
 jsonImport = import(§./json-file.json§)
 log(jsonImport)
 
+# typed import
+# the second argument is the type of the import
+# the compiler checks the value of the file against this type (JUL3170)
+# without a type, a json import has the type of its literal: exactly these two keys
+# with a type, the value is used like any other value of that type,
+# e.g. with a key that is only known at runtime
+people = import(§./people.json§ Dictionary([name: Text age: Integer]))
+log(getField(people §anna§))
+# a value that does not fit the type is an error (JUL3170):
+# wrongPeople = import(§./people.json§ List(Integer))
+# a file over 1 MB has the type Any without a type
+# with a type, the build still checks it, the editor does not load it and takes the type unchecked
+
 # typescript
 typescriptImport = import(§./ts-file.ts§)
 log(typescriptImport)
