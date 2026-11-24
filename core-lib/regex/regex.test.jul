@@ -9,29 +9,29 @@
 test(
 	§text before hash§
 	() =>
-		beforeHash.deepEqual([§abc § §abc §])
+		assert(§Text vor jedem #§ beforeHash.deepEqual([§abc § §abc §]))
 )
 
 test(
 	§named captures§
 	() =>
-		date.deepEqual([year = §2026§ month = §10§ day = §10§])
+		assert(§Jahr, Monat und Tag§ date.deepEqual([year = §2026§ month = §10§ day = §10§]))
 )
 
 test(
 	§no match§
 	() =>
-		noMatch.equal(false)
+		assert(§kein Treffer ist false§ noMatch.equal(false))
 )
 
 test(
 	§multiline regex§
 	() =>
-		dateMultiline.deepEqual([year = §2026§ month = §10§ day = §10§])
+		assert(§Jahr, Monat und Tag§ dateMultiline.deepEqual([year = §2026§ month = §10§ day = §10§]))
 )
 
 test(
 	§multiline regex with interpolation§
 	() =>
-		dateWithSeparator.deepEqual([§2026-10-10§ §2026§ §10§ §10§])
+		assert(§Treffer und Gruppen§ dateWithSeparator.deepEqual([§2026-10-10§ §2026§ §10§ §10§]))
 )

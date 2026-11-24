@@ -15,23 +15,23 @@ mixedValues = [
 test(
 	§filter mit Narrowing§
 	() =>
-		integersOf(mixedValues).deepEqual([1 3])
+		assert(§nur die Integer§ integersOf(mixedValues).deepEqual([1 3]))
 )
 
 test(
 	§filter ohne Narrowing§
 	() =>
-		allOf(mixedValues).deepEqual([1 §zwei§ 3 §vier§])
+		assert(§alle Werte§ allOf(mixedValues).deepEqual([1 §zwei§ 3 §vier§]))
 )
 
 test(
 	§findFirst mit Narrowing§
 	() =>
-		firstIntegerOf(mixedValues).equal(1)
+		assert(§erster Integer§ firstIntegerOf(mixedValues).equal(1))
 )
 
 test(
 	§findLast mit Narrowing§
 	() =>
-		lastIntegerOf(mixedValues).equal(3)
+		assert(§letzter Integer§ lastIntegerOf(mixedValues).equal(3))
 )

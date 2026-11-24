@@ -9,10 +9,13 @@ testValues = [
 test(
 	§aggrec§
 	() =>
-		testValues.aggregateRecursive(
-			0
-			(acc val) => acc.add(val)
-			1
-			0
-		).equal(6)
+		assert(
+			§Summe aller Werte§
+			testValues.aggregateRecursive(
+				0
+				(acc val) => acc.add(val)
+				1
+				0
+			).equal(6)
+		)
 )

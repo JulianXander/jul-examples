@@ -1,6 +1,6 @@
 # jul test
 (second) = import(§./assume.jul§)
 
-test(§liefert das zweite Element§ () => equal(second([1 2 3]) 2))
+test(§liefert das zweite Element§ () => assert(§zweites Element§ equal(second([1 2 3]) 2)))
 # Schlägt absichtlich fehl: Die Liste hat kein zweites Element, das assume ist verletzt.
-test(§verletztes assume§ () => equal(second([1]) 1))
+test(§verletztes assume§ () => assert(§zweites Element einer einelementigen Liste§ equal(second([1]) 1)))

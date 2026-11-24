@@ -10,37 +10,43 @@
 
 test(
 	§allEqual-positive§
-	() => allEqual([§x§ §x§ §x§] §x§)
+	() => assert(§drei gleiche§ allEqual([§x§ §x§ §x§] §x§))
 )
 
 test(
 	§allEqual-negative§
-	() => not(allEqual([§x§ §o§ §x§] §x§))
+	() => assert(§ein anderer dazwischen§ not(allEqual([§x§ §o§ §x§] §x§)))
 )
 
 test(
 	§hasFreeCell§
 	() =>
-		hasFreeCell([
-			[§x§ §x§ §x§]
-			[§x§ §x§ §x§]
-			[§x§ §x§ §§]
-		])
+		assert(
+			§eine leere Zelle unten rechts§
+			hasFreeCell([
+				[§x§ §x§ §x§]
+				[§x§ §x§ §x§]
+				[§x§ §x§ §§]
+			])
+		)
 )
 
 test(
 	§checkWinner§
 	() =>
-		not(checkWinner(
-			[
-				[§x§ §§ §x§]
-				[§x§ §§ §§]
-				[§x§ §x§ §x§]
-			]
-			§x§
-			1
-			3
-		))
+		assert(
+			§kein Sieg durch Zug in Zeile 1, Spalte 3§
+			not(checkWinner(
+				[
+					[§x§ §§ §x§]
+					[§x§ §§ §§]
+					[§x§ §x§ §x§]
+				]
+				§x§
+				1
+				3
+			))
+		)
 )
 
 test(
@@ -59,10 +65,8 @@ test(
 			1
 			1
 		)
-		and(
-			delta/status.equal(§running§)
-			delta/currentPlayer.equal(§o§)
-		)
+		assert(§Spiel läuft weiter§ delta/status.equal(§running§))
+		assert(§o ist am Zug§ delta/currentPlayer.equal(§o§))
 )
 
 test(
@@ -81,10 +85,8 @@ test(
 			1
 			3
 		)
-		and(
-			delta/status.equal(§win§)
-			delta/currentPlayer.equal(§x§)
-		)
+		assert(§x hat gewonnen§ delta/status.equal(§win§))
+		assert(§Gewinner bleibt am Zug§ delta/currentPlayer.equal(§x§))
 )
 
 test(
@@ -103,7 +105,7 @@ test(
 			3
 			3
 		)
-		delta/status.equal(§tie§)
+		assert(§unentschieden§ delta/status.equal(§tie§))
 )
 
 test(
@@ -122,7 +124,7 @@ test(
 			2
 			3
 		)
-		delta/cellChanges.deepEqual([[rowIndex = 2 columnIndex = 3 value = §x§ enabled = false]])
+		assert(§nur Zeile 2, Spalte 3§ delta/cellChanges.deepEqual([[rowIndex = 2 columnIndex = 3 value = §x§ enabled = false]]))
 )
 
 test(
@@ -144,15 +146,18 @@ test(
 				status = §running§
 			]
 		)
-		newState.deepEqual([
-			gameBoard = [
-				[§§ §§ §§]
-				[§§ §§ §x§]
-				[§§ §§ §§]
-			]
-			currentPlayer = §o§
-			status = §running§
-		])
+		assert(
+			§x in Zeile 2, Spalte 3, o am Zug§
+			newState.deepEqual([
+				gameBoard = [
+					[§§ §§ §§]
+					[§§ §§ §x§]
+					[§§ §§ §§]
+				]
+				currentPlayer = §o§
+				status = §running§
+			])
+		)
 )
 
 test(
@@ -167,14 +172,17 @@ test(
 			currentPlayer = §x§
 			status = §running§
 		])
-		delta.deepEqual([
-			cellChanges = [
-				[rowIndex = 1 columnIndex = 1 value = §§ enabled = true]
-				[rowIndex = 3 columnIndex = 3 value = §§ enabled = true]
-			]
-			currentPlayer = §x§
-			status = §running§
-		])
+		assert(
+			§nur die gefüllten Zellen geleert§
+			delta.deepEqual([
+				cellChanges = [
+					[rowIndex = 1 columnIndex = 1 value = §§ enabled = true]
+					[rowIndex = 3 columnIndex = 3 value = §§ enabled = true]
+				]
+				currentPlayer = §x§
+				status = §running§
+			])
+		)
 )
 
 test(
@@ -189,7 +197,7 @@ test(
 			currentPlayer = §x§
 			status = §running§
 		])
-		delta/cellChanges.deepEqual([])
+		assert(§keine Änderungen§ delta/cellChanges.deepEqual([]))
 )
 
 test(
@@ -208,13 +216,16 @@ test(
 			1
 			3
 		)
-		delta/cellChanges.deepEqual([
-			[rowIndex = 1 columnIndex = 3 value = §x§ enabled = false]
-			[rowIndex = 2 columnIndex = 3 enabled = false]
-			[rowIndex = 3 columnIndex = 1 enabled = false]
-			[rowIndex = 3 columnIndex = 2 enabled = false]
-			[rowIndex = 3 columnIndex = 3 enabled = false]
-		])
+		assert(
+			§Siegzug gesetzt, leere Zellen gesperrt§
+			delta/cellChanges.deepEqual([
+				[rowIndex = 1 columnIndex = 3 value = §x§ enabled = false]
+				[rowIndex = 2 columnIndex = 3 enabled = false]
+				[rowIndex = 3 columnIndex = 1 enabled = false]
+				[rowIndex = 3 columnIndex = 2 enabled = false]
+				[rowIndex = 3 columnIndex = 3 enabled = false]
+			])
+		)
 )
 
 test(
@@ -229,17 +240,20 @@ test(
 			currentPlayer = §x§
 			status = §win§
 		])
-		delta/cellChanges.deepEqual([
-			[rowIndex = 1 columnIndex = 1 value = §§ enabled = true]
-			[rowIndex = 1 columnIndex = 2 value = §§ enabled = true]
-			[rowIndex = 1 columnIndex = 3 value = §§ enabled = true]
-			[rowIndex = 2 columnIndex = 1 value = §§ enabled = true]
-			[rowIndex = 2 columnIndex = 2 value = §§ enabled = true]
-			[rowIndex = 2 columnIndex = 3 enabled = true]
-			[rowIndex = 3 columnIndex = 1 enabled = true]
-			[rowIndex = 3 columnIndex = 2 enabled = true]
-			[rowIndex = 3 columnIndex = 3 enabled = true]
-		])
+		assert(
+			§alle Zellen wieder frei, nur gefüllte geleert§
+			delta/cellChanges.deepEqual([
+				[rowIndex = 1 columnIndex = 1 value = §§ enabled = true]
+				[rowIndex = 1 columnIndex = 2 value = §§ enabled = true]
+				[rowIndex = 1 columnIndex = 3 value = §§ enabled = true]
+				[rowIndex = 2 columnIndex = 1 value = §§ enabled = true]
+				[rowIndex = 2 columnIndex = 2 value = §§ enabled = true]
+				[rowIndex = 2 columnIndex = 3 enabled = true]
+				[rowIndex = 3 columnIndex = 1 enabled = true]
+				[rowIndex = 3 columnIndex = 2 enabled = true]
+				[rowIndex = 3 columnIndex = 3 enabled = true]
+			])
+		)
 )
 
 test(
@@ -254,10 +268,8 @@ test(
 			currentPlayer = §x§
 			status = §win§
 		])
-		and(
-			delta/currentPlayer.equal(§x§)
-			delta/status.equal(§running§)
-		)
+		assert(§x beginnt§ delta/currentPlayer.equal(§x§))
+		assert(§Spiel läuft wieder§ delta/status.equal(§running§))
 )
 
 test(
@@ -280,25 +292,31 @@ test(
 				status = §win§
 			]
 		)
-		newState.deepEqual(gameState)
+		assert(§Brett unverändert§ newState.deepEqual(gameState))
 )
 
 test(
 	§isBoardEmpty-positive§
 	() =>
-		isBoardEmpty([
-			[§§ §§ §§]
-			[§§ §§ §§]
-			[§§ §§ §§]
-		])
+		assert(
+			§leeres Brett§
+			isBoardEmpty([
+				[§§ §§ §§]
+				[§§ §§ §§]
+				[§§ §§ §§]
+			])
+		)
 )
 
 test(
 	§isBoardEmpty-negative§
 	() =>
-		not(isBoardEmpty([
-			[§§ §§ §§]
-			[§§ §x§ §§]
-			[§§ §§ §§]
-		]))
+		assert(
+			§ein x in der Mitte§
+			not(isBoardEmpty([
+				[§§ §§ §§]
+				[§§ §x§ §§]
+				[§§ §§ §§]
+			]))
+		)
 )
