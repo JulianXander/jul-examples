@@ -13,8 +13,8 @@
 	isBoardEmpty
 ) = import(§./tic-tac-toe-logic.jul§)
 
-#TODO support nativeFunction at runtime in userland
-# subscribeEvent = nativeFunction(
+#TODO support native at runtime in userland
+# subscribeEvent = native(
 # 	(listener) :> []
 # 	§js
 # 		document.addEventListener('click', listener);
