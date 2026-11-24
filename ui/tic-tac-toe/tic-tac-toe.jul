@@ -45,7 +45,7 @@ gameState$ = create$(GameState initialGameState)
 # state: wird nur aus den Deltas aufgebaut
 delta$.subscribe(
 	(delta = value) =>
-		gameState$.push(applyDelta(gameState$/getValue() delta))
+		gameState$.push(applyDelta(gameState$.getCurrentValue() delta))
 )
 #endregion GameState
 
@@ -93,7 +93,7 @@ initialGameState/gameBoard.forEach(
 			subscribeEvent(
 				elementById(§§(rowIndex)-§(columnIndex)§)
 				§click§
-				() => delta$.push(computeMoveDelta(gameState$/getValue() rowIndex columnIndex))
+				() => delta$.push(computeMoveDelta(gameState$.getCurrentValue() rowIndex columnIndex))
 			)
 	)
 )
@@ -101,6 +101,6 @@ initialGameState/gameBoard.forEach(
 subscribeEvent(
 	resetElement
 	§click§
-	() => delta$.push(computeResetDelta(gameState$/getValue()))
+	() => delta$.push(computeResetDelta(gameState$.getCurrentValue()))
 )
 #endregion register events
